@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Controls.Shapes;
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Layouts;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -45,10 +46,10 @@ public partial class CreateForm : ContentPage
 
         foreach (var child in CanvasGrid.Children)
         {
-            if (child is Grid container)
+            if (child is SwipeView swipe)
             {
                 //obtiene el frame que envuelve el elemento
-                var border = container.Children.FirstOrDefault() as Border;
+                var border = swipe.Content as Border;
                 if (border != null)
                 {
                     border.Scale = 1.0; // Restablece el tamaño original
@@ -57,14 +58,10 @@ public partial class CreateForm : ContentPage
             }
         }
 
-        if (_selectedElement is Grid selectedContainer)
+        if (_selectedElement is Border selectedBorder)
         {
-            var borderToScale = selectedContainer.Children.FirstOrDefault() as Border;
-            if (borderToScale != null)
-            {
-                borderToScale.Scale = 1.5; // Aumenta el tamaño del frame
-                borderToScale.Stroke = Colors.Blue; // Cambia el color del borde para resaltar
-            }
+            selectedBorder.Scale = 1.05; // Aumenta el tamaño del elemento seleccionado
+            selectedBorder.Stroke = Colors.Blue;
         }
     }
 
@@ -75,9 +72,9 @@ public partial class CreateForm : ContentPage
 
         Grid.SetRow(newElement, _nextRow);
 
-        var tapGesture = new TapGestureRecognizer();
-        tapGesture.Tapped += OnElementTapped;
-        newElement.GestureRecognizers.Add(tapGesture);
+        //var tapGesture = new TapGestureRecognizer();
+        //tapGesture.Tapped += OnElementTapped;
+        //newElement.GestureRecognizers.Add(tapGesture);
 
         CanvasGrid.Children.Add(newElement);
 
@@ -121,17 +118,17 @@ public partial class CreateForm : ContentPage
         };
 
         //crea el boton eliminar
-        var deleteButton = new ImageButton
-        {
-            Source = "delete_icon2.png",
-            WidthRequest = 24,
-            HeightRequest = 24,
-            BackgroundColor = Colors.Transparent,
-            VerticalOptions = LayoutOptions.Start,
-            HorizontalOptions = LayoutOptions.End,
-            Margin = new Thickness(0, -8, -8,0),
-            ZIndex = 1,
-        };
+        //var deleteButton = new ImageButton
+        //{
+        //    Source = "delete_icon2.png",
+        //    WidthRequest = 24,
+        //    HeightRequest = 24,
+        //    BackgroundColor = Colors.Transparent,
+        //    VerticalOptions = LayoutOptions.Start,
+        //    HorizontalOptions = LayoutOptions.End,
+        //    Margin = new Thickness(0, -8, -8,0),
+        //    ZIndex = 1,
+        //};
 
         //crea un grid interno para organizar el titulo y el contenido principal
         var innerGrid = new Grid
@@ -153,35 +150,75 @@ public partial class CreateForm : ContentPage
         Grid.SetColumnSpan(mainContent, 2); // hace que el contenido principal ocupe ambas columnas
         innerGrid.Add(mainContent, row: 1, column: 0);
 
-        //envuelve el grid en un frame
+        //envuelve el grid en un border
         var borderElement = CreateBorderElement(innerGrid);
-        borderElement.ZIndex = 0; //el frame va detras
+        //borderElement.ZIndex = 0; //el frame va detras
 
         //define la accion del boton eliminar
-        deleteButton.Clicked += OnDeleteButtonClicked;
+        //deleteButton.Clicked += OnDeleteButtonClicked;
+
+        // Añade el gesto de toque al contenido
+        var tapGesture = new TapGestureRecognizer();
+        tapGesture.Tapped += OnElementTapped;
+        borderElement.GestureRecognizers.Add(tapGesture);
+
+        var editItem = new SwipeItem // boton de editar
+        {
+            Text = "Editar",
+            BackgroundColor = Colors.LightGray,
+            IconImageSource = "edit_icon.png"
+        };
+
+        var deleteItem = new SwipeItem // boton de eliminar
+        {
+            Text = "Eliminar",
+            BackgroundColor = Colors.Red,
+            IconImageSource = "delete_icon.png"
+        };
+
+        deleteItem.Invoked += OnDeleteElementInvoked;
+
+        var swipeView = new SwipeView
+        {
+            RightItems = new SwipeItems { editItem, deleteItem },
+            Content = borderElement
+        };
 
         //crea un contenedor absoluto para el frame y el boton eliminar
-        var containerGrid = new Grid();
+        //var containerGrid = new Grid();
 
-        containerGrid.Children.Add(borderElement);
+        //containerGrid.Children.Add(borderElement);
 
-        containerGrid.Children.Add(deleteButton); // agrega el boton al contenedor
+        //containerGrid.Children.Add(deleteButton); // agrega el boton al contenedor
 
         // agrega el frame al canvas en una nueva fila
-        AddElementToNewRow(containerGrid);
+        AddElementToNewRow(swipeView);
     }
 
-    private void OnDeleteButtonClicked(object sender, EventArgs e)
-    {
-        var deleteButton = sender as ImageButton;
+    //private void OnDeleteButtonClicked(object sender, EventArgs e)
+    //{
+    //    var deleteButton = sender as ImageButton;
 
-        if (deleteButton?.Parent is Grid containerGrid)
+    //    if (deleteButton?.Parent is Grid containerGrid)
+    //    {
+    //        //remueve el contenedor del grid principal
+    //        CanvasGrid.Children.Remove(containerGrid);
+    //    }
+    //}
+
+    private void OnDeleteElementInvoked(object sender, SwipeItemInvokedEventArgs e)
+    {
+        var swipeView = e.SwipeView;
+        if (swipeView != null)
         {
-            //remueve el contenedor del grid principal
-            CanvasGrid.Children.Remove(containerGrid);
+            CanvasGrid.Children.Remove(swipeView);
         }
     }
 
+    private async void OnEditElementInvoked(object sender, SwipeItemInvokeEventArgs e)
+    {
+
+    }
     private void OnAddTextClicked()
     {
         //crea un nuevo Label
