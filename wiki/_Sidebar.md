@@ -27,3 +27,4 @@
 - [v1.5 - Toolbar y Eliminacion](v1-5-Toolbar-y-Eliminacion)
 - [v1.6 - Iconos y Mejoras](v1-6-Iconos-y-Mejoras)
 - [v1.7 - Mejoras CreateForm](v1-7-Mejoras-CreateForm)
+- [v1.8 - Ajustes CreateForm](v1-8-Ajustes-CreateForm)

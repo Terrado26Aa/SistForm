@@ -33,3 +33,7 @@ Agregados iconos: checklist_icon, delete_icon2, image_icon, plus_icon, question_
 ## [v1.7] - Mejoras CreateForm
 
 Mejoras en la logica de CreateForm.
+
+## [v1.8] - Ajustes CreateForm
+
+Ajustes adicionales en CreateForm.xaml.cs.
