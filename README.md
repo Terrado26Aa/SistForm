@@ -51,6 +51,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v1.5](wiki/v1-5-Toolbar-y-Eliminacion) | Toolbar y Eliminacion | Agregado ToolbarItem. Agregado delete_icon.png. Eliminados PropertiesPanelView y PropertiesToolBarPopup (reemplazados por toolbar). |
 | [v1.6](wiki/v1-6-Iconos-y-Mejoras) | Iconos y Mejoras | Agregados iconos: checklist_icon, delete_icon2, image_icon, plus_icon, question_icon, text_icon. Modificaciones en CreateForm y ToolbarItem. |
 | [v1.7](wiki/v1-7-Mejoras-CreateForm) | Mejoras CreateForm | Mejoras en la logica de CreateForm. |
+| [v1.8](wiki/v1-8-Ajustes-CreateForm) | Ajustes CreateForm | Ajustes adicionales en CreateForm.xaml.cs. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
