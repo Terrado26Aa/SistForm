@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Forms.Views.Signin"
+             Title="Signin">
+    <ScrollView>
+        <Grid BackgroundColor="Red" RowDefinitions="auto, *">
+            <Image Source="fondo2.jpg" Grid.RowSpan="2" Aspect="AspectFill"/>
+            <Image Source="forms.png" HeightRequest="100" WidthRequest="100"
+                   VerticalOptions="Start"/>
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 40, 40, 0,0" 
+                    Grid.Row="1">
+                <VerticalStackLayout>
+                    <StackLayout Padding="20,20,20,0">
+                        <Label Text="Nombre de Usuario"/>
+                        <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
+                               HorizontalOptions="FillAndExpand" Padding="0">
+                            <Entry x:Name="UsernameEntry" BackgroundColor="Transparent"/>
+                        </Frame>
+                    </StackLayout>
+                    <StackLayout Padding="20,20,20,0">
+                        <Label Text="Nombre"/>
+                        <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
+                               HorizontalOptions="FillAndExpand" Padding="0">
+                            <Entry x:Name="FirstnameEntry" BackgroundColor="Transparent"/>
+                        </Frame>
+                    </StackLayout>
+                    <StackLayout Padding="20,20,20,0">
+                        <Label Text="Apellido"/>
+                        <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
+                               HorizontalOptions="FillAndExpand" Padding="0">
+                            <Entry x:Name="LastnameEntry" BackgroundColor="Transparent"/>
+                        </Frame>
+                    </StackLayout>
+                    <StackLayout Padding="20,20,20,0">
+                        <Label Text="Correo"/>
+                        <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
+                               HorizontalOptions="FillAndExpand" Padding="0">
+                            <Entry x:Name="EmailEntry" BackgroundColor="Transparent"/>
+                        </Frame>
+                    </StackLayout>
+                    <StackLayout Padding="20,20,20,0">
+                        <Label Text="Contraseña"/>
+                        <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
+                               HorizontalOptions="FillAndExpand" Padding="0">
+                            <Entry x:Name="PasswordEntry" BackgroundColor="Transparent"/>
+                        </Frame>
+                    </StackLayout>
+                    <StackLayout Padding="20,20,20,0">
+                        <Label Text="Confirmar Contraseña"/>
+                        <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
+                               HorizontalOptions="FillAndExpand" Padding="0">
+                            <Entry x:Name="ConfirmPasswordEntry" BackgroundColor="Transparent"/>
+                        </Frame>
+                    </StackLayout>
+                    <Button Text="Registrarse" BackgroundColor="Aqua" TextColor="White" FontAttributes="Bold" 
+                            CornerRadius="10" WidthRequest="200" Margin="0,15,0,0"
+                            HorizontalOptions="Center" Clicked="OnLoginClicked"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </ScrollView>
+</ContentPage>

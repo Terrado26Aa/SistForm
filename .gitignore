@@ -1,0 +1,27 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+## Visual Studio
+.vs/
+## macOS
+.DS_Store
+.DS_Store?
+._*
+## Build results
+[Dd]ebug/
+[Rr]elease/
+[Ll]og/
+[Ll]ogs/
+## NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+## Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
