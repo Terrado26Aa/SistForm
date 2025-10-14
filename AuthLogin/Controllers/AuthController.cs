@@ -45,5 +45,56 @@ namespace AuthLogin.Controllers
 
             return Ok(new { Message = $"Bienvenido {user.UserName}!", UserId = user.Id });
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequest)
+        {
+            //validación del modelo automatica (gracias a [ApiController]).
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            //verificar si el usuario o email ya existe en la base de datos.
+            if (await _context.Users.AnyAsync(u => u.UserName == registerRequest.Username))
+            {
+                return BadRequest("El nombre de usuario ya esta en uso.");
+            }
+
+            if (await _context.Users.AnyAsync(u => u.Email == registerRequest.Email))
+            {
+                return BadRequest("El correo electronico ya esta registrado");
+            }
+
+            //Crear la nueva entidad de Usuario.
+            var newUser = new User
+            {
+                UserName = registerRequest.Username,
+                FirstName = registerRequest.Firstname,
+                LastName = registerRequest.Lastname,
+                Email = registerRequest.Email,
+                //Hashear la contraseña antes de guardar
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password)
+            };
+
+            //Guardar el nuevo usuario en la base de datos.
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            //Devolver una respuesta exitosa.
+            return Ok(new { Message = "Usuario registrado exitosamente." });
+        }
+
+        [HttpGet("hash/{password}")]
+        public IActionResult HashPassword(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+            {
+                return BadRequest("Password no puede ser vacía.");
+            }
+
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+            return Ok(new { OriginalPassword = password, HashedPassword = hashedPassword });
+        }
     }
 }
