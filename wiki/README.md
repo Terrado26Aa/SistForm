@@ -5,6 +5,7 @@ Sistema de Encuestas (SistForm) es un sistema de encuestas con autenticacion de 
 ## Funcionalidades
 
 - Autenticacion de usuarios (Login, Registro)
+- Creacion de formularios y encuestas
 
 ## Tecnologias
 
@@ -42,6 +43,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | Version | Nombre | Descripcion |
 |---------|--------|-------------|
 | [v1.0](wiki/v1-0-Fundamentos) | Fundamentos | Estructura base del proyecto con autenticacion (Login, Signin, HomePage), backend ASP.NET Core con controlador de autenticacion y modelos User, LoginRequestDto, RegisterRequestDto. |
+| [v1.1](wiki/v1-1-Servicios-y-API) | Servicios y API | Agregados modelos frontend y backend para registro de usuarios. Agregado servicio ApiService. Agregadas vistas CreateForm, PropertiesPanelView, Surveys. Configuracion de plataforma Android. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
