@@ -1,4 +1,5 @@
 using Forms.Models;
+using Forms.Services;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -9,14 +10,14 @@ namespace Forms.Views;
 
 public partial class Login : ContentPage
 {
-    private readonly HttpClient _httpClient;
-    private const string ApiBaseUrl = "https://api.example.com"; // Cambia esto por la URL de tu API
+    //Cliente HTTP para hacer las peticiones
+    private readonly ApiService _apiService;
 
-    public Login()
+    public Login(ApiService apiService)
 	{
 		InitializeComponent();
-        _httpClient = new HttpClient { BaseAddress = new Uri(ApiBaseUrl) };
-        _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+        //Creamos una instancia del servicio
+        _apiService = apiService;
 
     }
 
@@ -29,59 +30,43 @@ public partial class Login : ContentPage
         // Validaciones basicas
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
-            ErrorLabel.Text = "Usuario y contraseña no pueden estar vacios.";
+            ShowError("Usuario y contraseña no pueden estar vacios.");
             return;
         }
 
-        // Simula una llamada a la API para autentificación
-        var loginData = new { Username = username, Password = password};
+        // Creamos un objeto con los datos del login
+        var loginRequest = new LoginRequestDto { UserName = username, Password = password };
 
         try
         {
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/login", loginData);
-            if (response.IsSuccessStatusCode)
+            // Hacemos la peticion de login
+            LoginResponseDto loginResponse = await _apiService.LoginAsync(loginRequest);
+
+            if (loginResponse != null)
             {
                 // Autenticación exitosa
-                var responseContent = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
-                await DisplayAlert("Éxito", $"Login Correcto. Bienvenido", "OK");
-                // Guarda el token de alguna manera segura (aqui solo se muestra un ejemplo simple)
+                await DisplayAlert("Éxito", $"Login Correcto. {loginResponse.Message}", "OK");
+                // navega hacia la pagina principal
                 await Shell.Current.GoToAsync(nameof(HomePage));
             }
-            else
-            {
-                // Error en la autenticación
-                String errorMesagge = $"Error: {response.StatusCode}";
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    errorMesagge = "Credenciales Invalidas";
-                } else
-                {
-                    // Intenta leer un mensaje de error del cuerpo
-                    try
-                    {
-                        var errrorContent = await response.Content.ReadAsStringAsync();
-                        errorMesagge = $"Error: {response.StatusCode} - {errrorContent}";
-                    } catch (Exception) { }
-                }
-                ShowError(errorMesagge);
-            }
         }
-        catch (JsonException JsonEx) 
+        catch (HttpRequestException httpEx) when (httpEx.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            // Error al Deserealizar la respuesta
-            ShowError($"Error procesando la respuesa: {JsonEx.Message}");
+            ShowError("Usuario o contraseña incorrectos. Por favor, intente denuevo.");
         }
-        catch( Exception ex)
+        catch (HttpRequestException httpEx)
         {
-            //Otro error inesperado
-            ShowError($"Ocurrio un error inesperado: {ex.Message}");
+            ShowError($"Error de conexion o del servidor: {httpEx.Message}");
         }
-        
+        catch (Exception ex)
+        {
+            ShowError($"Error inesperado: {ex.Message}");
+        }
     }
 
-    private void ShowError (string Message)
+        private void ShowError(string message)
     {
-        ErrorLabel.Text = Message;
+        ErrorLabel.Text = message;
         ErrorLabel.IsVisible = true;
     }
 
