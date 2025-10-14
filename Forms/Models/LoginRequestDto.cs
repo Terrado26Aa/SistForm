@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Forms.Models
 {
-    public class LoginResponseDto
+    public class LoginRequestDto
     {
-        public string Message { get; set; }
-        public int UserId { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
     }
 }
