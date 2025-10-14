@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Forms.Views.CreateForm"
+             Title="CreateForm"
+             BackgroundColor="#F0F2F5">
+    <Grid RowDefinitions="auto, *, auto">
+        <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Center" Padding="10" Spacing="10">
+            <Button Text="Texto"/>
+            <Button Text="Imagen"/>
+            <Button Text="Campo de Entrada"/>
+        </HorizontalStackLayout>
+
+        <ScrollView Grid.Row="1">
+            <Frame HasShadow="True" BorderColor="LightGray" CornerRadius="5" Margin="20" MinimumHeightRequest="500" BackgroundColor="White">
+                <AbsoluteLayout x:Name="CanvasLayout" BackgroundColor="Transparent">
+                    <Label Text="Arrastra y suelta elementos aquí"
+                           TextColor="Gray"
+                           AbsoluteLayout.LayoutFlags="PositionProportional"
+                           AbsoluteLayout.LayoutBounds="0.5,0.5"/>
+                </AbsoluteLayout>
+            </Frame>
+        </ScrollView>
+
+        <Button Grid.Row="2" Text="Guardar Formulario" Margin="20"/>
+    </Grid>
+</ContentPage>

@@ -55,7 +55,8 @@
                     </StackLayout>
                     <Button Text="Registrarse" BackgroundColor="Aqua" TextColor="White" FontAttributes="Bold" 
                             CornerRadius="10" WidthRequest="200" Margin="0,15,0,0"
-                            HorizontalOptions="Center" Clicked="OnLoginClicked"/>
+                            HorizontalOptions="Center" Clicked="OnRegisterButtonClicked"/>
+                    <Label x:Name="ErrorLabel" TextColor="Red" IsVisible="False" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
             </Border>
         </Grid>
