@@ -5,11 +5,46 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Forms"
     xmlns:local1="clr-namespace:Forms.Views"
-    Title="Forms">
+    Title="Forms"
+    Shell.FlyoutBehavior="Flyout">
+
+    <Shell.FlyoutHeader>
+        <VerticalStackLayout HorizontalOptions="FillAndExpand" Padding="10,30,10,30">
+            <Image Source="username.png" HeightRequest="75" WidthRequest="75"/>
+            <Button Text="Perfil" Background="Transparent" TextColor="Black"
+                    HorizontalOptions="Center" Padding="0,0,0,10"/>
+            <BoxView BackgroundColor="Black" HeightRequest="5" HorizontalOptions="Fill"
+                     CornerRadius="40" />
+        </VerticalStackLayout>
+    </Shell.FlyoutHeader>
 
     <ShellContent
         Title="Login"
-        ContentTemplate="{DataTemplate local1:Login}"
-        Route="Login" />
+        ContentTemplate="{DataTemplate local1:CreateForm}"
+        Route="Login"
+        Shell.FlyoutBehavior="Flyout"/>
+
+    <FlyoutItem Title="Hamburger" FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent 
+            Title="Página Principal"
+            ContentTemplate="{DataTemplate local1:HomePage}"
+            Route="HomePage">
+        </ShellContent>
+        <ShellContent
+            Title="Crear Formulario"
+            ContentTemplate="{DataTemplate local1:CreateForm}"
+            Route="CreateForm">
+        </ShellContent>
+        <ShellContent
+            Title="Encuestas"
+            ContentTemplate="{DataTemplate local1:Surveys}"
+            Route="Surveys">
+        </ShellContent>
+    </FlyoutItem>
+
+    <MenuItem
+        Text="Cerrar Sesión"
+        IconImageSource="cerrar.png"
+        Clicked="OnLogoutClicked"/>
 
 </Shell>
