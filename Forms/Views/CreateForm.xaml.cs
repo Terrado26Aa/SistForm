@@ -39,7 +39,10 @@ public partial class CreateForm : ContentPage
 
         _propertiesPanel.SelectedElement = _selectedElement;
 
-        //Muestra el panel de propiedades como un BottomSheet
-        await this.ShowBottomSheet(_propertiesPanel);
+        // crea una instancia del popup de la toolbar de propiedades
+        var toolbarPopup = new PropertiesToolBarPopup(_selectedElement);
+
+        // Muestra el popup
+        await this.ShowPopupAsync(toolbarPopup);
     }
 }
