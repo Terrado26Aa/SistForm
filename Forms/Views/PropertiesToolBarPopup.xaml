@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Forms.Views.PropertiesToolBarPopup"
+             CanBeDismissedByTappingOutsideOfPopup="True"
+             Color="Transparent">
+    <toolkit:Popup.Content>
+        <Frame CornerRadius="8" Padding="0" BackgroundColor="#333333" BorderColor="#555555">
+            <VerticalStackLayout Padding="5" Spacing="0">
+                <HorizontalStackLayout Spacing="15" Padding="10">
+                    <HorizontalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBoldTapped"/>
+                    </HorizontalStackLayout.GestureRecognizers>
+                    <Image Source="bold_icon.png" HeightRequest="20" WidthRequest="20"/>
+                    <Label Text="Negrita" TextColor="White" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="15" Padding="10">
+                    <HorizontalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnItalicTapped"/>
+                    </HorizontalStackLayout.GestureRecognizers>
+                    <Image Source="italic_icon.png" HeightRequest="20" WidthRequest="20"/>
+                    <Label Text="Cursiva" TextColor="White" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="15" Padding="10">
+                    <HorizontalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnUnderlineTapped"/>
+                    </HorizontalStackLayout.GestureRecognizers>
+                    <Image Source="underline_icon.png" HeightRequest="20" WidthRequest="20"/>
+                    <Label Text="Subrayado" TextColor="White" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                
+            </VerticalStackLayout>
+        </Frame>
+    </toolkit:Popup.Content>
+</toolkit:Popup>
