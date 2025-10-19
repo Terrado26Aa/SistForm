@@ -21,3 +21,4 @@
 
 - [v1.0 - Fundamentos](v1-0-Fundamentos)
 - [v1.1 - Servicios y API](v1-1-Servicios-y-API)
+- [v1.2 - Toolbar Popup](v1-2-Toolbar-Popup)

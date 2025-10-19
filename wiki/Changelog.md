@@ -9,3 +9,7 @@ Estructura base del proyecto con autenticacion (Login, Signin, HomePage), backen
 ## [v1.1] - Servicios y API
 
 Agregados modelos frontend y backend para registro de usuarios. Agregado servicio ApiService. Agregadas vistas CreateForm, PropertiesPanelView, Surveys. Configuracion de plataforma Android.
+
+## [v1.2] - Toolbar Popup
+
+Agregado PropertiesToolBarPopup. Modificaciones en CreateForm.xaml y appsettings.json.
