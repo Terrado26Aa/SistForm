@@ -13,3 +13,7 @@ Agregados modelos frontend y backend para registro de usuarios. Agregado servici
 ## [v1.2] - Toolbar Popup
 
 Agregado PropertiesToolBarPopup. Modificaciones en CreateForm.xaml y appsettings.json.
+
+## [v1.3] - Configuracion Maui
+
+Modificacion en MauiProgram.cs (configuracion de la aplicacion).
