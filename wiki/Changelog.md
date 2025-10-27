@@ -17,3 +17,7 @@ Agregado PropertiesToolBarPopup. Modificaciones en CreateForm.xaml y appsettings
 ## [v1.3] - Configuracion Maui
 
 Modificacion en MauiProgram.cs (configuracion de la aplicacion).
+
+## [v1.4] - Ajustes Proyecto
+
+Ajustes en configuracion del proyecto Forms.csproj.

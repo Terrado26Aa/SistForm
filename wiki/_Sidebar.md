@@ -23,3 +23,4 @@
 - [v1.1 - Servicios y API](v1-1-Servicios-y-API)
 - [v1.2 - Toolbar Popup](v1-2-Toolbar-Popup)
 - [v1.3 - Configuracion Maui](v1-3-Configuracion-Maui)
+- [v1.4 - Ajustes Proyecto](v1-4-Ajustes-Proyecto)
