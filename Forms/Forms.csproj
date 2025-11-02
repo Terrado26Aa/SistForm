@@ -78,9 +78,6 @@
 	  <MauiXaml Update="Views\Login.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\PropertiesToolBarPopup.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Views\Signin.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
