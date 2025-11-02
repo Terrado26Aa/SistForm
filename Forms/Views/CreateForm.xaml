@@ -8,17 +8,15 @@
         <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Center" Padding="10" Spacing="10">
             <Button Text="Texto" Clicked="OnAddTextClicked"/>
             <Button Text="Imagen" Clicked="OnAddImageClicked"/>
-            <Button Text="Campo de Entrada" Clicked="OnAddEntryClicked"/>
+            <Button Text="CheckList" Clicked="OnAddChecklistClicked"/>
+            <Button Text="Selección Multiple" Clicked="OnAddMultipleChoiceClicked"/>
         </HorizontalStackLayout>
 
         <ScrollView Grid.Row="1">
             <Frame HasShadow="True" BorderColor="LightGray" CornerRadius="5" Margin="20" MinimumHeightRequest="500" BackgroundColor="White">
-                <AbsoluteLayout x:Name="CanvasLayout" BackgroundColor="Transparent">
-                    <Label Text="Arrastra y suelta elementos aquí"
-                           TextColor="Gray"
-                           AbsoluteLayout.LayoutFlags="PositionProportional"
-                           AbsoluteLayout.LayoutBounds="0.5,0.5"/>
-                </AbsoluteLayout>
+                <Grid x:Name="CanvasGrid" RowSpacing="10" Padding="15">
+                    
+                </Grid>
             </Frame>
         </ScrollView>
 
