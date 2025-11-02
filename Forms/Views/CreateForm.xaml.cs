@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Layouts;
+
 namespace Forms.Views;
 
 public partial class CreateForm : ContentPage
@@ -7,87 +8,83 @@ public partial class CreateForm : ContentPage
     //variable para guardar el elemento seleccionado
     private View _selectedElement;
     //variable para guardar las dimensiones iniciales del elemento
-    private Rect _startBounds;
+    private int _nextRow = 0;
 
     public CreateForm()
 	{
 		InitializeComponent();
     }
 
-    private void OnElementPanUpdated(object sender, PanUpdatedEventArgs e)
-    {
-        var element = (View)sender;
-
-        switch (e.StatusType)
-        {
-            case GestureStatus.Started:
-                // Guarda las dimensiones iniciales del elemento cuando comienza el gesto
-                _startBounds = AbsoluteLayout.GetLayoutBounds(element);
-                break;
-
-            case GestureStatus.Running:
-                // Actualiza la posición del elemento mientras se arrastra
-                var newX = _startBounds.X + e.TotalX;
-                var newY = _startBounds.Y + e.TotalY;
-
-                // Asegura que el elemento no se mueva fuera del lienzo
-                newX = Math.Max(0, newX);
-                newY = Math.Max(0, newY);
-
-                AbsoluteLayout.SetLayoutBounds(element, new Rect(newX, newY, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
-                break;
-
-            case GestureStatus.Completed:
-            case GestureStatus.Canceled:
-                //no hacemos nada en estos casos
-                break;
-        }
-    }
-
     private async void OnElementTapped(object sender, TappedEventArgs e)
     {
-        _selectedElement = sender as View; //Guarda el elemento seleccionado
+        //Guarda el elemento seleccionado
+        _selectedElement = sender as View;
         if (_selectedElement == null) return;
-
-        //Limpia cualquier selección visual anterior
-        foreach (var child in CanvasLayout.Children.OfType<View>())
-        {
-            child.Scale = 1; //Restaura la escala
-        }
 
         //Resalta visualmente el elemento seleccionado
         _selectedElement.Scale = 1.1; // Lo hace un poco mas grande
-
-        // crea una instancia del popup de la toolbar de propiedades
-        var toolbarPopup = new PropertiesToolBarPopup(_selectedElement);
-
-        //Ancla el popup al elemento seleccionado
-        toolbarPopup.Anchor = _selectedElement;
-
-        // Muestra el popup
-        await this.ShowPopupAsync(toolbarPopup);
     }
 
-    private void AddDraggableElement(View element, string elementType)
-	{
-        //posición inicial del elemento
-        AbsoluteLayout.SetLayoutBounds(element, new Rect(50, 50, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
-        AbsoluteLayout.SetLayoutFlags(element, AbsoluteLayoutFlags.PositionProportional);
+    private void AddElementToNewRow(View element)
+    {
+        var rowDefinition = new RowDefinition { Height = GridLength.Auto };
+        CanvasGrid.RowDefinitions.Add(rowDefinition);
 
-        //Gesto de toque para seleccionar el elemento y mostrar el panel
-        var panGesture = new PanGestureRecognizer();
-        panGesture.PanUpdated += OnElementPanUpdated;
-        element.GestureRecognizers.Add(panGesture);
+        Grid.SetRow(element, _nextRow);
 
-        //Gesto de toque para seleccionar el elemento y mostrar el panel
         var tapGesture = new TapGestureRecognizer();
-        //Conectamos el evento Tapped al manejador OnElementTapped
         tapGesture.Tapped += OnElementTapped;
-        //Anadimos el gesto de toque al elemento
         element.GestureRecognizers.Add(tapGesture);
 
-        //Agregamos el elemento al lienzo
-        CanvasLayout.Children.Add(element);
+        CanvasGrid.Children.Add(element);
+
+        _nextRow++;
+    }
+
+    //metodo para crear un frame que envuelve el elemento
+    private Frame CreateFrameElement(View element)
+    {
+        return new Frame
+        {
+            Content = element,
+            BorderColor = Colors.LightGray,
+            CornerRadius = 8,
+            HasShadow = true,
+            Padding = new Thickness(15, 10),
+            Margin = new Thickness(5),
+            BackgroundColor = Colors.White,
+        };
+    }
+
+    private void CreateAndAddElement (View mainContent)
+    {
+        //crea un nuevo Entry para el titulo
+        var titleInput = new Entry
+        {
+            Placeholder = "Ingrese el titulo",
+            FontSize = 16,
+            FontAttributes = FontAttributes.Bold,
+            TextColor = Colors.Black,
+        };
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+            },
+        };
+
+        // agrega el titulo y el contenido principal al grid
+        grid.Add(titleInput, 0, 0);
+        grid.Add(mainContent, 0, 1); // agrega el contenido principal en la segunda fila
+
+        //envuelve el grid en un frame
+        var FrameElement = CreateFrameElement(grid);
+
+        // agrega el frame al canvas en una nueva fila
+        AddElementToNewRow(FrameElement);
     }
 
     private void OnAddTextClicked(object sender, EventArgs e)
@@ -99,36 +96,176 @@ public partial class CreateForm : ContentPage
             Padding = 5,
             FontSize = 16,
             TextColor = Colors.Black,
-            BackgroundColor = Colors.LightYellow,
         };
 
-        //llama al metodo para agregar el elemento al lienzo
-        AddDraggableElement(newLabel, "Texto");
+        // agrega el label envuelto en un frame al grid
+        CreateAndAddElement(newLabel);
     }
 
     private void OnAddImageClicked(object sender, EventArgs e)
     {
-        //crea una nueva imagen
-        var newImage = new Image
+        //crea un Boton para insertar la imagen
+        var newButtom = new Button
         {
-            Source = "dotnet_bot", //Imagen de ejemplo
-            WidthRequest = 100,
-            HeightRequest = 100,
+            Text = "Inserte una imagen",
+            WidthRequest = 200,
+            HeightRequest = 50,
         };
-        //llama al metodo para agregar el elemento al lienzo
-        AddDraggableElement(newImage, "Imagen");
+
+        CreateAndAddElement(newButtom);
     }
 
-    private void OnAddEntryClicked(object sender, EventArgs e)
+    private void OnAddChecklistClicked(object sender, EventArgs e)
     {
-        //crea un nuevo Entry
-        var newEntry = new Entry
+        //crea un contenedor vertical para la checklist
+        var checklistStack = new VerticalStackLayout { Spacing = 5 };
+
+        //crea el botón "Agregar ítem" que ira dentro del checklist
+        var addItemButton = new Button
         {
-            Placeholder = "Ingrese texto",
-            WidthRequest = 200,
-            BackgroundColor = Colors.LightYellow,
+            Text = "Agregar ítem",
+            WidthRequest = 100,
+            HeightRequest = 40,
+            BackgroundColor = Colors.Transparent,
+            TextColor= Colors.CornflowerBlue,
+            HorizontalOptions = LayoutOptions.Start,
         };
-        //llama al metodo para agregar el elemento al lienzo
-        AddDraggableElement(newEntry, "Campo de Entrada");
+
+        //define la acción del botón "agregar ítem" usando la función lambda.
+        addItemButton.Clicked += (sender, e) => 
+        {
+            //crea un nuevo ítem para la checklist (checkbox + entry)
+            var newItemLayout = new HorizontalStackLayout { Spacing = 5 };
+            newItemLayout.Children.Add(new CheckBox());
+            newItemLayout.Children.Add(new Entry
+            {
+                Placeholder = "Nuevo ítem",
+                FontSize = 16,
+                TextColor = Colors.Black,
+                VerticalOptions = LayoutOptions.Center,
+            });
+
+            //inserta el nuevo ítem antes del botón "Agregar ítem"
+            checklistStack.Children.Insert(checklistStack.Children.Count - 1, newItemLayout);
+        };
+
+        // crea el primer ítem de la checklist
+        var firstItemLayout = new HorizontalStackLayout { Spacing = 5 };
+        firstItemLayout.Children.Add(new CheckBox());
+        firstItemLayout.Children.Add(new Entry
+        {
+            Placeholder = "Nuevo ítem",
+            FontSize = 16,
+            TextColor = Colors.Black,
+            VerticalOptions = LayoutOptions.Center,
+        });
+
+        // agrega el checklistStack (con el primer ítem y el botón) al canvas
+        checklistStack.Children.Add(firstItemLayout);
+        checklistStack.Children.Add(addItemButton);
+
+        CreateAndAddElement(checklistStack);
+    }
+
+    private async void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e)
+    {
+        if (!e.Value) return; // si la casilla se desmarca, no hacer nada
+
+        var changedCheckBox = sender as CheckBox;
+        if (changedCheckBox == null) return;
+
+        //buscamos el contenedor padre que tiene las opciones de multiple choice
+        var parentLayout = changedCheckBox.Parent?.Parent as VerticalStackLayout;
+        if (parentLayout == null) return;
+
+        //obtenemos el Entry que define el limite de selecciones
+        var limitEntry = parentLayout.Children.OfType<Entry>().FirstOrDefault();
+        if (limitEntry == null) return;
+
+        //obtenemos el limite de selecciones permitido
+        int limit = int.TryParse(limitEntry.Text, out int parsedLimit) ? parsedLimit : int.MaxValue;
+
+        if (limit <= 0) limit = int.MaxValue; // si el limite es 0 o negativo, no hay limite
+
+        //contamos cuantas casillas estan marcadas actualmente
+        int checkedCount = 0;
+        foreach (var item in parentLayout.Children.OfType<HorizontalStackLayout>())
+        {
+            if (item.Children.OfType<CheckBox>().FirstOrDefault()?.IsChecked == true)
+            {
+                checkedCount++;
+            }
+        }
+
+        if (checkedCount > limit)
+        {
+            Dispatcher.Dispatch(() =>
+            {
+                changedCheckBox.IsChecked = false; // desmarca la casilla que excede el limite
+            });
+
+            await DisplayAlert("Límite alcanzado", $"Solo puede seleccionar hasta {limit} opciones.", "OK");
+        }
+    }
+
+    private void OnAddMultipleChoiceClicked(object sender, EventArgs e)
+    {
+        // crea el contenedor para las opciones de multiple choice
+        var multipleChoiceLayout = new VerticalStackLayout { Spacing = 8 };
+
+        // crea los controles para agregar opciones
+        var limitLable = new Label
+        {
+            Text = "Permitir seleccionar hasta:",
+            FontSize = 14,
+            FontAttributes = FontAttributes.Italic,
+        };
+        var limitEntry = new Entry
+        {
+            Placeholder = "Número máximo de selecciones",
+            Keyboard = Keyboard.Numeric,
+            WidthRequest = 150,
+        };
+
+        // crea el botón para agregar opciones que ira dentro del multiple choice
+        var addOptionButton = new Button
+        {
+            Text = "Agregar opción",
+            WidthRequest = 120,
+            HeightRequest = 40,
+            BackgroundColor = Colors.Transparent,
+            TextColor = Colors.CornflowerBlue,
+            HorizontalOptions = LayoutOptions.Start,
+        };
+
+        addOptionButton.Clicked += (s, args) =>
+        {
+            var newOptionLayout = new HorizontalStackLayout { Spacing = 5 };
+            var newCheckbox = new CheckBox();
+
+            //asigna el manejador de evento para controlar el limite de selecciones
+            newCheckbox.CheckedChanged += OnCheckBoxCheckedChanged;
+
+            newOptionLayout.Children.Add(newCheckbox);
+            newOptionLayout.Children.Add(new Entry{ Placeholder = "Nueva opción", VerticalOptions = LayoutOptions.Center, });
+
+            // inserta la nueva opción antes del botón "Agregar opción"
+            multipleChoiceLayout.Children.Insert(multipleChoiceLayout.Children.Count - 1, newOptionLayout);
+        };
+
+        var firstOptionLayout = new HorizontalStackLayout { Spacing = 5 };
+        var firstCheckbox = new CheckBox();
+        firstCheckbox.CheckedChanged += OnCheckBoxCheckedChanged; // asigna el manejador de evento para controlar el limite de selecciones
+
+        firstOptionLayout.Children.Add(firstCheckbox);
+        firstOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opción", VerticalOptions = LayoutOptions.Center, });
+
+        //añade todos los componentes al contenedor principal en orden.
+        multipleChoiceLayout.Children.Add(limitLable);
+        multipleChoiceLayout.Children.Add(limitEntry);
+        multipleChoiceLayout.Children.Add(firstOptionLayout);
+        multipleChoiceLayout.Children.Add(addOptionButton);
+
+        CreateAndAddElement(multipleChoiceLayout);
     }
 }
