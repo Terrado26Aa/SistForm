@@ -6,9 +6,9 @@
              BackgroundColor="#F0F2F5">
     <Grid RowDefinitions="auto, *, auto">
         <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Center" Padding="10" Spacing="10">
-            <Button Text="Texto"/>
-            <Button Text="Imagen"/>
-            <Button Text="Campo de Entrada"/>
+            <Button Text="Texto" Clicked="OnAddTextClicked"/>
+            <Button Text="Imagen" Clicked="OnAddImageClicked"/>
+            <Button Text="Campo de Entrada" Clicked="OnAddEntryClicked"/>
         </HorizontalStackLayout>
 
         <ScrollView Grid.Row="1">
