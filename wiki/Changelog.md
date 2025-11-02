@@ -21,3 +21,7 @@ Modificacion en MauiProgram.cs (configuracion de la aplicacion).
 ## [v1.4] - Ajustes Proyecto
 
 Ajustes en configuracion del proyecto Forms.csproj.
+
+## [v1.5] - Toolbar y Eliminacion
+
+Agregado ToolbarItem. Agregado delete_icon.png. Eliminados PropertiesPanelView y PropertiesToolBarPopup (reemplazados por toolbar).
