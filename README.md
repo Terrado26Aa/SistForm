@@ -48,6 +48,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v1.2](wiki/v1-2-Toolbar-Popup) | Toolbar Popup | Agregado PropertiesToolBarPopup. Modificaciones en CreateForm.xaml y appsettings.json. |
 | [v1.3](wiki/v1-3-Configuracion-Maui) | Configuracion Maui | Modificacion en MauiProgram.cs (configuracion de la aplicacion). |
 | [v1.4](wiki/v1-4-Ajustes-Proyecto) | Ajustes Proyecto | Ajustes en configuracion del proyecto Forms.csproj. |
+| [v1.5](wiki/v1-5-Toolbar-y-Eliminacion) | Toolbar y Eliminacion | Agregado ToolbarItem. Agregado delete_icon.png. Eliminados PropertiesPanelView y PropertiesToolBarPopup (reemplazados por toolbar). |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
