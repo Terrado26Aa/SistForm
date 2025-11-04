@@ -1,5 +1,7 @@
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Layouts;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace Forms.Views;
 
@@ -10,9 +12,28 @@ public partial class CreateForm : ContentPage
     //variable para guardar las dimensiones iniciales del elemento
     private int _nextRow = 0;
 
+    public ObservableCollection<ToolbarItem> ToolbarItems {  get; set; }
+
     public CreateForm()
 	{
 		InitializeComponent();
+
+        //inicializa los comandos para los botones de la toolbar
+        var addTextCommand = new Command(OnAddTextClicked);
+        var addImageCommand = new Command(OnAddImageClicked);
+        var addChecklistCommand = new Command(OnAddChecklistClicked);
+        var addMultipleChoiceCommand = new Command(OnAddMultipleChoiceClicked);
+
+        //creamos la lista de datos para el CarouselView de la toolbar
+        ToolbarItems = new ObservableCollection<ToolbarItem> 
+        {
+            new ToolbarItem{ Text = "Texto", Command = addTextCommand},
+            new ToolbarItem{ Text = "Imagen", Command = addImageCommand },
+            new ToolbarItem{ Text = "Checklist", Command = addChecklistCommand },
+            new ToolbarItem{ Text = "Multiple", Command = addMultipleChoiceCommand },
+        };
+
+        this.BindingContext = this;
     }
 
     private async void OnElementTapped(object sender, TappedEventArgs e)
@@ -21,8 +42,29 @@ public partial class CreateForm : ContentPage
         _selectedElement = sender as View;
         if (_selectedElement == null) return;
 
-        //Resalta visualmente el elemento seleccionado
-        _selectedElement.Scale = 1.1; // Lo hace un poco mas grande
+        foreach (var child in CanvasGrid.Children)
+        {
+            if (child is Grid container)
+            {
+                //obtiene el frame que envuelve el elemento
+                var frame = container.Children.FirstOrDefault() as Frame;
+                if (frame != null)
+                {
+                    frame.Scale = 1.0; // Restablece el tamaño original
+                    frame.BorderColor = Colors.LightGray; // Restablece el color del borde
+                }
+            }
+        }
+
+        if(_selectedElement is Grid selectedContainer)
+        {
+            var frameToScale = selectedContainer.Children.FirstOrDefault() as Frame;
+            if (frameToScale != null)
+            {
+                frameToScale.Scale = 1.5; // Aumenta el tamaño del frame
+                frameToScale.BorderColor = Colors.Blue; // Cambia el color del borde para resaltar
+            }
+        }
     }
 
     private void AddElementToNewRow(View element)
@@ -67,8 +109,25 @@ public partial class CreateForm : ContentPage
             TextColor = Colors.Black,
         };
 
-        var grid = new Grid
+        var deleteButton = new ImageButton
         {
+            Source = "delete_icon.png",
+            WidthRequest = 24,
+            HeightRequest = 24,
+            BackgroundColor = Colors.Transparent,
+            VerticalOptions = LayoutOptions.Start,
+            HorizontalOptions = LayoutOptions.End,
+            Margin = new Thickness(0, -10, -10, 0),
+            ZIndex = 1,
+        };
+
+        var innerGrid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Star },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
             RowDefinitions =
             {
                 new RowDefinition { Height = GridLength.Auto },
@@ -77,17 +136,39 @@ public partial class CreateForm : ContentPage
         };
 
         // agrega el titulo y el contenido principal al grid
-        grid.Add(titleInput, 0, 0);
-        grid.Add(mainContent, 0, 1); // agrega el contenido principal en la segunda fila
+        innerGrid.Add(titleInput, 0, 0);
+        innerGrid.Add(mainContent, 0, 1); // agrega el contenido principal en la segunda fila
+
+        Grid.SetColumnSpan(mainContent, 2); // hace que el contenido principal ocupe ambas columnas
+        innerGrid.Add(mainContent, row: 1, column: 0);
 
         //envuelve el grid en un frame
-        var FrameElement = CreateFrameElement(grid);
+        var FrameElement = CreateFrameElement(innerGrid);
+
+        //define la accion del boton eliminar
+        deleteButton.Clicked += OndeleteButtonClicked;
+
+        // crea un grid contenedor para el frame y el boton eliminar
+        var containerGrid = new Grid();
+        containerGrid.Add(FrameElement);
+        containerGrid.Add(deleteButton);
 
         // agrega el frame al canvas en una nueva fila
-        AddElementToNewRow(FrameElement);
+        AddElementToNewRow(containerGrid);
     }
 
-    private void OnAddTextClicked(object sender, EventArgs e)
+    private void OndeleteButtonClicked(object sender, EventArgs e)
+    {
+        var deleteButton = sender as ImageButton;
+
+        if (deleteButton?.Parent is Grid containerGrid)
+        {
+            //remueve el contenedor del grid principal
+            CanvasGrid.Children.Remove(containerGrid);
+        }
+    }
+
+    private void OnAddTextClicked()
     {
         //crea un nuevo Label
         var newLabel = new Label
@@ -102,7 +183,7 @@ public partial class CreateForm : ContentPage
         CreateAndAddElement(newLabel);
     }
 
-    private void OnAddImageClicked(object sender, EventArgs e)
+    private void OnAddImageClicked()
     {
         //crea un Boton para insertar la imagen
         var newButtom = new Button
@@ -115,7 +196,7 @@ public partial class CreateForm : ContentPage
         CreateAndAddElement(newButtom);
     }
 
-    private void OnAddChecklistClicked(object sender, EventArgs e)
+    private void OnAddChecklistClicked()
     {
         //crea un contenedor vertical para la checklist
         var checklistStack = new VerticalStackLayout { Spacing = 5 };
@@ -208,7 +289,7 @@ public partial class CreateForm : ContentPage
         }
     }
 
-    private void OnAddMultipleChoiceClicked(object sender, EventArgs e)
+    private void OnAddMultipleChoiceClicked()
     {
         // crea el contenedor para las opciones de multiple choice
         var multipleChoiceLayout = new VerticalStackLayout { Spacing = 8 };
@@ -224,7 +305,7 @@ public partial class CreateForm : ContentPage
         {
             Placeholder = "Número máximo de selecciones",
             Keyboard = Keyboard.Numeric,
-            WidthRequest = 150,
+            WidthRequest = 50,
         };
 
         // crea el botón para agregar opciones que ira dentro del multiple choice
