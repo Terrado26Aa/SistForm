@@ -1,4 +1,5 @@
 using CommunityToolkit.Maui.Views;
+using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Layouts;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -47,22 +48,22 @@ public partial class CreateForm : ContentPage
             if (child is Grid container)
             {
                 //obtiene el frame que envuelve el elemento
-                var frame = container.Children.FirstOrDefault() as Frame;
-                if (frame != null)
+                var border = container.Children.FirstOrDefault() as Border;
+                if (border != null)
                 {
-                    frame.Scale = 1.0; // Restablece el tamaño original
-                    frame.BorderColor = Colors.LightGray; // Restablece el color del borde
+                    border.Scale = 1.0; // Restablece el tamaño original
+                    border.Stroke = Colors.LightGray; // Restablece el color del borde
                 }
             }
         }
 
         if (_selectedElement is Grid selectedContainer)
         {
-            var frameToScale = selectedContainer.Children.FirstOrDefault() as Frame;
-            if (frameToScale != null)
+            var borderToScale = selectedContainer.Children.FirstOrDefault() as Border;
+            if (borderToScale != null)
             {
-                frameToScale.Scale = 1.5; // Aumenta el tamaño del frame
-                frameToScale.BorderColor = Colors.Blue; // Cambia el color del borde para resaltar
+                borderToScale.Scale = 1.5; // Aumenta el tamaño del frame
+                borderToScale.Stroke = Colors.Blue; // Cambia el color del borde para resaltar
             }
         }
     }
@@ -84,18 +85,28 @@ public partial class CreateForm : ContentPage
     }
 
     //metodo para crear un frame que envuelve el elemento
-    private Frame CreateFrameElement(View element)
+    private Border CreateBorderElement(View element)
     {
-        return new Frame
+        return new Border
         {
             Content = element,
-            BorderColor = Colors.LightGray,
-            CornerRadius = 8,
-            HasShadow = true,
-            Padding = new Thickness(15, 10),
+            Stroke = Colors.LightGray,
+            StrokeThickness = 1,
+            Background = Colors.White,
             Margin = new Thickness(5),
-            BackgroundColor = Colors.White,
-        };
+            Padding = new Thickness(15, 10),
+            StrokeShape = new RoundRectangle
+            {
+                CornerRadius = new CornerRadius(8),
+            },
+            Shadow = new Shadow
+            {
+                Brush = Colors.Black,
+                Opacity = 0.3f,
+                Radius = 5,
+                Offset = new Point(2,2),
+            },
+        }; 
     }
 
     private void CreateAndAddElement (View mainContent)
@@ -113,13 +124,13 @@ public partial class CreateForm : ContentPage
         var deleteButton = new ImageButton
         {
             Source = "delete_icon2.png",
-            WidthRequest = 28,
-            HeightRequest = 28,
+            WidthRequest = 24,
+            HeightRequest = 24,
             BackgroundColor = Colors.Transparent,
             VerticalOptions = LayoutOptions.Start,
             HorizontalOptions = LayoutOptions.End,
-            TranslationX = 10,
-            TranslationY = -15,
+            Margin = new Thickness(0, -8, -8,0),
+            ZIndex = 1,
         };
 
         //crea un grid interno para organizar el titulo y el contenido principal
@@ -137,25 +148,24 @@ public partial class CreateForm : ContentPage
             },
         };
 
-        //envuelve el grid en un frame
-        var frameElement = CreateFrameElement(innerGrid);
-
         // agrega el titulo y el contenido principal al grid
         innerGrid.Add(titleInput, 0, 0);
         Grid.SetColumnSpan(mainContent, 2); // hace que el contenido principal ocupe ambas columnas
         innerGrid.Add(mainContent, row: 1, column: 0);
 
+        //envuelve el grid en un frame
+        var borderElement = CreateBorderElement(innerGrid);
+        borderElement.ZIndex = 0; //el frame va detras
+
         //define la accion del boton eliminar
         deleteButton.Clicked += OnDeleteButtonClicked;
 
-        // crea un grid contenedor para el frame y el boton eliminar
+        //crea un contenedor absoluto para el frame y el boton eliminar
         var containerGrid = new Grid();
 
-        frameElement.ZIndex = 0; //el frame va detras
-        deleteButton.ZIndex = 1; //el boton va delante
+        containerGrid.Children.Add(borderElement);
 
-        containerGrid.Add(frameElement);
-        containerGrid.Add(deleteButton);
+        containerGrid.Children.Add(deleteButton); // agrega el boton al contenedor
 
         // agrega el frame al canvas en una nueva fila
         AddElementToNewRow(containerGrid);
