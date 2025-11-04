@@ -5,12 +5,15 @@
              Title="CreateForm"
              BackgroundColor="#F0F2F5">
     <Grid RowDefinitions="auto, *, auto">
-        <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Center" Padding="10" Spacing="10">
-            <Button Text="Texto" Clicked="OnAddTextClicked"/>
-            <Button Text="Imagen" Clicked="OnAddImageClicked"/>
-            <Button Text="CheckList" Clicked="OnAddChecklistClicked"/>
-            <Button Text="Selección Multiple" Clicked="OnAddMultipleChoiceClicked"/>
-        </HorizontalStackLayout>
+        <CarouselView Grid.Row="0" ItemsSource="{Binding ToolbarItems}" PeekAreaInsets="50" HeightRequest="60">
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="0" Margin="5" HasShadow="False" BorderColor="#2B0B98" BackgroundColor="#512BD4">
+                        <Button Text="{Binding Text}" Command="{Binding Command}" BackgroundColor="Transparent" TextColor="White" Margin="0"/>
+                    </Frame>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
 
         <ScrollView Grid.Row="1">
             <Frame HasShadow="True" BorderColor="LightGray" CornerRadius="5" Margin="20" MinimumHeightRequest="500" BackgroundColor="White">
