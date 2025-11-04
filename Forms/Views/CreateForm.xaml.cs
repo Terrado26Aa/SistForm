@@ -27,10 +27,10 @@ public partial class CreateForm : ContentPage
         //creamos la lista de datos para el CarouselView de la toolbar
         ToolbarItems = new ObservableCollection<ToolbarItem> 
         {
-            new ToolbarItem{ Text = "Texto", Command = addTextCommand},
-            new ToolbarItem{ Text = "Imagen", Command = addImageCommand },
-            new ToolbarItem{ Text = "Checklist", Command = addChecklistCommand },
-            new ToolbarItem{ Text = "Multiple", Command = addMultipleChoiceCommand },
+            new ToolbarItem{ Text = "Texto", IconImageSource = "text_icon.png", Command = addTextCommand},
+            new ToolbarItem{ Text = "Imagen", IconImageSource = "image_icon.png", Command = addImageCommand },
+            new ToolbarItem{ Text = "Checklist",IconImageSource = "checklist_icon.png", Command = addChecklistCommand },
+            new ToolbarItem{ Text = "Multiple", IconImageSource = "multiple_icon.png", Command = addMultipleChoiceCommand },
         };
 
         this.BindingContext = this;
@@ -56,7 +56,7 @@ public partial class CreateForm : ContentPage
             }
         }
 
-        if(_selectedElement is Grid selectedContainer)
+        if (_selectedElement is Grid selectedContainer)
         {
             var frameToScale = selectedContainer.Children.FirstOrDefault() as Frame;
             if (frameToScale != null)
@@ -67,18 +67,18 @@ public partial class CreateForm : ContentPage
         }
     }
 
-    private void AddElementToNewRow(View element)
+    private void AddElementToNewRow(View newElement)
     {
         var rowDefinition = new RowDefinition { Height = GridLength.Auto };
         CanvasGrid.RowDefinitions.Add(rowDefinition);
 
-        Grid.SetRow(element, _nextRow);
+        Grid.SetRow(newElement, _nextRow);
 
         var tapGesture = new TapGestureRecognizer();
         tapGesture.Tapped += OnElementTapped;
-        element.GestureRecognizers.Add(tapGesture);
+        newElement.GestureRecognizers.Add(tapGesture);
 
-        CanvasGrid.Children.Add(element);
+        CanvasGrid.Children.Add(newElement);
 
         _nextRow++;
     }
@@ -109,18 +109,20 @@ public partial class CreateForm : ContentPage
             TextColor = Colors.Black,
         };
 
+        //crea el boton eliminar
         var deleteButton = new ImageButton
         {
-            Source = "delete_icon.png",
-            WidthRequest = 24,
-            HeightRequest = 24,
+            Source = "delete_icon2.png",
+            WidthRequest = 28,
+            HeightRequest = 28,
             BackgroundColor = Colors.Transparent,
             VerticalOptions = LayoutOptions.Start,
             HorizontalOptions = LayoutOptions.End,
-            Margin = new Thickness(0, -10, -10, 0),
-            ZIndex = 1,
+            TranslationX = 10,
+            TranslationY = -15,
         };
 
+        //crea un grid interno para organizar el titulo y el contenido principal
         var innerGrid = new Grid
         {
             ColumnDefinitions =
@@ -135,29 +137,31 @@ public partial class CreateForm : ContentPage
             },
         };
 
+        //envuelve el grid en un frame
+        var frameElement = CreateFrameElement(innerGrid);
+
         // agrega el titulo y el contenido principal al grid
         innerGrid.Add(titleInput, 0, 0);
-        innerGrid.Add(mainContent, 0, 1); // agrega el contenido principal en la segunda fila
-
         Grid.SetColumnSpan(mainContent, 2); // hace que el contenido principal ocupe ambas columnas
         innerGrid.Add(mainContent, row: 1, column: 0);
 
-        //envuelve el grid en un frame
-        var FrameElement = CreateFrameElement(innerGrid);
-
         //define la accion del boton eliminar
-        deleteButton.Clicked += OndeleteButtonClicked;
+        deleteButton.Clicked += OnDeleteButtonClicked;
 
         // crea un grid contenedor para el frame y el boton eliminar
         var containerGrid = new Grid();
-        containerGrid.Add(FrameElement);
+
+        frameElement.ZIndex = 0; //el frame va detras
+        deleteButton.ZIndex = 1; //el boton va delante
+
+        containerGrid.Add(frameElement);
         containerGrid.Add(deleteButton);
 
         // agrega el frame al canvas en una nueva fila
         AddElementToNewRow(containerGrid);
     }
 
-    private void OndeleteButtonClicked(object sender, EventArgs e)
+    private void OnDeleteButtonClicked(object sender, EventArgs e)
     {
         var deleteButton = sender as ImageButton;
 
