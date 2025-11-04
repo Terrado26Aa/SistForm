@@ -25,3 +25,7 @@ Ajustes en configuracion del proyecto Forms.csproj.
 ## [v1.5] - Toolbar y Eliminacion
 
 Agregado ToolbarItem. Agregado delete_icon.png. Eliminados PropertiesPanelView y PropertiesToolBarPopup (reemplazados por toolbar).
+
+## [v1.6] - Iconos y Mejoras
+
+Agregados iconos: checklist_icon, delete_icon2, image_icon, plus_icon, question_icon, text_icon. Modificaciones en CreateForm y ToolbarItem.

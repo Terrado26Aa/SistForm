@@ -25,3 +25,4 @@
 - [v1.3 - Configuracion Maui](v1-3-Configuracion-Maui)
 - [v1.4 - Ajustes Proyecto](v1-4-Ajustes-Proyecto)
 - [v1.5 - Toolbar y Eliminacion](v1-5-Toolbar-y-Eliminacion)
+- [v1.6 - Iconos y Mejoras](v1-6-Iconos-y-Mejoras)
