@@ -11,5 +11,6 @@ namespace Forms.Models
     {
         public string Text { get; set; }
         public ICommand command { get; set; }
+        public string IconImageSource { get; set; }
     }
 }
