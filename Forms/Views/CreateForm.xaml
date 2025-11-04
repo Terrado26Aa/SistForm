@@ -9,7 +9,14 @@
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <Frame Padding="0" Margin="5" HasShadow="False" BorderColor="#2B0B98" BackgroundColor="#512BD4">
-                        <Button Text="{Binding Text}" Command="{Binding Command}" BackgroundColor="Transparent" TextColor="White" Margin="0"/>
+                        <HorizontalStackLayout Padding="5" Spacing="8" HorizontalOptions="Center">
+                            <Image Source="{Binding IconImageSource}" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center"/>
+                            <Label Text="{Binding Text}" FontSize="20" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
+
+                            <HorizontalStackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Command}" />
+                            </HorizontalStackLayout.GestureRecognizers>
+                        </HorizontalStackLayout>
                     </Frame>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
