@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Forms.Views.Login"
              Title="Login">
-    
+
     <Grid BackgroundColor="White" RowDefinitions="150, *">
-        
+
         <StackLayout Grid.Row="0">
             <Grid Padding="0">
                 <Image Source="fondo2.jpg" Aspect="AspectFill"/>
