@@ -25,22 +25,22 @@ namespace Forms.Services
         private static string DetermineBaseUrl()
         {
 #if DEBUG
-            if(DeviceInfo.Platform == DevicePlatform.Android)
+            if (DeviceInfo.Platform == DevicePlatform.Android)
             {
-                return "http://10.0.2.2:5096";
+                return "http://10.0.2.2:5174";
             }
 
-            else if(DeviceInfo.Platform == DevicePlatform.iOS)
+            else if (DeviceInfo.Platform == DevicePlatform.iOS)
             {
-                return "http://TU_IP_DE_MAC_O_PC:5096";
+                return "http://TU_IP_DE_MAC_O_PC:5174";
             }
 
             else if (DeviceInfo.Platform == DevicePlatform.WinUI)
             {
-                return "http://localhost:5096";
+                return "http://localhost:5174";
             }
 
-            return "http://localhost:5096";
+            return "http://localhost:5174";
 
 #endif
         }
