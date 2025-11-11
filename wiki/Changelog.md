@@ -37,3 +37,7 @@ Mejoras en la logica de CreateForm.
 ## [v1.8] - Ajustes CreateForm
 
 Ajustes adicionales en CreateForm.xaml.cs.
+
+## [v1.9] - MainPage y Refactor
+
+Agregados MainPage.xaml y MainPage.xaml.cs. Modificaciones en CreateForm, HomePage, Login. Actualizaciones en DbContext, controladores y ApiService.
