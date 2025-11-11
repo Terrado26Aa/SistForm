@@ -13,12 +13,12 @@ public partial class CreateForm : ContentPage
     private View _selectedElement;
     //variable para guardar las dimensiones iniciales del elemento
     private int _nextRow = 0;
-
-    public ObservableCollection<ToolbarItem> ToolbarItems {  get; set; }
+    
+    public ObservableCollection<ToolbarItem> ToolbarItems { get; set; }
 
     public CreateForm()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
 
         //inicializa los comandos para los botones de la toolbar
         var addTextCommand = new Command(OnAddTextClicked);
@@ -27,7 +27,7 @@ public partial class CreateForm : ContentPage
         var addMultipleChoiceCommand = new Command(OnAddMultipleChoiceClicked);
 
         //creamos la lista de datos para el CarouselView de la toolbar
-        ToolbarItems = new ObservableCollection<ToolbarItem> 
+        ToolbarItems = new ObservableCollection<ToolbarItem>
         {
             new ToolbarItem{ Text = "Texto", IconImageSource = "text_icon.png", Command = addTextCommand},
             new ToolbarItem{ Text = "Imagen", IconImageSource = "image_icon.png", Command = addImageCommand },
@@ -38,43 +38,12 @@ public partial class CreateForm : ContentPage
         this.BindingContext = this;
     }
 
-    private async void OnElementTapped(object sender, TappedEventArgs e)
-    {
-        //Guarda el elemento seleccionado
-        _selectedElement = sender as View;
-        if (_selectedElement == null) return;
-
-        foreach (var child in CanvasGrid.Children)
-        {
-            if (child is SwipeView swipe)
-            {
-                //obtiene el frame que envuelve el elemento
-                var border = swipe.Content as Border;
-                if (border != null)
-                {
-                    border.Scale = 1.0; // Restablece el tamaño original
-                    border.Stroke = Colors.LightGray; // Restablece el color del borde
-                }
-            }
-        }
-
-        if (_selectedElement is Border selectedBorder)
-        {
-            selectedBorder.Scale = 1.05; // Aumenta el tamaño del elemento seleccionado
-            selectedBorder.Stroke = Colors.Blue;
-        }
-    }
-
     private void AddElementToNewRow(View newElement)
     {
         var rowDefinition = new RowDefinition { Height = GridLength.Auto };
         CanvasGrid.RowDefinitions.Add(rowDefinition);
 
         Grid.SetRow(newElement, _nextRow);
-
-        //var tapGesture = new TapGestureRecognizer();
-        //tapGesture.Tapped += OnElementTapped;
-        //newElement.GestureRecognizers.Add(tapGesture);
 
         CanvasGrid.Children.Add(newElement);
 
@@ -101,12 +70,12 @@ public partial class CreateForm : ContentPage
                 Brush = Colors.Black,
                 Opacity = 0.3f,
                 Radius = 5,
-                Offset = new Point(2,2),
+                Offset = new Point(2, 2),
             },
-        }; 
+        };
     }
 
-    private void CreateAndAddElement (View mainContent)
+    private void CreateAndAddElement(View mainContent)
     {
         //crea un nuevo Entry para el titulo
         var titleInput = new Entry
@@ -116,19 +85,6 @@ public partial class CreateForm : ContentPage
             FontAttributes = FontAttributes.Bold,
             TextColor = Colors.Black,
         };
-
-        //crea el boton eliminar
-        //var deleteButton = new ImageButton
-        //{
-        //    Source = "delete_icon2.png",
-        //    WidthRequest = 24,
-        //    HeightRequest = 24,
-        //    BackgroundColor = Colors.Transparent,
-        //    VerticalOptions = LayoutOptions.Start,
-        //    HorizontalOptions = LayoutOptions.End,
-        //    Margin = new Thickness(0, -8, -8,0),
-        //    ZIndex = 1,
-        //};
 
         //crea un grid interno para organizar el titulo y el contenido principal
         var innerGrid = new Grid
@@ -152,72 +108,64 @@ public partial class CreateForm : ContentPage
 
         //envuelve el grid en un border
         var borderElement = CreateBorderElement(innerGrid);
-        //borderElement.ZIndex = 0; //el frame va detras
 
-        //define la accion del boton eliminar
-        //deleteButton.Clicked += OnDeleteButtonClicked;
-
-        // Añade el gesto de toque al contenido
-        var tapGesture = new TapGestureRecognizer();
-        tapGesture.Tapped += OnElementTapped;
-        borderElement.GestureRecognizers.Add(tapGesture);
-
-        var editItem = new SwipeItem // boton de editar
+        var editItem = new MenuFlyoutItem //accion de editar
         {
             Text = "Editar",
-            BackgroundColor = Colors.LightGray,
             IconImageSource = "edit_icon.png"
         };
+        editItem.Command = new Command((param) =>
+        {
+            if (param is Border elementToEdit)
+            {
+                OnEditElement(elementToEdit);
+            }
+        });
+        editItem.CommandParameter = borderElement; // pasa el border como parametro para editarlo
 
-        var deleteItem = new SwipeItem // boton de eliminar
+        var deleteItem = new MenuFlyoutItem //accion de eliminar
         {
             Text = "Eliminar",
-            BackgroundColor = Colors.Red,
             IconImageSource = "delete_icon.png"
         };
-
-        deleteItem.Invoked += OnDeleteElementInvoked;
-
-        var swipeView = new SwipeView
+        deleteItem.Command = new Command((param) =>
         {
-            RightItems = new SwipeItems { editItem, deleteItem },
-            Content = borderElement
-        };
+            if(param is View elementToDelete)
+            {
+                CanvasGrid.Children.Remove(elementToDelete);
+            }
+        });
+        deleteItem.CommandParameter = borderElement; // pasa el border como parametro para eliminarlo
 
-        //crea un contenedor absoluto para el frame y el boton eliminar
-        //var containerGrid = new Grid();
-
-        //containerGrid.Children.Add(borderElement);
-
-        //containerGrid.Children.Add(deleteButton); // agrega el boton al contenedor
+        // crea el menu contextual
+        var menuFlyout = new MenuFlyout { editItem, deleteItem };
+        MenuFlyout.SetContextFlyout(borderElement, menuFlyout);
 
         // agrega el frame al canvas en una nueva fila
-        AddElementToNewRow(swipeView);
+        AddElementToNewRow(borderElement);
     }
 
-    //private void OnDeleteButtonClicked(object sender, EventArgs e)
-    //{
-    //    var deleteButton = sender as ImageButton;
-
-    //    if (deleteButton?.Parent is Grid containerGrid)
-    //    {
-    //        //remueve el contenedor del grid principal
-    //        CanvasGrid.Children.Remove(containerGrid);
-    //    }
-    //}
-
-    private void OnDeleteElementInvoked(object sender, SwipeItemInvokedEventArgs e)
+    private void DeselectElement()
     {
-        var swipeView = e.SwipeView;
-        if (swipeView != null)
+        foreach (var child in CanvasGrid.Children)
         {
-            CanvasGrid.Children.Remove(swipeView);
+            if (child is Border border)
+            {
+                border.Scale = 1.0;
+                border.Stroke = Colors.LightGray;
+            }
         }
     }
 
-    private async void OnEditElementInvoked(object sender, SwipeItemInvokeEventArgs e)
+    private async void OnEditElement(Border selectedBorder)
     {
+        _selectedElement = selectedBorder;
 
+        DeselectElement();
+        selectedBorder.Scale = 1.05;
+        selectedBorder.Stroke = Colors.Blue;
+
+        await DisplayAlert("Editar Elemento", "La funcionalidad de Editar se implementara pronto!", "OK");
     }
     private void OnAddTextClicked()
     {
@@ -252,47 +200,47 @@ public partial class CreateForm : ContentPage
         //crea un contenedor vertical para la checklist
         var checklistStack = new VerticalStackLayout { Spacing = 5 };
 
-        //crea el botón "Agregar ítem" que ira dentro del checklist
+        //crea el boton "Agregar ?tem" que ira dentro del checklist
         var addItemButton = new Button
         {
-            Text = "Agregar ítem",
+            Text = "Agregar ?tem",
             WidthRequest = 100,
             HeightRequest = 40,
             BackgroundColor = Colors.Transparent,
-            TextColor= Colors.CornflowerBlue,
+            TextColor = Colors.CornflowerBlue,
             HorizontalOptions = LayoutOptions.Start,
         };
 
-        //define la acción del botón "agregar ítem" usando la función lambda.
-        addItemButton.Clicked += (sender, e) => 
+        //define la accion del bot?n "agregar item" usando la funcion lambda.
+        addItemButton.Clicked += (sender, e) =>
         {
-            //crea un nuevo ítem para la checklist (checkbox + entry)
+            //crea un nuevo item para la checklist (checkbox + entry)
             var newItemLayout = new HorizontalStackLayout { Spacing = 5 };
             newItemLayout.Children.Add(new CheckBox());
             newItemLayout.Children.Add(new Entry
             {
-                Placeholder = "Nuevo ítem",
+                Placeholder = "Nuevo item",
                 FontSize = 16,
                 TextColor = Colors.Black,
                 VerticalOptions = LayoutOptions.Center,
             });
 
-            //inserta el nuevo ítem antes del botón "Agregar ítem"
+            //inserta el nuevo ?tem antes del boton "Agregar item"
             checklistStack.Children.Insert(checklistStack.Children.Count - 1, newItemLayout);
         };
 
-        // crea el primer ítem de la checklist
+        // crea el primer item de la checklist
         var firstItemLayout = new HorizontalStackLayout { Spacing = 5 };
         firstItemLayout.Children.Add(new CheckBox());
         firstItemLayout.Children.Add(new Entry
         {
-            Placeholder = "Nuevo ítem",
+            Placeholder = "Nuevo item",
             FontSize = 16,
             TextColor = Colors.Black,
             VerticalOptions = LayoutOptions.Center,
         });
 
-        // agrega el checklistStack (con el primer ítem y el botón) al canvas
+        // agrega el checklistStack (con el primer item y el boton) al canvas
         checklistStack.Children.Add(firstItemLayout);
         checklistStack.Children.Add(addItemButton);
 
@@ -336,7 +284,7 @@ public partial class CreateForm : ContentPage
                 changedCheckBox.IsChecked = false; // desmarca la casilla que excede el limite
             });
 
-            await DisplayAlert("Límite alcanzado", $"Solo puede seleccionar hasta {limit} opciones.", "OK");
+            await DisplayAlert("Limite alcanzado", $"Solo puede seleccionar hasta {limit} opciones.", "OK");
         }
     }
 
@@ -354,15 +302,15 @@ public partial class CreateForm : ContentPage
         };
         var limitEntry = new Entry
         {
-            Placeholder = "Número máximo de selecciones",
+            Placeholder = "Numero maximo de selecciones",
             Keyboard = Keyboard.Numeric,
             WidthRequest = 50,
         };
 
-        // crea el botón para agregar opciones que ira dentro del multiple choice
+        // crea el boton para agregar opciones que ira dentro del multiple choice
         var addOptionButton = new Button
         {
-            Text = "Agregar opción",
+            Text = "Agregar opcion",
             WidthRequest = 120,
             HeightRequest = 40,
             BackgroundColor = Colors.Transparent,
@@ -379,9 +327,9 @@ public partial class CreateForm : ContentPage
             newCheckbox.CheckedChanged += OnCheckBoxCheckedChanged;
 
             newOptionLayout.Children.Add(newCheckbox);
-            newOptionLayout.Children.Add(new Entry{ Placeholder = "Nueva opción", VerticalOptions = LayoutOptions.Center, });
+            newOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opcion", VerticalOptions = LayoutOptions.Center, });
 
-            // inserta la nueva opción antes del botón "Agregar opción"
+            // inserta la nueva opcion antes del bot?n "Agregar opcion"
             multipleChoiceLayout.Children.Insert(multipleChoiceLayout.Children.Count - 1, newOptionLayout);
         };
 
@@ -390,7 +338,7 @@ public partial class CreateForm : ContentPage
         firstCheckbox.CheckedChanged += OnCheckBoxCheckedChanged; // asigna el manejador de evento para controlar el limite de selecciones
 
         firstOptionLayout.Children.Add(firstCheckbox);
-        firstOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opción", VerticalOptions = LayoutOptions.Center, });
+        firstOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opcion", VerticalOptions = LayoutOptions.Center, });
 
         //añade todos los componentes al contenedor principal en orden.
         multipleChoiceLayout.Children.Add(limitLable);
