@@ -1,5 +1,7 @@
 ﻿using AuthLogin.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace AuthLogin.Data
 {
@@ -7,7 +9,7 @@ namespace AuthLogin.Data
     {
         //Constructor que recibe las opciones de configuración del DbContext
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options){}
+            : base(options) { }
 
         //Definición del DbSet para la entidad User
         public DbSet<User> Users { get; set; }
