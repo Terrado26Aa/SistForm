@@ -7,6 +7,7 @@ Sistema de Encuestas (SistForm) es un sistema de encuestas con autenticacion de 
 - Autenticacion de usuarios (Login, Registro)
 - Creacion de formularios y encuestas
 - Toolbar contextual para edicion de elementos
+- Refactorizacion de vistas y navegacion
 
 ## Tecnologias
 
@@ -52,6 +53,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v1.6](wiki/v1-6-Iconos-y-Mejoras) | Iconos y Mejoras | Agregados iconos: checklist_icon, delete_icon2, image_icon, plus_icon, question_icon, text_icon. Modificaciones en CreateForm y ToolbarItem. |
 | [v1.7](wiki/v1-7-Mejoras-CreateForm) | Mejoras CreateForm | Mejoras en la logica de CreateForm. |
 | [v1.8](wiki/v1-8-Ajustes-CreateForm) | Ajustes CreateForm | Ajustes adicionales en CreateForm.xaml.cs. |
+| [v1.9](wiki/v1-9-MainPage-y-Refactor) | MainPage y Refactor | Agregados MainPage.xaml y MainPage.xaml.cs. Modificaciones en CreateForm, HomePage, Login. Actualizaciones en DbContext, controladores y ApiService. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
