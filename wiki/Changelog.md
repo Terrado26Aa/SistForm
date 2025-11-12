@@ -41,3 +41,7 @@ Ajustes adicionales en CreateForm.xaml.cs.
 ## [v1.9] - MainPage y Refactor
 
 Agregados MainPage.xaml y MainPage.xaml.cs. Modificaciones en CreateForm, HomePage, Login. Actualizaciones en DbContext, controladores y ApiService.
+
+## [v2.0] - Plataforma Android
+
+Modificaciones en plataforma Android (manifest, actividades, aplicaciones).

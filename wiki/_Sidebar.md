@@ -29,3 +29,4 @@
 - [v1.7 - Mejoras CreateForm](v1-7-Mejoras-CreateForm)
 - [v1.8 - Ajustes CreateForm](v1-8-Ajustes-CreateForm)
 - [v1.9 - MainPage y Refactor](v1-9-MainPage-y-Refactor)
+- [v2.0 - Plataforma Android](v2-0-Plataforma-Android)

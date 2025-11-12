@@ -4,7 +4,7 @@ El estandar **ESSENCE** (Essential Software Engineering Common Terminology) defi
 
 A continuacion se define cada alfa para el contexto de SistForm, con sus estados y checklist de progresion.
 
-> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v1.9, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
+> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v2.0, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
 
 ---
 
@@ -17,6 +17,7 @@ La necesidad o el problema que motiva el desarrollo del sistema.
 | Estado | Criterios |
 |--------|-----------|
 | **Identified** | Se reconoce la falta de una herramienta unificada de recoleccion de datos geoespaciales en Panama |
+| **Solution Needed** | Se determina que una plataforma ubicua con soporte offline resuelve el problema |
 
 ---
 
@@ -29,6 +30,8 @@ Las personas, grupos u organizaciones que afectan o son afectados por el sistema
 | Estado | Criterios |
 |--------|-----------|
 | **Identified** | Se identifican investigadores, tecnicos ambientales y administradores como interesados |
+| **Represented** | Los requerimientos de los interesados se documentan en el anteproyecto |
+| **Involved** | Los interesados participan en la validacion de funcionalidades |
 
 ---
 
@@ -42,6 +45,14 @@ Lo que el sistema debe hacer para satisfacer a los interesados y la oportunidad.
 |--------|-----------|
 | **Conceived** | Idea inicial: sistema de encuestas con autenticacion |
 | **Bounded** | Se delimita el alcance: CRUD de formularios, respuestas, usuarios |
+| **Coherent** | Los requisitos se organizan en funcionales y no funcionales |
+
+### Requisitos Funcionales Implementados
+
+- RF-01: Autenticacion de usuarios (Login/Registro)
+- RF-02: Creacion y edicion de formularios
+- RF-03: Respuesta a encuestas
+- RF-04: Administracion de formularios (asignacion, gestion)
 
 ---
 
@@ -55,6 +66,7 @@ El sistema de software que se esta construyendo.
 |--------|-----------|
 | **Architecture Selected** | Se elige .NET MAUI (frontend) + ASP.NET Core (backend) + MySQL |
 | **Demonstrable** | La autenticacion funciona (Login, Signin, HomePage) |
+| **Usable** | Se pueden crear, ver y responder encuestas |
 
 ---
 
@@ -73,7 +85,7 @@ El conjunto de actividades que se deben realizar para construir el sistema.
 
 | Metrica | Valor |
 |---------|-------|
-| Versiones | v1.9 |
+| Versiones | v2.0 |
 
 ---
 
@@ -115,6 +127,8 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 |-------------|-----------|
 | .NET MAUI | Framework frontend multiplataforma |
 | ASP.NET Core | Framework backend REST API |
+| Entity Framework Core | ORM para base de datos |
+| MySQL | Base de datos relacional |
 | Git + GitHub | Control de versiones |
 | GitHub Wiki | Documentacion del proyecto |
 
@@ -122,4 +136,4 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 
 > Basado en el estandar **ESSENCE v1.2** (Object Management Group) adaptado al contexto del proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v1.9.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v2.0.
