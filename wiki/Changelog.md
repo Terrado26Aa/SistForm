@@ -45,3 +45,7 @@ Agregados MainPage.xaml y MainPage.xaml.cs. Modificaciones en CreateForm, HomePa
 ## [v2.0] - Plataforma Android
 
 Modificaciones en plataforma Android (manifest, actividades, aplicaciones).
+
+## [v2.1] - Reestructuracion
+
+Ajustes en archivos de proyecto (AuthLogin.csproj, Forms.sln, Forms.csproj).
