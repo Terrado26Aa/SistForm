@@ -8,7 +8,7 @@
         <CarouselView Grid.Row="0" ItemsSource="{Binding ToolbarItems}" PeekAreaInsets="50" HeightRequest="60">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Padding="0" Margin="5" HasShadow="False" BorderColor="#2B0B98" BackgroundColor="#512BD4">
+                    <Frame IsVisible="{Binding IsVisible}" Padding="0" Margin="5" HasShadow="False" BorderColor="#2B0B98" BackgroundColor="#512BD4">
                         <HorizontalStackLayout Padding="5" Spacing="8" HorizontalOptions="Center">
                             <Image Source="{Binding IconImageSource}" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center"/>
                             <Label Text="{Binding Text}" FontSize="20" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
