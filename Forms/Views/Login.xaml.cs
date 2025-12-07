@@ -14,8 +14,8 @@ public partial class Login : ContentPage
     private readonly ApiService _apiService;
 
     public Login(ApiService apiService)
-    {
-        InitializeComponent();
+	{
+		InitializeComponent();
         //Creamos una instancia del servicio
         _apiService = apiService;
 
@@ -30,7 +30,7 @@ public partial class Login : ContentPage
         // Validaciones basicas
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
-            ShowError("Usuario y contrase?a no pueden estar vacios.");
+            ShowError("Usuario y contraseña no pueden estar vacios.");
             return;
         }
 
@@ -44,15 +44,15 @@ public partial class Login : ContentPage
 
             if (loginResponse != null)
             {
-                // Autenticaci?n exitosa
-                await DisplayAlert("?xito", $"Login Correcto. {loginResponse.Message}", "OK");
+                // Autenticación exitosa
+                await DisplayAlert("Éxito", $"Login Correcto. {loginResponse.Message}", "OK");
                 // navega hacia la pagina principal
-                await Shell.Current.GoToAsync(nameof(HomePage));
+                await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
             }
         }
         catch (HttpRequestException httpEx) when (httpEx.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            ShowError("Usuario o contrase?a incorrectos. Por favor, intente denuevo.");
+            ShowError("Usuario o contraseña incorrectos. Por favor, intente denuevo.");
         }
         catch (HttpRequestException httpEx)
         {
@@ -64,7 +64,7 @@ public partial class Login : ContentPage
         }
     }
 
-    private void ShowError(string message)
+        private void ShowError(string message)
     {
         ErrorLabel.Text = message;
         ErrorLabel.IsVisible = true;

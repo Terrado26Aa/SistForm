@@ -1,4 +1,4 @@
-using Forms.Services;
+﻿using Forms.Services;
 using Forms.Models;
 
 namespace Forms.Views;
@@ -6,17 +6,17 @@ namespace Forms.Views;
 public partial class Signin : ContentPage
 {
     private readonly ApiService _apiService;
-    public Signin(ApiService apiService)
-    {
-        InitializeComponent();
+	public Signin(ApiService apiService)
+	{
+		InitializeComponent();
         _apiService = apiService;
-    }
+	}
 
-    private async void OnRegisterButtonClicked(object sender, EventArgs e)
-    {
+	private async void OnRegisterButtonClicked(object sender, EventArgs e)
+	{
         ErrorLabel.IsVisible = false;
 
-        //Validaci?n del lado del cliente.
+        //Validaci�n del lado del cliente.
         if (string.IsNullOrWhiteSpace(UsernameEntry.Text) ||
             string.IsNullOrWhiteSpace(FirstnameEntry.Text) ||
             string.IsNullOrWhiteSpace(LastnameEntry.Text) ||
@@ -31,7 +31,7 @@ public partial class Signin : ContentPage
 
         if (PasswordEntry.Text != ConfirmPasswordEntry.Text)
         {
-            ErrorLabel.Text = "Las contrase?as no coinciden.";
+            ErrorLabel.Text = "Las contrase�as no coinciden.";
             ErrorLabel.IsVisible = true;
             return;
         }
@@ -50,7 +50,7 @@ public partial class Signin : ContentPage
             await _apiService.RegisterAsync(registerData);
 
             //Manejo de registro exitoso.
-            await DisplayAlert("Exito", "Registro exitoso. Ahora puedes iniciar sesi�n.", "OK");
+            await DisplayAlert("Exito", "Registro exitoso. Ahora puedes iniciar sesión.", "OK");
 
             //Redirigir el usuario al login.
             await Shell.Current.GoToAsync($"//{nameof(Login)}");
