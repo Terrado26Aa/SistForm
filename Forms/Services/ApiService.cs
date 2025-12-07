@@ -8,6 +8,7 @@ using Forms.Models;
 using Microsoft.Maui.Devices;
 using System.Text.Json;
 using static System.Net.WebRequestMethods;
+using Microsoft.Maui.Storage;
 
 namespace Forms.Services
 {
@@ -25,12 +26,12 @@ namespace Forms.Services
         private static string DetermineBaseUrl()
         {
 #if DEBUG
-            if (DeviceInfo.Platform == DevicePlatform.Android)
+            if(DeviceInfo.Platform == DevicePlatform.Android)
             {
                 return "http://10.0.2.2:5174";
             }
 
-            else if (DeviceInfo.Platform == DevicePlatform.iOS)
+            else if(DeviceInfo.Platform == DevicePlatform.iOS)
             {
                 return "http://TU_IP_DE_MAC_O_PC:5174";
             }
@@ -54,7 +55,17 @@ namespace Forms.Services
                 //Exito, Deserializamos y devolvemos los datos
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+                    var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+
+                    if (loginResponse != null && !string.IsNullOrEmpty(loginResponse.Token))
+                    {
+                        // Guardar el token en SecureStorage
+                        await SecureStorage.Default.SetAsync("auth_token", loginResponse.Token);
+
+                        await Application.Current.MainPage.DisplayAlert("Token Guardado", $"El token empieza con: {loginResponse.Token.Substring(0,15)}...", "OK");
+                    }
+
+                    return loginResponse;
                 }
                 else
                 {
