@@ -1,15 +1,39 @@
-﻿namespace Forms
+﻿using Forms.Views;
+
+namespace Forms
 {
     public partial class AppShell : Shell
     {
+
+        private bool _hasCheckedLogin = false; // Variable para evitar comprobaciones repetidas
         public AppShell()
         {
             InitializeComponent();
-            Routing.RegisterRoute(nameof(Views.Login), typeof(Views.Login));
-            Routing.RegisterRoute(nameof(Views.Signin), typeof(Views.Signin));
-            Routing.RegisterRoute(nameof(Views.HomePage), typeof(Views.HomePage));
-            Routing.RegisterRoute(nameof(Views.CreateForm), typeof(Views.CreateForm));
-            Routing.RegisterRoute(nameof(Views.Surveys), typeof(Views.Surveys));
+            Routing.RegisterRoute(nameof(Signin), typeof(Signin));
+            Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
+            Routing.RegisterRoute(nameof(CreateForm), typeof(CreateForm));
+            Routing.RegisterRoute(nameof(Surveys), typeof(Surveys));
+
+        }
+
+        // Verifica el estado de login cuando la pagina aparece
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            // Solo verifica el estado de login una vez
+            if (_hasCheckedLogin) return;
+
+            _hasCheckedLogin = true;
+
+            // Busca el token
+            string token = await SecureStorage.Default.GetAsync("auth_token");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                // No hay token, el usuario no ha iniciado sesion.
+                await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
+            }
         }
 
         private async void OnLogoutClicked(object sender, EventArgs e)
@@ -18,6 +42,9 @@
 
             if (confirm)
             {
+                // Borra el token guardado
+                SecureStorage.Default.Remove("auth_token");
+
                 // Navegar a la página de login y limpiar el historial de navegación
                 await Shell.Current.GoToAsync($"//{nameof(Views.Login)}");
             }

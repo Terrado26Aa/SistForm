@@ -6,7 +6,8 @@
     xmlns:local="clr-namespace:Forms"
     xmlns:local1="clr-namespace:Forms.Views"
     Title="Forms"
-    Shell.FlyoutBehavior="Flyout">
+    Shell.FlyoutBehavior="Flyout"
+    Shell.TabBarIsVisible="False">
 
     <Shell.FlyoutHeader>
         <VerticalStackLayout HorizontalOptions="FillAndExpand" Padding="10,30,10,30">
@@ -18,13 +19,7 @@
         </VerticalStackLayout>
     </Shell.FlyoutHeader>
 
-    <ShellContent
-        Title="Login"
-        ContentTemplate="{DataTemplate local1:CreateForm}"
-        Route="Login"
-        Shell.FlyoutBehavior="Flyout"/>
-
-    <FlyoutItem Title="Hamburger" FlyoutDisplayOptions="AsMultipleItems">
+    <FlyoutItem Title="Menu" FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent 
             Title="Página Principal"
             ContentTemplate="{DataTemplate local1:HomePage}"
@@ -41,6 +36,11 @@
             Route="Surveys">
         </ShellContent>
     </FlyoutItem>
+
+    <ShellContent
+        ContentTemplate="{DataTemplate local1:Login}"
+        Route="Login"
+        Shell.FlyoutBehavior="Disabled"/>
 
     <MenuItem
         Text="Cerrar Sesión"
