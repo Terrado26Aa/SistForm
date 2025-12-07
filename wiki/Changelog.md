@@ -49,3 +49,7 @@ Modificaciones en plataforma Android (manifest, actividades, aplicaciones).
 ## [v2.1] - Reestructuracion
 
 Ajustes en archivos de proyecto (AuthLogin.csproj, Forms.sln, Forms.csproj).
+
+## [v2.2] - Formularios y Controlador
+
+Agregado FormsController. Agregados modelos FormDto, CForm, CreateFormDto. Modificaciones en estilos, fuentes, configuracion de app. Mejoras en vistas CreateForm, HomePage, Login.

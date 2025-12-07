@@ -9,11 +9,14 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 - Toolbar contextual para edicion de elementos
 - Refactorizacion de vistas y navegacion
 - Configuracion para plataforma Android
+- API REST para formularios con Entity Framework Core y MySQL
 
 ## Tecnologias
 
 - **Frontend:** .NET MAUI (C#, XAML)
 - **Backend:** ASP.NET Core Web API
+- **ORM:** Entity Framework Core
+- **Base de datos:** MySQL
 
 ## Requisitos Previos
 
@@ -57,6 +60,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v1.9](wiki/v1-9-MainPage-y-Refactor) | MainPage y Refactor | Agregados MainPage.xaml y MainPage.xaml.cs. Modificaciones en CreateForm, HomePage, Login. Actualizaciones en DbContext, controladores y ApiService. |
 | [v2.0](wiki/v2-0-Plataforma-Android) | Plataforma Android | Modificaciones en plataforma Android (manifest, actividades, aplicaciones). |
 | [v2.1](wiki/v2-1-Reestructuracion) | Reestructuracion | Ajustes en archivos de proyecto (AuthLogin.csproj, Forms.sln, Forms.csproj). |
+| [v2.2](wiki/v2-2-Formularios-y-Controlador) | Formularios y Controlador | Agregado FormsController. Agregados modelos FormDto, CForm, CreateFormDto. Modificaciones en estilos, fuentes, configuracion de app. Mejoras en vistas CreateForm, HomePage, Login. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 

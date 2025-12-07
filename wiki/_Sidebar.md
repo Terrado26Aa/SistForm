@@ -31,3 +31,4 @@
 - [v1.9 - MainPage y Refactor](v1-9-MainPage-y-Refactor)
 - [v2.0 - Plataforma Android](v2-0-Plataforma-Android)
 - [v2.1 - Reestructuracion](v2-1-Reestructuracion)
+- [v2.2 - Formularios y Controlador](v2-2-Formularios-y-Controlador)
