@@ -3,7 +3,9 @@ using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Layouts;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
+using Forms.Models;
 
 namespace Forms.Views;
 
@@ -14,43 +16,181 @@ public partial class CreateForm : ContentPage
     //variable para guardar las dimensiones iniciales del elemento
     private int _nextRow = 0;
     
-    public ObservableCollection<ToolbarItem> ToolbarItems { get; set; }
+    public ObservableCollection<Forms.Models.ToolbarItem> ToolbarItems { get; set; }
+
+    private ICommand _editCommand;
+    private ICommand _deleteCommand;
+    private ICommand _selectModeCommand;
+
+    private bool _isSelectionMode;
+    public bool IsSelectionMode
+    {
+        get => _isSelectionMode;
+        set
+        {
+            _isSelectionMode = value;
+            OnPropertyChanged(nameof(IsSelectionMode));
+            //actualiza la visibilidad de los botones en la toolbar
+            UpdateToolbarItemsVisibility();
+        }
+    }
 
     public CreateForm()
     {
         InitializeComponent();
 
-        //inicializa los comandos para los botones de la toolbar
-        var addTextCommand = new Command(OnAddTextClicked);
-        var addImageCommand = new Command(OnAddImageClicked);
-        var addChecklistCommand = new Command(OnAddChecklistClicked);
-        var addMultipleChoiceCommand = new Command(OnAddMultipleChoiceClicked);
+        // Inicializa los comandos
+        InitializeCommands();
 
         //creamos la lista de datos para el CarouselView de la toolbar
-        ToolbarItems = new ObservableCollection<ToolbarItem>
+        ToolbarItems = new ObservableCollection<Forms.Models.ToolbarItem>
         {
-            new ToolbarItem{ Text = "Texto", IconImageSource = "text_icon.png", Command = addTextCommand},
-            new ToolbarItem{ Text = "Imagen", IconImageSource = "image_icon.png", Command = addImageCommand },
-            new ToolbarItem{ Text = "Checklist",IconImageSource = "checklist_icon.png", Command = addChecklistCommand },
-            new ToolbarItem{ Text = "Multiple", IconImageSource = "multiple_icon.png", Command = addMultipleChoiceCommand },
+            new Forms.Models.ToolbarItem{ Text = "Texto", IconImageSource = "text_icon.png", Command = new Command(OnAddTextClicked)},
+            new Forms.Models.ToolbarItem{ Text = "Imagen", IconImageSource = "image_icon.png", Command = new Command(OnAddImageClicked) },
+            new Forms.Models.ToolbarItem{ Text = "Checklist",IconImageSource = "checklist_icon.png", Command = new Command(OnAddChecklistClicked) },
+            new Forms.Models.ToolbarItem{ Text = "Multiple", IconImageSource = "multiple_icon.png", Command = new Command(OnAddMultipleChoiceClicked) },
+
+            // Añade los botones Contextuales
+            new Forms.Models.ToolbarItem{ Text = "Seleccionar", IconImageSource = "select_icon.png", Command = _selectModeCommand },
+            new Forms.Models.ToolbarItem{ Text = "Editar", IconImageSource = "edit_icon.png", Command = _editCommand, IsContextItem = true, IsVisible = false },
+            new Forms.Models.ToolbarItem{ Text = "Eliminar", IconImageSource = "delete_icon.png", Command = _deleteCommand, IsContextItem = true, IsVisible = false },
         };
 
         this.BindingContext = this;
     }
 
+    //Metodo de Inicializacion de Comandos
+    private void InitializeCommands()
+    {
+        _selectModeCommand = new Command(ToggleSelectionMode);
+        _editCommand = new Command(OnEditElement, CanExecuteContextAction);
+        _deleteCommand = new Command(OnDeleteElement, CanExecuteContextAction);
+    }
+
+    // Metodo para actualizar la visibilidad de los items de la toolbar
+    private void UpdateToolbarItemsVisibility()
+    {
+        // Recorre todos los items de la barra de herramientas
+        foreach (var item in ToolbarItems)
+        {
+            if (item.IsContextItem)
+            {
+                //Muestra botones contextuales solo cuando esta en modo seleccion
+                item.IsVisible = IsSelectionMode;
+            }
+            else
+            {
+                //Muestra botones normales solo cuando no esta en modo seleccion
+                { item.IsVisible = !IsSelectionMode; }
+            }
+        }
+
+        // Fuerza la actualizacion del CarouselView
+        var temp = new ObservableCollection<Forms.Models.ToolbarItem>(ToolbarItems);
+        ToolbarItems.Clear();
+        foreach (var item in temp)
+        {
+            ToolbarItems.Add(item);
+        }
+    }
+
+    // Logica para alternar el modo de seleccion
+    private void ToggleSelectionMode()
+    {
+        IsSelectionMode = !IsSelectionMode;
+
+        if (!IsSelectionMode)
+        {
+            DeselectAllElement();
+            _selectedElement = null;
+        }
+
+        var selectButton = ToolbarItems.FirstOrDefault(item => item.Command == _selectModeCommand);
+        if (selectButton != null)
+        {
+            selectButton.Text = IsSelectionMode ? "Cancelar" : "Seleccionar";
+            selectButton.IconImageSource = IsSelectionMode ? "cancel_icon.png" : "select_icon.png";
+        }
+    }
+
+    // Logica para editar el elemento seleccionado
+    private async void OnEditElement()
+    {
+        if (_selectedElement == null) return;
+
+        await DisplayAlert("Editar Elemento", "La funcionalidad de Editar se implementara pronto!", "OK");
+    }
+
+    // Logica para eliminar el elemento seleccionado
+    private async void OnDeleteElement()
+    {
+        if (_selectedElement == null)
+        {
+            CanvasGrid.Children.Remove(_selectedElement);
+            _selectedElement = null;
+
+            // Refresca el estado de los comandos
+            ((Command)_deleteCommand).ChangeCanExecute();
+            ((Command)_editCommand).ChangeCanExecute();
+        }
+    }
+
+    // Este metodo decide si los comandos contextuales pueden ejecutarse
+    private bool CanExecuteContextAction()
+    {
+        //solo permite ejecutar si hay un elemento seleccionado
+        return _selectedElement != null;
+    }
+
+    // Logica para deseleccionar todos los elementos
+    private void DeselectAllElement()
+    {
+        foreach (var child in CanvasGrid.Children)
+        {
+            if (child is Border border)
+            {
+                border.Scale = 1.0;
+                border.Stroke = Colors.LightGray;
+            }
+        }
+    }
+
+    // Manejador del evento Tapped para los elementos
+    private void OnElementTapped(object sender, TappedEventArgs e)
+    {
+        if (!IsSelectionMode) return; // solo permite seleccionar en modo seleccion
+
+        var tappedBorder = sender as Border;
+        if (tappedBorder == null) return;
+
+        DeselectAllElement();
+
+        _selectedElement = tappedBorder; // guarda el elemento seleccionado
+
+        tappedBorder.Scale = 1.05;
+        tappedBorder.Stroke = Colors.Blue;
+
+        // Refresca el estado de los comandos
+        ((Command)_deleteCommand).ChangeCanExecute();
+        ((Command)_editCommand).ChangeCanExecute();
+    }
+
+    //Metodo para agregar un nuevo elemento en una nueva fila del grid
     private void AddElementToNewRow(View newElement)
     {
         var rowDefinition = new RowDefinition { Height = GridLength.Auto };
         CanvasGrid.RowDefinitions.Add(rowDefinition);
-
         Grid.SetRow(newElement, _nextRow);
 
-        CanvasGrid.Children.Add(newElement);
+        var tapGesture = new TapGestureRecognizer();
+        tapGesture.Tapped += OnElementTapped;
+        newElement.GestureRecognizers.Add(tapGesture);
 
+        CanvasGrid.Children.Add(newElement);
         _nextRow++;
     }
 
-    //metodo para crear un frame que envuelve el elemento
+    //Metodo para crear un Border que envuelve el elemento
     private Border CreateBorderElement(View element)
     {
         return new Border
@@ -75,6 +215,7 @@ public partial class CreateForm : ContentPage
         };
     }
 
+    //Metodo para crear y agregar un nuevo elemento al grid
     private void CreateAndAddElement(View mainContent)
     {
         //crea un nuevo Entry para el titulo
@@ -109,64 +250,11 @@ public partial class CreateForm : ContentPage
         //envuelve el grid en un border
         var borderElement = CreateBorderElement(innerGrid);
 
-        var editItem = new MenuFlyoutItem //accion de editar
-        {
-            Text = "Editar",
-            IconImageSource = "edit_icon.png"
-        };
-        editItem.Command = new Command((param) =>
-        {
-            if (param is Border elementToEdit)
-            {
-                OnEditElement(elementToEdit);
-            }
-        });
-        editItem.CommandParameter = borderElement; // pasa el border como parametro para editarlo
-
-        var deleteItem = new MenuFlyoutItem //accion de eliminar
-        {
-            Text = "Eliminar",
-            IconImageSource = "delete_icon.png"
-        };
-        deleteItem.Command = new Command((param) =>
-        {
-            if(param is View elementToDelete)
-            {
-                CanvasGrid.Children.Remove(elementToDelete);
-            }
-        });
-        deleteItem.CommandParameter = borderElement; // pasa el border como parametro para eliminarlo
-
-        // crea el menu contextual
-        var menuFlyout = new MenuFlyout { editItem, deleteItem };
-        MenuFlyout.SetContextFlyout(borderElement, menuFlyout);
-
         // agrega el frame al canvas en una nueva fila
         AddElementToNewRow(borderElement);
     }
 
-    private void DeselectElement()
-    {
-        foreach (var child in CanvasGrid.Children)
-        {
-            if (child is Border border)
-            {
-                border.Scale = 1.0;
-                border.Stroke = Colors.LightGray;
-            }
-        }
-    }
-
-    private async void OnEditElement(Border selectedBorder)
-    {
-        _selectedElement = selectedBorder;
-
-        DeselectElement();
-        selectedBorder.Scale = 1.05;
-        selectedBorder.Stroke = Colors.Blue;
-
-        await DisplayAlert("Editar Elemento", "La funcionalidad de Editar se implementara pronto!", "OK");
-    }
+    // Metodo para agregar un elemento de Texto
     private void OnAddTextClicked()
     {
         //crea un nuevo Label
@@ -182,6 +270,7 @@ public partial class CreateForm : ContentPage
         CreateAndAddElement(newLabel);
     }
 
+    // Metodo para agregar un elemento de Imagen
     private void OnAddImageClicked()
     {
         //crea un Boton para insertar la imagen
@@ -195,6 +284,7 @@ public partial class CreateForm : ContentPage
         CreateAndAddElement(newButtom);
     }
 
+    // Metodo para agregar un elemento de Checklist
     private void OnAddChecklistClicked()
     {
         //crea un contenedor vertical para la checklist
@@ -247,6 +337,7 @@ public partial class CreateForm : ContentPage
         CreateAndAddElement(checklistStack);
     }
 
+    // Manejador del evento CheckedChanged para las casillas de multiple choice
     private async void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e)
     {
         if (!e.Value) return; // si la casilla se desmarca, no hacer nada
@@ -288,6 +379,7 @@ public partial class CreateForm : ContentPage
         }
     }
 
+    // Metodo para agregar un elemento de Multiple Choice
     private void OnAddMultipleChoiceClicked()
     {
         // crea el contenedor para las opciones de multiple choice
