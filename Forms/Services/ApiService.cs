@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Json;
 using Forms.Models;
-using Microsoft.Maui.Devices;
-using System.Text.Json;
-using static System.Net.WebRequestMethods;
-using Microsoft.Maui.Storage;
+using System.Net.Http.Headers;
 
 namespace Forms.Services
 {
@@ -62,7 +54,10 @@ namespace Forms.Services
                         // Guardar el token en SecureStorage
                         await SecureStorage.Default.SetAsync("auth_token", loginResponse.Token);
 
-                        await Application.Current.MainPage.DisplayAlert("Token Guardado", $"El token empieza con: {loginResponse.Token.Substring(0,15)}...", "OK");
+                        await SecureStorage.Default.SetAsync("user_id", loginResponse.UserId.ToString());
+
+                        await Application.Current.MainPage.DisplayAlert("Token Guardado", $"El token empieza con: " +
+                            $"{loginResponse.Token.Substring(0,15)}... \nID Usuario: {loginResponse.UserId}", "OK");
                     }
 
                     return loginResponse;
@@ -108,6 +103,34 @@ namespace Forms.Services
             {
                 //Envolvemos calquier oto error
                 throw new Exception($"Ocurrio un error inesperado en el registro: {ex.Message}");
+            }
+        }
+
+        public async Task<bool> SaveFormAsync(FormDto formData)
+        {
+            try
+            {
+                // Obtener el token de SecureStorage
+                var token = await SecureStorage.Default.GetAsync("auth_token");
+
+                // Agregar el token al encabezado de autorización
+                _httpClient.DefaultRequestHeaders.Authorization = null;
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var response = await _httpClient.PostAsJsonAsync("api/forms", formData);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Debug.WriteLine($"Error api al guardar: {response.StatusCode} - {errorContent}");
+                    throw new HttpRequestException($"Error de la API: {response.StatusCode} - {errorContent}", null, response.StatusCode);
+                }
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error inesperado al guardar el formulario: {ex.Message}");
             }
         }
     }
