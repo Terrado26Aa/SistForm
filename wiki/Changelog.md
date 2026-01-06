@@ -53,3 +53,7 @@ Ajustes en archivos de proyecto (AuthLogin.csproj, Forms.sln, Forms.csproj).
 ## [v2.2] - Formularios y Controlador
 
 Agregado FormsController. Agregados modelos FormDto, CForm, CreateFormDto. Modificaciones en estilos, fuentes, configuracion de app. Mejoras en vistas CreateForm, HomePage, Login.
+
+## [v2.3] - Base de Datos
+
+Modificacion en ApplicationDbContext.

@@ -21,6 +21,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 | [v2.0](v2-0-Plataforma-Android) | Plataforma Android | Modificaciones en plataforma Android (manifest, actividades, aplicaciones). |
 | [v2.1](v2-1-Reestructuracion) | Reestructuracion | Ajustes en archivos de proyecto (AuthLogin.csproj, Forms.sln, Forms.csproj). |
 | [v2.2](v2-2-Formularios-y-Controlador) | Formularios y Controlador | Agregado FormsController. Agregados modelos FormDto, CForm, CreateFormDto. Modificaciones en estilos, fuentes, configuracion de app. Mejoras en vistas CreateForm, HomePage, Login. |
+| [v2.3](v2-3-Base-de-Datos) | Base de Datos | Modificacion en ApplicationDbContext. |
 
 ---
 
@@ -38,7 +39,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 | Pagina | Descripcion |
 |--------|-------------|
 | [Kernel ESSENCE](SEMAT-Kernel) | Definicion de las 7 alfas con checklist de estados para SistForm |
-| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v2.2) |
+| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v2.3) |
 | [Espacios de Actividad](SEMAT-Activity-Spaces) | Mapa de espacios de actividad cubiertos en cada fase del proyecto |
 
 ---
