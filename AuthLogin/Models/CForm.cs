@@ -14,5 +14,8 @@ namespace AuthLogin.Models
         public string? Description { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime LastModifiedDate { get; set; }
+
+        //Esto crea la relación en Entity Framework
+        public List<CFormElement> Elements { get; set; } = new List<CFormElement>();
     }
 }
