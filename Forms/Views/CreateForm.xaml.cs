@@ -3,6 +3,8 @@ using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Layouts;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Forms.Services;
+using System.Text.RegularExpressions;
 
 namespace Forms.Views;
 
@@ -24,6 +26,7 @@ public partial class CreateForm : ContentPage
         var addImageCommand = new Command(OnAddImageClicked);
         var addChecklistCommand = new Command(OnAddChecklistClicked);
         var addMultipleChoiceCommand = new Command(OnAddMultipleChoiceClicked);
+        var addSingleSelectionCommand = new Command(OnAddSingleSelectionClicked);
 
         //creamos la lista de datos para el CarouselView de la toolbar
         ToolbarItems = new ObservableCollection<ToolbarItem> 
@@ -32,6 +35,7 @@ public partial class CreateForm : ContentPage
             new ToolbarItem{ Text = "Imagen", IconImageSource = "image_icon.png", Command = addImageCommand },
             new ToolbarItem{ Text = "Checklist",IconImageSource = "checklist_icon.png", Command = addChecklistCommand },
             new ToolbarItem{ Text = "Multiple", IconImageSource = "multiple_icon.png", Command = addMultipleChoiceCommand },
+            new ToolbarItem{ Text = "Única", IconImageSource = "unique_icon.png", Command = addSingleSelectionCommand },
         };
 
         this.BindingContext = this;
@@ -262,6 +266,72 @@ public partial class CreateForm : ContentPage
         CreateAndAddElement(checklistStack);
     }
 
+    private void OnAddSingleSelectionClicked()
+    {
+        //crea un contenedor vertical
+        var singleSelectionStack = new VerticalStackLayout { Spacing = 5 };
+
+        //Asegura que los RadioButtons de esta pregunta no se mezclen con otros
+        string groupName = Guid.NewGuid().ToString();
+
+        //Crea el boton para añadir mas opciones
+        var addItemButton = new Button
+        {
+            Text = "Agregar Opción",
+            WidthRequest = 120,
+            HeightRequest = 40,
+            BackgroundColor = Colors.Transparent,
+            TextColor = Colors.CornflowerBlue,
+            HorizontalOptions = LayoutOptions.Start,
+        };
+        
+        //Añade la fila con RadioButton mas Entry
+        addItemButton.Clicked += (s, args) =>
+        {
+            var newItemLayout = new HorizontalStackLayout { Spacing=5 };
+
+            //Creamos el RadioButton y le asignamos el grupo único
+            var radioButton = new RadioButton { GroupName = groupName };
+
+            var entry = new Entry
+            {
+                Placeholder = "Opción",
+                FontSize = 16,
+                TextColor = Colors.Black,
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 200
+            };
+
+            newItemLayout.Children.Add(radioButton);
+            newItemLayout.Children.Add(entry);
+
+            //Inserta antes del boton de agregar
+            singleSelectionStack.Children.Insert(singleSelectionStack.Children.Count -1 , newItemLayout);
+        };
+
+        // Crea la primera opción por defecto
+        var firstItemLayout = new HorizontalStackLayout { Spacing = 5 };
+        var firstRadioButton = new RadioButton { GroupName = groupName, IsChecked = true }; //Marcamos la primera por defecto
+        var firstEntry = new Entry
+        {
+            Placeholder = "Opción 1",
+            FontSize = 16,
+            TextColor = Colors.Black,
+            VerticalOptions = LayoutOptions.Center,
+            WidthRequest = 200
+        };
+
+        firstItemLayout.Children.Add(firstRadioButton);
+        firstItemLayout.Children.Add(firstEntry);
+
+        //Añade todo al contenedor
+        singleSelectionStack.Children.Add(firstItemLayout);
+        singleSelectionStack.Children.Add(addItemButton);
+
+        //Lo manda al lienzo
+        CreateAndAddElement(singleSelectionStack);
+    }
+
     private async void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e)
     {
         if (!e.Value) return; // si la casilla se desmarca, no hacer nada
@@ -362,5 +432,86 @@ public partial class CreateForm : ContentPage
         multipleChoiceLayout.Children.Add(addOptionButton);
 
         CreateAndAddElement(multipleChoiceLayout);
+    }
+
+    private void ResetForm()
+    {
+        if (FormTitleEntry != null)
+            FormTitleEntry.Text = string.Empty;
+        if (FormDescriptionEditor != null)
+            FormDescriptionEditor.Text = string.Empty;
+
+        CanvasGrid.Children.Clear();
+
+        CanvasGrid.RowDefinitions.Clear();
+
+        _nextRow = 0;
+        _selectedElement = null;
+    }
+
+    private async void OnSaveFormClicked(object sender, EventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(FormTitleEntry.Text))
+        {
+            await DisplayAlert("Error", "El título del formulario no puede estar vacío.", "OK");
+            return;
+        }
+
+        string userIdString = await SecureStorage.Default.GetAsync("user_id");
+        if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int idUser))
+        {
+            await DisplayAlert("Error", "No se pudo obtener la información del usuario.", "OK");
+            return;
+        }
+
+        var formDto = new Models.FormDto
+        {
+            IdUser = idUser,
+            Title = FormTitleEntry.Text,
+            Description = FormDescriptionEditor.Text,
+            Elements = new List<Models.FormElementDto>()
+        };
+        
+        foreach (var child in CanvasGrid.Children)
+        {
+            if (child is SwipeView swipeView && swipeView.Content is Border border)
+            {
+                if(border.Content is Grid innerGrid)
+                {
+                    var titleEntry = innerGrid.Children
+                    .OfType<Entry>()
+                    .FirstOrDefault(c => Grid.GetRow(c) == 0);
+
+                    string elementType = "Desconocido";
+
+                    var content = innerGrid.Children.FirstOrDefault(c => Grid.GetRow((BindableObject)c) == 1);
+
+                    if (content is Label) elementType = "Texto";
+                    else if (content is Image) elementType = "Imagen";
+                    else if (content is VerticalStackLayout) elementType = "Lista";
+                    else if (content is Entry) elementType = "Campo de entrada";
+
+                    formDto.Elements.Add(new Models.FormElementDto
+                    {
+                        Title = titleEntry?.Text ?? "Sin titulo",
+                        Type = elementType,
+                    });
+                }
+            }
+        }
+
+        var apiService = new ApiService();
+        bool isSuccess = await apiService.SaveFormAsync(formDto);
+
+        if (isSuccess)
+        {
+            await DisplayAlert("Éxito", "El formulario se ha guardado correctamente.", "OK");
+            ResetForm();
+            await Shell.Current.GoToAsync("//HomePage");
+        }
+        else
+        {
+            await DisplayAlert("Error", "Hubo un problema al guardar el formulario. Por favor, inténtelo de nuevo.", "OK");
+        }
     }
 }

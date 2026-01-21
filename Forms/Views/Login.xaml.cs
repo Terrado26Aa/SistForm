@@ -44,6 +44,9 @@ public partial class Login : ContentPage
 
             if (loginResponse != null)
             {
+                // Guardar el token y userId en SecureStorage
+                await SecureStorage.Default.SetAsync("auth_token", loginResponse.Token);
+                await SecureStorage.Default.SetAsync("user_id", loginResponse.UserId.ToString());
                 // Autenticación exitosa
                 await DisplayAlert("Éxito", $"Login Correcto. {loginResponse.Message}", "OK");
                 // navega hacia la pagina principal
