@@ -29,11 +29,23 @@ namespace Forms
             // Busca el token
             string token = await SecureStorage.Default.GetAsync("auth_token");
 
+            //borrar despues
             if (string.IsNullOrEmpty(token))
             {
-                // No hay token, el usuario no ha iniciado sesion.
-                await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
+                await DisplayAlert("Debug", "No hay token. Debería ir al Login.", "OK");
+                await Shell.Current.GoToAsync("//Login");
             }
+            else
+            {
+                await DisplayAlert("Debug", "¡Token encontrado! Bienvenido de nuevo.", "OK");
+                // No hace nada, se queda en el HomePage que es la página por defecto
+            }
+
+            //if (string.IsNullOrEmpty(token))
+            //{
+            //    // No hay token, el usuario no ha iniciado sesion.
+            //    await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
+            //}
         }
 
         private async void OnLogoutClicked(object sender, EventArgs e)
