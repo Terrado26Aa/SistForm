@@ -62,6 +62,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v2.1](wiki/v2-1-Reestructuracion) | Reestructuracion | Ajustes en archivos de proyecto (AuthLogin.csproj, Forms.sln, Forms.csproj). |
 | [v2.2](wiki/v2-2-Formularios-y-Controlador) | Formularios y Controlador | Agregado FormsController. Agregados modelos FormDto, CForm, CreateFormDto. Modificaciones en estilos, fuentes, configuracion de app. Mejoras en vistas CreateForm, HomePage, Login. |
 | [v2.3](wiki/v2-3-Base-de-Datos) | Base de Datos | Modificacion en ApplicationDbContext. |
+| [v2.4](wiki/v2-4-Elementos-de-Formulario) | Elementos de Formulario | Agregado modelo CFormElement. Modificaciones en CreateForm y Login. Actualizacion en AppShell. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
