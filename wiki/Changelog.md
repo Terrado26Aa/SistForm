@@ -57,3 +57,7 @@ Agregado FormsController. Agregados modelos FormDto, CForm, CreateFormDto. Modif
 ## [v2.3] - Base de Datos
 
 Modificacion en ApplicationDbContext.
+
+## [v2.4] - Elementos de Formulario
+
+Agregado modelo CFormElement. Modificaciones en CreateForm y Login. Actualizacion en AppShell.
