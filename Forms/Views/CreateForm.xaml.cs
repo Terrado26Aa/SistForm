@@ -43,33 +43,34 @@ public partial class CreateForm : ContentPage
 
     private async void OnElementTapped(object sender, TappedEventArgs e)
     {
-        //Guarda el elemento seleccionado
-        _selectedElement = sender as View;
-        if (_selectedElement == null) return;
+        // Guarda el elemento seleccionado(el contenedor Grid)
+        var selectedContainer = sender as Grid;
+        if (selectedContainer == null) return;
 
+        _selectedElement = selectedContainer;
+
+        //Reinicia el tamaño y color de todos los frames
         foreach (var child in CanvasGrid.Children)
         {
             if (child is Grid container)
             {
-                //obtiene el frame que envuelve el elemento
-                var border = container.Children.FirstOrDefault() as Border;
+                //Buscamos el border dentro del Grid contenedor
+                var border = container.Children.FirstOrDefault(c => c is Border) as Border;
                 if (border != null)
                 {
-                    border.Scale = 1.0; // Restablece el tamaño original
-                    border.Stroke = Colors.LightGray; // Restablece el color del borde
+                    border.Scale = 1.0; // Tamaño normal
+                    border.Stroke = Colors.LightGray; // Color normal
+                    border.StrokeThickness = 1; // Grosor normal
                 }
             }
         }
-
-        if (_selectedElement is Grid selectedContainer)
-        {
-            var borderToScale = selectedContainer.Children.FirstOrDefault() as Border;
-            if (borderToScale != null)
+            var selectedBorder = selectedContainer.Children.FirstOrDefault(c => c is Border) as Border;
+            if (selectedBorder != null)
             {
-                borderToScale.Scale = 1.5; // Aumenta el tamaño del frame
-                borderToScale.Stroke = Colors.Blue; // Cambia el color del borde para resaltar
-            }
-        }
+                selectedBorder.Scale = 1.0; // Tamaño normal
+                selectedBorder.Stroke = Colors.DodgerBlue; // Cambia el color del borde para resaltar
+                selectedBorder.StrokeThickness = 3; // Aumenta el grosor del borde
+        } 
     }
 
     private void AddElementToNewRow(View newElement)
@@ -471,27 +472,51 @@ public partial class CreateForm : ContentPage
             Description = FormDescriptionEditor.Text,
             Elements = new List<Models.FormElementDto>()
         };
-        
+
+        // Recorremos los hijos del CanvasGrid para extraer los elementos del formulario
         foreach (var child in CanvasGrid.Children)
         {
-            if (child is SwipeView swipeView && swipeView.Content is Border border)
+            // agregamos el elemento a la lista del formulario
+            if (child is Grid containerGrid)
             {
-                if(border.Content is Grid innerGrid)
+                //Buscamos el borde dentro del Grid contenedor
+                var border = containerGrid.Children.FirstOrDefault(c => c is Border) as Border;
+
+                if(border !=  null && border.Content is Grid innerGrid)
                 {
-                    var titleEntry = innerGrid.Children
+
+                    //obtener el titulo (siempre esta en la fila 0)
+                    var titleEntry = innerGrid .Children
                     .OfType<Entry>()
                     .FirstOrDefault(c => Grid.GetRow(c) == 0);
 
                     string elementType = "Desconocido";
 
+                    //obtener el Contenido (siempre esta en la fila 1)
+                    //Usamos (BindableObject) para evitar el error de compilacion
                     var content = innerGrid.Children.FirstOrDefault(c => Grid.GetRow((BindableObject)c) == 1);
 
+                    //Determinar el tipo
                     if (content is Label) elementType = "Texto";
-                    else if (content is Image) elementType = "Imagen";
-                    else if (content is VerticalStackLayout) elementType = "Lista";
+                    else if (content is Button) elementType = "Imagen";
+                    else if (content is VerticalStackLayout stack)
+                    {
+                        // Determina si es Checklist o Multiple y Unica
+                        var firstRow = stack.Children.FirstOrDefault() as HorizontalStackLayout;
+                        if (firstRow != null)
+                        {
+                            if (firstRow.Children.Any(c => c is RadioButton))
+                                elementType = "Selección Única";
+                            else
+                                elementType = "Checklist/Multiple";
+                        }
+                        else
+                            elementType = "Checklist/Multiple";
+                    }
                     else if (content is Entry) elementType = "Campo de entrada";
 
-                    formDto.Elements.Add(new Models.FormElementDto
+                //Agregar a la lista de elementos del formulario
+                formDto.Elements.Add(new Models.FormElementDto
                     {
                         Title = titleEntry?.Text ?? "Sin titulo",
                         Type = elementType,
