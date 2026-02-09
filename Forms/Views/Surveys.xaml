@@ -3,10 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Forms.Views.Surveys"
              Title="Surveys">
-    <VerticalStackLayout>
-        <Label 
-            Text="Aqui puedes llenar tus formularios"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <CollectionView SelectionMode="Single" SelectionChanged="OnSelectionChanged">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Frame Margin="10" Padding="15">
+                    <VerticalStackLayout>
+                        <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold"/>
+                        <Label Text="{Binding Description}" FontSize="14" TextColor="Gray"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
 </ContentPage>
