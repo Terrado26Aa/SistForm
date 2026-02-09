@@ -10,6 +10,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 - Refactorizacion de vistas y navegacion
 - Configuracion para plataforma Android
 - API REST para formularios con Entity Framework Core y MySQL
+- Respuesta a encuestas desde dispositivo movil
 
 ## Tecnologias
 
@@ -63,6 +64,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v2.2](wiki/v2-2-Formularios-y-Controlador) | Formularios y Controlador | Agregado FormsController. Agregados modelos FormDto, CForm, CreateFormDto. Modificaciones en estilos, fuentes, configuracion de app. Mejoras en vistas CreateForm, HomePage, Login. |
 | [v2.3](wiki/v2-3-Base-de-Datos) | Base de Datos | Modificacion en ApplicationDbContext. |
 | [v2.4](wiki/v2-4-Elementos-de-Formulario) | Elementos de Formulario | Agregado modelo CFormElement. Modificaciones en CreateForm y Login. Actualizacion en AppShell. |
+| [v2.5](wiki/v2-5-Respuestas-y-Encuestas) | Respuestas y Encuestas | Agregada FillSurveyPage para llenar encuestas. Agregados modelos ResponseDtos y CFormResponse. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
