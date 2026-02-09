@@ -9,6 +9,7 @@ namespace Forms.Models
 {
     public class FormDto
     {
+        public int IdForm { get; set; }
         public int IdUser { get; set; }
         [Required]
         public string Title { get; set; }
@@ -19,6 +20,7 @@ namespace Forms.Models
 
     public class FormElementDto
     {
+        public int Id { get; set; }
         public string Type { get; set; }
         public string Title { get; set; }
     }
