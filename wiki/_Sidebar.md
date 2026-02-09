@@ -34,3 +34,4 @@
 - [v2.2 - Formularios y Controlador](v2-2-Formularios-y-Controlador)
 - [v2.3 - Base de Datos](v2-3-Base-de-Datos)
 - [v2.4 - Elementos de Formulario](v2-4-Elementos-de-Formulario)
+- [v2.5 - Respuestas y Encuestas](v2-5-Respuestas-y-Encuestas)

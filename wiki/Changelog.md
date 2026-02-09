@@ -61,3 +61,7 @@ Modificacion en ApplicationDbContext.
 ## [v2.4] - Elementos de Formulario
 
 Agregado modelo CFormElement. Modificaciones en CreateForm y Login. Actualizacion en AppShell.
+
+## [v2.5] - Respuestas y Encuestas
+
+Agregada FillSurveyPage para llenar encuestas. Agregados modelos ResponseDtos y CFormResponse.
