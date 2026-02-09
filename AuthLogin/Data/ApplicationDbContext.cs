@@ -17,6 +17,8 @@ namespace AuthLogin.Data
         //Definición del DbSet para la entidad CForm
         public DbSet<CForm> CForms { get; set; }
 
+        public DbSet<CFormElement> FormElements { get; set; }
+
         //Configuración del modelo de datos
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
