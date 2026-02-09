@@ -133,5 +133,85 @@ namespace Forms.Services
                 throw new Exception($"Error inesperado al guardar el formulario: {ex.Message}");
             }
         }
+
+        //logica que devuelve todos los formularios
+        public async Task<List<FormDto>> GetAllFormsAsync()
+        {
+            try
+            {
+                // Obtener el token de SecureStorage
+                var token = await SecureStorage.Default.GetAsync("auth_token");
+                // Agregar el token al encabezado de autorización
+                //_httpClient.DefaultRequestHeaders.Authorization = null;
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //endpoint para obtener todos los formularios
+                return await _httpClient.GetFromJsonAsync<List<FormDto>>("api/forms/all") ?? new List<FormDto>();
+                //var response = await _httpClient.GetAsync("api/forms/all");
+                //if (response.IsSuccessStatusCode)
+                //{
+                //    var forms = await response.Content.ReadFromJsonAsync<List<FormDto>>();
+                //    return forms ?? new List<FormDto>();
+                //}
+                //else
+                //{
+                //    var errorContent = await response.Content.ReadAsStringAsync();
+                //    throw new HttpRequestException($"Error de la API: {response.StatusCode} - {errorContent}", null, response.StatusCode);
+                //}
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error al obtener los formularios: {ex.Message}");
+                return new List<FormDto>(); //En caso de error, devolvemos una lista vacía para evitar que la aplicación se caiga.
+            }
+        }
+
+        public async Task<FormDto> GetFormDetailsAsync(int id)
+        {
+            try
+            {
+                // Obtener el token de SecureStorage
+                var token = await SecureStorage.Default.GetAsync("auth_token");
+                // Agregar el token al encabezado de autorización
+                _httpClient.DefaultRequestHeaders.Authorization = null;
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var response = await _httpClient.GetAsync($"api/forms/{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var form = await response.Content.ReadFromJsonAsync<FormDto>();
+                    return form ?? new FormDto();
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new HttpRequestException($"Error de la API: {response.StatusCode} - {errorContent}", null, response.StatusCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error inesperado al obtener los detalles del formulario: {ex.Message}");
+            }
+        }
+
+        public async Task<bool> SubmitResponseAsync(SubmitResponseDto responseDto)
+        {
+            try
+            {
+                // Obtener el token de SecureStorage
+                var token = await SecureStorage.Default.GetAsync("auth_token");
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                //Envia los datos
+                var httpResponse = await _httpClient.PostAsJsonAsync("api/forms/submit", responseDto);
+
+                return httpResponse.IsSuccessStatusCode;
+            }
+
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error al enviar la respuesta: {ex.Message}");
+                return false;
+            }
+        }
     }
 }
