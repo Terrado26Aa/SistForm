@@ -19,6 +19,10 @@ namespace AuthLogin.Data
 
         public DbSet<CFormElement> FormElements { get; set; }
 
+        public DbSet<CFormResponse> FormResponses { get; set; }
+        public DbSet<CFormResponseDetail> FormResponseDetails { get; set; }
+
+
         //Configuración del modelo de datos
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
