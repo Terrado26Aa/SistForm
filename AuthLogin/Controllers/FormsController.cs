@@ -1,6 +1,7 @@
 ﻿using AuthLogin.Data;
 using AuthLogin.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthLogin.Controllers
 {
@@ -32,7 +33,8 @@ namespace AuthLogin.Controllers
             };
 
             //Mapea los elementos del DTO a la entidad
-            if (createFormDto.Elements != null) {
+            if (createFormDto.Elements != null)
+            {
                 foreach (var item in createFormDto.Elements)
                 {
                     newForm.Elements.Add(new CFormElement
@@ -47,6 +49,69 @@ namespace AuthLogin.Controllers
             _context.CForms.Add(newForm);
             await _context.SaveChangesAsync();
             return Ok(new { Message = "Formulario creado exitosamente", FormId = newForm.IdForm });
+        }
+
+        //Get: api/Forms/all (para listar los formularios)
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllForms()
+        {
+            var forms = await _context.CForms
+                .Select(f => new
+                {
+                    f.IdForm,
+                    f.Title,
+                    f.Description,
+                })
+                .ToListAsync();
+            return Ok(forms);
+        }
+
+        //Get: api/Forms/{id} (para obtener un formulario por su Id, incluyendo sus elementos)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetFormById(int id)
+        {
+            var form = await _context.CForms
+                .Include(f => f.Elements) //Incluye los elementos relacionados
+                .FirstOrDefaultAsync(f => f.IdForm == id);
+            if (form == null) return NotFound("Formulario no encontrado");
+            return Ok(form);
+        }
+
+        public class SubmitResponseDto
+        {
+            public int FormId { get; set; }
+            public int UserId { get; set; }
+            public List<ResponseDetailDto> Answer { get; set; }
+        }
+
+        public class ResponseDetailDto
+        {
+            public string Question { get; set; }
+            public string Answer { get; set; }
+        }
+
+        [HttpPost("submit")]
+        public async Task<IActionResult> SubmitResponse([FromBody] SubmitResponseDto data)
+        {
+            var response = new CFormResponse
+            {
+                FormId = data.FormId,
+                UserId = data.UserId,
+                Date = DateTime.Now
+            };
+
+            foreach (var ans in data.Answer)
+            {
+                response.Details.Add(new CFormResponseDetail
+                {
+                    QuestionTitle = ans.Question,
+                    Answer = ans.Answer
+                });
+            }
+
+            _context.FormResponses.Add(response);
+            await _context.SaveChangesAsync();
+            return Ok(new { Message = "Respuesta enviada exitosamente" });
         }
     }
 }
