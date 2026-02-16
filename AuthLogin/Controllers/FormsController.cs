@@ -70,11 +70,18 @@ namespace AuthLogin.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFormById(int id)
         {
-            var form = await _context.CForms
+            try
+            {
+                var form = await _context.CForms
                 .Include(f => f.Elements) //Incluye los elementos relacionados
                 .FirstOrDefaultAsync(f => f.IdForm == id);
-            if (form == null) return NotFound("Formulario no encontrado");
-            return Ok(form);
+                if (form == null) return NotFound("Formulario no encontrado");
+                return Ok(form);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener el formulario: {ex.Message}");
+            }
         }
 
         public class SubmitResponseDto
