@@ -2,7 +2,7 @@
 
 Este documento registra el estado de cada alfa del kernel ESSENCE a lo largo de las versiones de SistForm.
 
-> *Esta matriz se ha ido completando progresivamente desde v1.0 hasta v2.6. Cada nueva version agrega su fila a la tabla.*
+> *Esta matriz se ha ido completando progresivamente desde v1.0 hasta v2.7. Cada nueva version agrega su fila a la tabla.*
 
 ## Matriz de Estados por Version
 
@@ -25,6 +25,7 @@ Este documento registra el estado de cada alfa del kernel ESSENCE a lo largo de 
 | [v2.4](v2-4-Elementos-de-Formulario) | Solution Needed | Involved | Coherent | Demonstrable | Under Control | Formed | Foundation Established |
 | [v2.5](v2-5-Respuestas-y-Encuestas) | Solution Needed | Involved | Coherent | Demonstrable | Under Control | Formed | Foundation Established |
 | [v2.6](v2-6-Ajustes-Proyecto) | Solution Needed | Involved | Coherent | Demonstrable | Under Control | Formed | Foundation Established |
+| [v2.7](v2-7-Controlador-Forms) | Solution Needed | Involved | Coherent | Demonstrable | Under Control | Formed | Foundation Established |
 
 ---
 
@@ -44,4 +45,4 @@ WoW:             Principles Established --► Foundation Established
 
 > Basado en el estandar **ESSENCE v1.2** adaptado al proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Matriz generada progresivamente desde v1.0 hasta v2.6.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Matriz generada progresivamente desde v1.0 hasta v2.7.

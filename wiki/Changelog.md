@@ -69,3 +69,7 @@ Agregada FillSurveyPage para llenar encuestas. Agregados modelos ResponseDtos y 
 ## [v2.6] - Ajustes Proyecto
 
 Ajustes en configuracion del proyecto.
+
+## [v2.7] - Controlador Forms
+
+Modificaciones en FormsController.
