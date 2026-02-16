@@ -65,3 +65,7 @@ Agregado modelo CFormElement. Modificaciones en CreateForm y Login. Actualizacio
 ## [v2.5] - Respuestas y Encuestas
 
 Agregada FillSurveyPage para llenar encuestas. Agregados modelos ResponseDtos y CFormResponse.
+
+## [v2.6] - Ajustes Proyecto
+
+Ajustes en configuracion del proyecto.

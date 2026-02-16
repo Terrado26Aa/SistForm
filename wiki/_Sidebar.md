@@ -35,3 +35,4 @@
 - [v2.3 - Base de Datos](v2-3-Base-de-Datos)
 - [v2.4 - Elementos de Formulario](v2-4-Elementos-de-Formulario)
 - [v2.5 - Respuestas y Encuestas](v2-5-Respuestas-y-Encuestas)
+- [v2.6 - Ajustes Proyecto](v2-6-Ajustes-Proyecto)
