@@ -37,3 +37,4 @@
 - [v2.5 - Respuestas y Encuestas](v2-5-Respuestas-y-Encuestas)
 - [v2.6 - Ajustes Proyecto](v2-6-Ajustes-Proyecto)
 - [v2.7 - Controlador Forms](v2-7-Controlador-Forms)
+- [v2.8 - Vistas Encuestas](v2-8-Vistas-Encuestas)

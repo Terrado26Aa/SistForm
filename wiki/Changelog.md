@@ -73,3 +73,7 @@ Ajustes en configuracion del proyecto.
 ## [v2.7] - Controlador Forms
 
 Modificaciones en FormsController.
+
+## [v2.8] - Vistas Encuestas
+
+Ajustes en vistas FillSurveyPage.xaml y Surveys.xaml.

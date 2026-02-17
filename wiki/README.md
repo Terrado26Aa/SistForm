@@ -67,6 +67,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v2.5](wiki/v2-5-Respuestas-y-Encuestas) | Respuestas y Encuestas | Agregada FillSurveyPage para llenar encuestas. Agregados modelos ResponseDtos y CFormResponse. |
 | [v2.6](wiki/v2-6-Ajustes-Proyecto) | Ajustes Proyecto | Ajustes en configuracion del proyecto. |
 | [v2.7](wiki/v2-7-Controlador-Forms) | Controlador Forms | Modificaciones en FormsController. |
+| [v2.8](wiki/v2-8-Vistas-Encuestas) | Vistas Encuestas | Ajustes en vistas FillSurveyPage.xaml y Surveys.xaml. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
