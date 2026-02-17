@@ -3,12 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Forms.Views.Surveys"
              Title="Surveys">
-    <CollectionView SelectionMode="Single" SelectionChanged="OnSelectionChanged">
+    <CollectionView x:Name="FormsList" SelectionMode="Single" SelectionChanged="OnSelectionChanged">
         <CollectionView.ItemTemplate>
             <DataTemplate>
-                <Frame Margin="10" Padding="15">
+                <Frame Margin="10" Padding="15" BorderColor="Gray" CornerRadius="10">
                     <VerticalStackLayout>
-                        <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold"/>
+                        <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
                         <Label Text="{Binding Description}" FontSize="14" TextColor="Gray"/>
                     </VerticalStackLayout>
                 </Frame>

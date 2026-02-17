@@ -6,7 +6,7 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
             <VerticalStackLayout x:Name="FormContainer" Spacing="10">
-                
+
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
