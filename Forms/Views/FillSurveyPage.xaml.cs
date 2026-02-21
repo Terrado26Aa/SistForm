@@ -20,9 +20,33 @@ public partial class FillSurveyPage : ContentPage
             var api = new ApiService();
             var form = await api.GetFormDetailsAsync(id);//obtener el formulario por id
 
-            Title = form.Title;
-            FormContainer.Children.Clear(); // Un VerticalStackLayout para contener los elementos del formulario
+            //validar que el formulario se haya cargado correctamente antes de intentar acceder a sus propiedades
+            if (form == null)
+            {
+                await DisplayAlert("Error", "No se pudo cargar el formulario.", "OK");
+                return; // Si no se pudo cargar el formulario, salimos del metodo para evitar errores posteriores
+            }
 
+            //Asignamos el titulo del formulario a la pagina, si no tiene titulo le asignamos uno por defecto
+            Title = form.Title ?? "Encuesta sin titulo";
+
+            //validar que el contenedor del formulario este disponible antes de intentar agregar controles
+            if (FormContainer == null)
+            {
+                await DisplayAlert("Error", "El contenedor del formulario no esta disponible.", "OK");
+                return; // Si el contenedor no esta disponible, salimos del metodo para evitar errores posteriores
+            }
+
+            FormContainer.Children.Clear(); // Limpiar cualquier contenido previo en el contenedor del formulario
+
+            //validar que el formulario tenga elementos antes de intentar iterar sobre ellos
+            if (form.Elements == null || form.Elements.Count == 0)
+            {
+                await DisplayAlert("Info", "Este formulario no tiene preguntas para responder.", "OK");
+                return; // Si el formulario no tiene elementos, salimos del metodo
+            }
+
+            //dibujar cada elemento del formulario en la interfaz de usuario
             foreach (var element in form.Elements)
             {
                 var label = new Label
@@ -40,18 +64,21 @@ public partial class FillSurveyPage : ContentPage
                 {
                     inputControl = new Entry
                     {
-                        Placeholder = "Escribe tu respuesta aqu�",
+                        Placeholder = "Escriba su respuesta",
                         FontSize = 14
                     };
                 }
                 else if (element.Type == "Lista" || element.Type == "Checklist")
                 {
-                    inputControl = new Picker
+                    inputControl = new Editor
                     {
-                        Title = "Selecciona una opci�n",
-                        FontSize = 14
+                        HeightRequest = 100,
+                        BackgroundColor = Colors.WhiteSmoke,
+                        Placeholder = "Escriba sus opciones, separadas por comas",
+                        FontSize = 14,
+                        AutoSize = EditorAutoSizeOption.TextChanges
                     };
-                    // Aqu� podr�as agregar opciones al Picker si las tienes en el elemento
+                    // Agregar lógica adicional para manejar la entrada de opciones si es necesario
                 }
 
                 if (inputControl != null)

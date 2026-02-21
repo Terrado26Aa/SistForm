@@ -25,16 +25,15 @@ public partial class Surveys : ContentPage
         FormsList.ItemsSource = forms; // Asignar la lista al CollectionView
     }
 
-    private async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private async void OnFrameTapped(object sender, TappedEventArgs e)
     {
-        // Obtener el formulario seleccionado
-        var selectedForm = e.CurrentSelection.FirstOrDefault() as FormDto;
-		if (selectedForm != null) return;
+        // Obtener el formulario seleccionado a través del parámetro del evento
+        var selectedForm = e.Parameter as FormDto; 
 
-        // Navegar a la página FillSurveyPage pasando el IdUser del formulario seleccionado
-        await Navigation.PushAsync(new FillSurveyPage(selectedForm.IdForm));//verificar si es IdUser o IdForm.
+        if (selectedForm == null) return;
 
-        // Deseleccionar el ítem después de la navegación
-        ((CollectionView)sender).SelectedItem = null;
+        // Navegar a la página de llenado de formulario, pasando el ID del formulario seleccionado
+        await Navigation.PushAsync(new FillSurveyPage(selectedForm.IdForm)); 
+
     }
 }
