@@ -2,7 +2,7 @@
 
 Los espacios de actividad de ESSENCE definen las areas de trabajo en el desarrollo de software. A continuacion se documenta como cada fase de SistForm cubrio estos espacios.
 
-> *Este mapa se ha ido completando progresivamente desde v1.0 hasta v2.9. Cada fase se agrego a la documentacion una vez completada.*
+> *Este mapa se ha ido completando progresivamente desde v1.0 hasta v3.0. Cada fase se agrego a la documentacion una vez completada.*
 
 | Simbolo | Significado |
 |---------|-------------|
@@ -48,24 +48,42 @@ Los espacios de actividad de ESSENCE definen las areas de trabajo en el desarrol
 
 ---
 
+### Fase 3: Administracion y Offline (v3.0 — v3.9)
+
+| Espacio de Actividad | Estado | Evidencia |
+|---------------------|--------|-----------|
+| **Explorar Posibilidades** | — | Fase concluida |
+| **Entender Necesidades de Stakeholders** | ◐ | Nuevos requisitos: edicion, perfil, offline |
+| **Entender los Requisitos** | ✓ | Requisitos de administracion y sincronizacion |
+| **Dar Forma al Sistema** | ✓ | Arquitectura offline con SQLite + cola de sync |
+| **Implementar el Sistema** | ✓ | ManageForms, EditProfile, OfflineSurveys, Sync |
+| **Probar el Sistema** | — | Sin pruebas automatizadas |
+| **Desplegar el Sistema** | ◐ | Preparacion para despliegue |
+| **Planear el Trabajo** | ✓ | Versionado continuo |
+| **Coordinar Actividad** | ✓ | Commits atomicos |
+| **Seguir Progreso** | ✓ | Tags por version |
+| **Identificar y Gestionar Riesgos** | ✓ | Soporte offline para escenarios sin conexion |
+
+---
+
 ## Cobertura Total por Espacio
 
 | Espacio de Actividad | F1 | F2 | F3 | F4 |
 |---------------------|:--:|:--:|:--:|:--:|
 | Explorar Posibilidades | ✓ | — | — | — |
-| Entender Necesidades de Stakeholders | ✓ | ◐ | — | — |
-| Entender los Requisitos | ✓ | ✓ | — | — |
-| Dar Forma al Sistema | ◐ | ✓ | — | — |
-| Implementar el Sistema | ✓ | ✓ | — | — |
+| Entender Necesidades de Stakeholders | ✓ | ◐ | ◐ | — |
+| Entender los Requisitos | ✓ | ✓ | ✓ | — |
+| Dar Forma al Sistema | ◐ | ✓ | ✓ | — |
+| Implementar el Sistema | ✓ | ✓ | ✓ | — |
 | Probar el Sistema | — | — | — | — |
-| Desplegar el Sistema | — | ◐ | — | — |
-| Planear el Trabajo | ✓ | ✓ | — | — |
-| Coordinar Actividad | ✓ | ✓ | — | — |
-| Seguir Progreso | ✓ | ✓ | — | — |
-| Identificar y Gestionar Riesgos | ◐ | ◐ | — | — |
+| Desplegar el Sistema | — | ◐ | ◐ | — |
+| Planear el Trabajo | ✓ | ✓ | ✓ | — |
+| Coordinar Actividad | ✓ | ✓ | ✓ | — |
+| Seguir Progreso | ✓ | ✓ | ✓ | — |
+| Identificar y Gestionar Riesgos | ◐ | ◐ | ✓ | — |
 
 ---
 
 > Basado en el estandar **ESSENCE v1.2** adaptado al proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Mapa generado progresivamente desde v1.0 hasta v2.9.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Mapa generado progresivamente desde v1.0 hasta v3.0.

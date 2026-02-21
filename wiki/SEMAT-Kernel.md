@@ -4,7 +4,7 @@ El estandar **ESSENCE** (Essential Software Engineering Common Terminology) defi
 
 A continuacion se define cada alfa para el contexto de SistForm, con sus estados y checklist de progresion.
 
-> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v2.9, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
+> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v3.0, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
 
 ---
 
@@ -18,6 +18,7 @@ La necesidad o el problema que motiva el desarrollo del sistema.
 |--------|-----------|
 | **Identified** | Se reconoce la falta de una herramienta unificada de recoleccion de datos geoespaciales en Panama |
 | **Solution Needed** | Se determina que una plataforma ubicua con soporte offline resuelve el problema |
+| **Value Established** | Investigadores y tecnicos validan que la plataforma ahorra tiempo y reduce errores |
 
 ---
 
@@ -32,6 +33,7 @@ Las personas, grupos u organizaciones que afectan o son afectados por el sistema
 | **Identified** | Se identifican investigadores, tecnicos ambientales y administradores como interesados |
 | **Represented** | Los requerimientos de los interesados se documentan en el anteproyecto |
 | **Involved** | Los interesados participan en la validacion de funcionalidades |
+| **In Agreement** | Los interesados aceptan los requisitos y el alcance definido |
 
 ---
 
@@ -46,6 +48,8 @@ Lo que el sistema debe hacer para satisfacer a los interesados y la oportunidad.
 | **Conceived** | Idea inicial: sistema de encuestas con autenticacion |
 | **Bounded** | Se delimita el alcance: CRUD de formularios, respuestas, usuarios |
 | **Coherent** | Los requisitos se organizan en funcionales y no funcionales |
+| **Acceptable** | Los requisitos son aprobados para implementacion |
+| **Addressed** | Los requisitos se implementan en su totalidad |
 
 ### Requisitos Funcionales Implementados
 
@@ -53,6 +57,9 @@ Lo que el sistema debe hacer para satisfacer a los interesados y la oportunidad.
 - RF-02: Creacion y edicion de formularios
 - RF-03: Respuesta a encuestas
 - RF-04: Administracion de formularios (asignacion, gestion)
+- RF-05: Perfil de usuario (edicion)
+- RF-06: Soporte offline (SQLite local)
+- RF-07: Sincronizacion de datos offline
 
 ---
 
@@ -67,6 +74,7 @@ El sistema de software que se esta construyendo.
 | **Architecture Selected** | Se elige .NET MAUI (frontend) + ASP.NET Core (backend) + MySQL |
 | **Demonstrable** | La autenticacion funciona (Login, Signin, HomePage) |
 | **Usable** | Se pueden crear, ver y responder encuestas |
+| **Ready** | Funcionalidades completas: administracion, perfiles, offline |
 
 ---
 
@@ -85,7 +93,7 @@ El conjunto de actividades que se deben realizar para construir el sistema.
 
 | Metrica | Valor |
 |---------|-------|
-| Versiones | v2.9 |
+| Versiones | v3.0 |
 
 ---
 
@@ -99,6 +107,7 @@ El grupo de personas responsables de construir el sistema.
 |--------|-----------|
 | **Seeded** | Se asigna Cesar Terrado como unico desarrollador |
 | **Formed** | Se definen roles y herramientas de desarrollo |
+| **Collaborating** | El equipo trabaja de forma consistente |
 
 ### Roles
 
@@ -120,6 +129,7 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 |--------|-----------|
 | **Principles Established** | Se adopta SEMAT/ESSENCE como metodologia base |
 | **Foundation Established** | Se define el kernel, las alfas y los espacios de actividad |
+| **In Use** | Se aplica SEMAT durante todo el desarrollo, version a version |
 
 ### Herramientas
 
@@ -129,6 +139,7 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 | ASP.NET Core | Framework backend REST API |
 | Entity Framework Core | ORM para base de datos |
 | MySQL | Base de datos relacional |
+| SQLite | Base de datos local offline |
 | Git + GitHub | Control de versiones |
 | GitHub Wiki | Documentacion del proyecto |
 
@@ -136,4 +147,4 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 
 > Basado en el estandar **ESSENCE v1.2** (Object Management Group) adaptado al contexto del proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v2.9.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v3.0.

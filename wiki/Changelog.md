@@ -81,3 +81,7 @@ Ajustes en vistas FillSurveyPage.xaml y Surveys.xaml.
 ## [v2.9] - Logica Encuestas
 
 Mejoras en logica de FillSurveyPage y Surveys.
+
+## [v3.0] - Administracion
+
+Agregada ManageFormsPage para administrar formularios. Modificaciones en FormsController, FillSurveyPage, CreateForm, Surveys.

@@ -2,7 +2,7 @@
 
 Este documento registra el estado de cada alfa del kernel ESSENCE a lo largo de las versiones de SistForm.
 
-> *Esta matriz se ha ido completando progresivamente desde v1.0 hasta v2.9. Cada nueva version agrega su fila a la tabla.*
+> *Esta matriz se ha ido completando progresivamente desde v1.0 hasta v3.0. Cada nueva version agrega su fila a la tabla.*
 
 ## Matriz de Estados por Version
 
@@ -28,23 +28,24 @@ Este documento registra el estado de cada alfa del kernel ESSENCE a lo largo de 
 | [v2.7](v2-7-Controlador-Forms) | Solution Needed | Involved | Coherent | Demonstrable | Under Control | Formed | Foundation Established |
 | [v2.8](v2-8-Vistas-Encuestas) | Solution Needed | Involved | Coherent | Demonstrable | Under Control | Formed | Foundation Established |
 | [v2.9](v2-9-Logica-Encuestas) | Solution Needed | Involved | Coherent | Demonstrable | Under Control | Formed | Foundation Established |
+| [v3.0](v3-0-Administracion) | Value Established | Involved | Coherent | Usable | Under Control | Collaborating | In Use |
 
 ---
 
 ## Resumen de Progresion
 
 ```
-Oportunidad:     Identified --► Solution Needed
+Oportunidad:     Identified --► Value Established
 Interesados:     Identified --► Involved
 Requisitos:      Conceived --► Coherent
-Sistema:         Architecture Selected --► Demonstrable
+Sistema:         Architecture Selected --► Usable
 Trabajo:         Started --► Under Control
-Equipo:          Formed --► Formed
-WoW:             Principles Established --► Foundation Established
+Equipo:          Formed --► Collaborating
+WoW:             Principles Established --► In Use
 ```
 
 ---
 
 > Basado en el estandar **ESSENCE v1.2** adaptado al proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Matriz generada progresivamente desde v1.0 hasta v2.9.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Matriz generada progresivamente desde v1.0 hasta v3.0.
