@@ -51,7 +51,27 @@ namespace AuthLogin.Controllers
             return Ok(new { Message = "Formulario creado exitosamente", FormId = newForm.IdForm });
         }
 
-        //Get: api/Forms/all (para listar los formularios)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteForm(int id)
+        {
+            try
+            {
+                var form = await _context.CForms.FindAsync(id);
+                if (form == null) return NotFound(new { Message = "Formulario no encontrado" });
+
+                //Elimina el formulario y sus elementos relacionados (si hay)
+                _context.CForms.Remove(form);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { Message = "Formulario eliminado exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al eliminar el formulario: {ex.Message}");
+            }
+        }
+
+        //Para listar los formularios.
         [HttpGet("all")]
         public async Task<IActionResult> GetAllForms()
         {
@@ -66,7 +86,7 @@ namespace AuthLogin.Controllers
             return Ok(forms);
         }
 
-        //Get: api/Forms/{id} (para obtener un formulario por su Id, incluyendo sus elementos)
+        //Para obtener un formulario por su Id, incluyendo sus elementos.
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFormById(int id)
         {
@@ -97,6 +117,7 @@ namespace AuthLogin.Controllers
             public string Answer { get; set; }
         }
 
+        //Para enviar las respuestas de un formulario.
         [HttpPost("submit")]
         public async Task<IActionResult> SubmitResponse([FromBody] SubmitResponseDto data)
         {
