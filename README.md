@@ -11,6 +11,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 - Configuracion para plataforma Android
 - API REST para formularios con Entity Framework Core y MySQL
 - Respuesta a encuestas desde dispositivo movil
+- Administracion de formularios (CRUD completo)
 
 ## Tecnologias
 
@@ -22,7 +23,9 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 ## Requisitos Previos
 
 - [.NET SDK](https://dotnet.microsoft.com/download) (.NET 8 o superior)
+- Servidor **MySQL**
 - Visual Studio 2022 (con cargas de trabajo MAUI y ASP.NET) o VS Code con C# Dev Kit
+- Entity Framework Core CLI (opcional): `dotnet tool install --global dotnet-ef`
 
 ## Configuracion y Ejecucion
 
@@ -42,6 +45,21 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 4. Presiona **F5** o haz clic en "Ejecutar".
 
 > **Nota:** Si pruebas en un emulador de Android, usa `10.0.2.2` en lugar de `localhost` para referirte a la maquina local.
+
+### 3. Base de Datos
+
+1. Asegurate de que MySQL este ejecutandose.
+2. Edita `AuthLogin/appsettings.json` y configura la cadena de conexion:
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "Server=localhost;Database=dbforms;Uid=TU_USUARIO;Pwd=TU_CONTRASENA;"
+   }
+   ```
+3. Aplica las migraciones:
+   ```bash
+   cd AuthLogin
+   dotnet ef database update
+   ```
 
 ---
 
@@ -69,6 +87,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v2.7](wiki/v2-7-Controlador-Forms) | Controlador Forms | Modificaciones en FormsController. |
 | [v2.8](wiki/v2-8-Vistas-Encuestas) | Vistas Encuestas | Ajustes en vistas FillSurveyPage.xaml y Surveys.xaml. |
 | [v2.9](wiki/v2-9-Logica-Encuestas) | Logica Encuestas | Mejoras en logica de FillSurveyPage y Surveys. |
+| [v3.0](wiki/v3-0-Administracion) | Administracion | Agregada ManageFormsPage para administrar formularios. Modificaciones en FormsController, FillSurveyPage, CreateForm, Surveys. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
