@@ -134,6 +134,26 @@ namespace Forms.Services
             }
         }
 
+        public async Task<bool> DeleteFormAsync(int id)
+        {
+            try
+            {
+                // Obtener el token de SecureStorage
+                var token = await SecureStorage.Default.GetAsync("auth_token");
+                // Agregar el token al encabezado de autorización
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //endpoint para eliminar un formulario por id
+                var response = await _httpClient.DeleteAsync($"api/forms/{id}");
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error inesperado al eliminar el formulario: {ex.Message}");
+            }
+        }
+
         //logica que devuelve todos los formularios
         public async Task<List<FormDto>> GetAllFormsAsync()
         {
@@ -141,23 +161,12 @@ namespace Forms.Services
             {
                 // Obtener el token de SecureStorage
                 var token = await SecureStorage.Default.GetAsync("auth_token");
+
                 // Agregar el token al encabezado de autorización
-                //_httpClient.DefaultRequestHeaders.Authorization = null;
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 //endpoint para obtener todos los formularios
                 return await _httpClient.GetFromJsonAsync<List<FormDto>>("api/forms/all") ?? new List<FormDto>();
-                //var response = await _httpClient.GetAsync("api/forms/all");
-                //if (response.IsSuccessStatusCode)
-                //{
-                //    var forms = await response.Content.ReadFromJsonAsync<List<FormDto>>();
-                //    return forms ?? new List<FormDto>();
-                //}
-                //else
-                //{
-                //    var errorContent = await response.Content.ReadAsStringAsync();
-                //    throw new HttpRequestException($"Error de la API: {response.StatusCode} - {errorContent}", null, response.StatusCode);
-                //}
             }
             catch (Exception ex)
             {
