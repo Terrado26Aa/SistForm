@@ -5,6 +5,7 @@
         public int IdUser { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
+        public string? Options { get; set; } // Solo se usará para elementos de tipo "select", "checkbox" o "radio"
 
         //Lista de elementos que viene del celular
         public List<FormElementDto> Elements { get; set; } = new List<FormElementDto>();
