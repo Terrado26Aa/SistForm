@@ -491,6 +491,7 @@ public partial class CreateForm : ContentPage
                     .FirstOrDefault(c => Grid.GetRow(c) == 0);
 
                     string elementType = "Desconocido";
+                    string combinedOptions = "";
 
                     //obtener el Contenido (siempre esta en la fila 1)
                     //Usamos (BindableObject) para evitar el error de compilacion
@@ -499,6 +500,7 @@ public partial class CreateForm : ContentPage
                     //Determinar el tipo
                     if (content is Label) elementType = "Texto";
                     else if (content is Button) elementType = "Imagen";
+                    else if (content is Entry) elementType = "Campo de Entrada";
                     else if (content is VerticalStackLayout stack)
                     {
                         // Determina si es Checklist o Multiple y Unica
@@ -506,20 +508,34 @@ public partial class CreateForm : ContentPage
                         if (firstRow != null)
                         {
                             if (firstRow.Children.Any(c => c is RadioButton))
-                                elementType = "Selección Única";
+                                elementType = "Seleccion Unica";
                             else
                                 elementType = "Checklist/Multiple";
                         }
-                        else
-                            elementType = "Checklist/Multiple";
+
+                        //Extraer las opciones escritas por el usuario
+                        var optionsList = new List<string>();
+                        foreach (var child2 in stack.Children)
+                        {
+                            if (child2 is HorizontalStackLayout row)
+                            {
+                                var optionsEntry = row.Children.OfType<Entry>().FirstOrDefault();
+                                if (optionsEntry != null && !string.IsNullOrWhiteSpace(optionsEntry.Text))
+                                {
+                                    optionsList.Add(optionsEntry.Text.Trim());
+                                }
+                            }
+                        }
+                        //Unimos la lista con comas.
+                        combinedOptions = string.Join(",", optionsList);
                     }
-                    else if (content is Entry) elementType = "Campo de entrada";
 
                 //Agregar a la lista de elementos del formulario
                 formDto.Elements.Add(new Models.FormElementDto
                     {
                         Title = titleEntry?.Text ?? "Sin titulo",
                         Type = elementType,
+                        Options = combinedOptions
                     });
                 }
             }

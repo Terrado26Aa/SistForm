@@ -68,17 +68,38 @@ public partial class FillSurveyPage : ContentPage
                         FontSize = 14
                     };
                 }
-                else if (element.Type == "Lista" || element.Type == "Checklist")
+                else if (element.Type == "Lista" || element.Type == "Checklist/Multiple" || element.Type == "Seleccion Unica")
                 {
-                    inputControl = new Editor
+                    var optionStack = new VerticalStackLayout { Spacing = 5 };
+
+                    //Separar las opciones por comas.
+                    string[] options = string.IsNullOrEmpty(element.Options)
+                        ? new string[0] 
+                        : element.Options.Split(',');
+
+                    string radioGroup = Guid.NewGuid().ToString(); //para que los radios no se mezclen.
+
+                    foreach (var option in options)
                     {
-                        HeightRequest = 100,
-                        BackgroundColor = Colors.WhiteSmoke,
-                        Placeholder = "Escriba sus opciones, separadas por comas",
-                        FontSize = 14,
-                        AutoSize = EditorAutoSizeOption.TextChanges
-                    };
-                    // Agregar lógica adicional para manejar la entrada de opciones si es necesario
+                        var row = new HorizontalStackLayout { Spacing = 10, VerticalOptions = LayoutOptions.Center };
+
+                        //Creamos la etiqueta de la opcion
+                        var lblOption = new Label { Text = option, VerticalOptions = LayoutOptions.Center };
+
+                        if (element.Type == "Seleccion Unica")
+                        {
+                            row.Children.Add(new RadioButton {GroupName = radioGroup, Value = option });
+                        }
+                        else
+                        {
+                            row.Children.Add(new CheckBox());
+                        }
+
+                        row.Children.Add(lblOption);
+                        optionStack.Children.Add(row);
+                    }
+
+                    inputControl = optionStack;
                 }
 
                 if (inputControl != null)
@@ -109,15 +130,24 @@ public partial class FillSurveyPage : ContentPage
             var elementData = View.BindingContext as FormElementDto;
             string answer = "";
 
-            if (View is Entry entry) answer = entry.Text;
-            else if (View is Picker picker) answer = picker.SelectedItem?.ToString() ?? "";
-            //Aqu� a�adir l�gica para Checkbox/Radio si los implementas
-
-            awnsers.Add(new ResponseDetailDto
+            if (View is Entry entry) answer = entry.Text ?? "";
+            else if (View is VerticalStackLayout stack) //Si es seleccion unica o multiple
             {
-                FormElementId = elementData.Id,
-                Answer = answer
-            });
+                var selectedAnswers = new List<string>();
+
+                foreach (var row in stack.Children.OfType<HorizontalStackLayout>())
+                {
+                    var checkBox = row.Children.OfType<CheckBox>().FirstOrDefault();
+                    var radioButton = row.Children.OfType<RadioButton>().FirstOrDefault();
+                    var label = row.Children.OfType<Label>().FirstOrDefault();
+
+                    if (checkBox != null && checkBox.IsChecked)
+                        selectedAnswers.Add(label.Text);
+                    else if (radioButton != null && radioButton.IsChecked)
+                        selectedAnswers.Add(label.Text);
+                }
+                answer = string.Join(", ", selectedAnswers); // Unir las respuestas seleccionadas en una sola cadena
+            }
         }
 
         var submitDto = new SubmitResponseDto
@@ -129,7 +159,7 @@ public partial class FillSurveyPage : ContentPage
 
         var api = new ApiService();
         await api.SubmitResponseAsync(submitDto);
-        await DisplayAlert("�xito", "Tus respuestas han sido enviadas.", "OK");
+        await DisplayAlert("Exito", "Tus respuestas han sido enviadas.", "OK");
         await Navigation.PopAsync(); // Volver a la p�gina anterior
     }
 }
