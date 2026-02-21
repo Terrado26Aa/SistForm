@@ -3,10 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Forms.Views.Surveys"
              Title="Surveys">
-    <CollectionView x:Name="FormsList" SelectionMode="Single" SelectionChanged="OnSelectionChanged">
+    <CollectionView x:Name="FormsList" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <Frame Margin="10" Padding="15" BorderColor="Gray" CornerRadius="10">
+
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnFrameTapped" CommandParameter="{Binding .}"/>
+                    </Frame.GestureRecognizers>
+                    
                     <VerticalStackLayout>
                         <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
                         <Label Text="{Binding Description}" FontSize="14" TextColor="Gray"/>
