@@ -101,6 +101,56 @@ public partial class FillSurveyPage : ContentPage
 
                     inputControl = optionStack;
                 }
+                else if(element.Type == "Imagen")
+                {
+                    var imageStack = new VerticalStackLayout { Spacing = 10 };
+
+                    //La imagen donde mostraremos la vista previa (oculta al principio)
+                    var previewImage = new Image { HeightRequest = 200, IsVisible = false, Aspect = Aspect.AspectFit };
+
+                    //El boton para seleccionar la imagen
+                    var pickButton = new Button { Text = "Seleccionar Imagen", BackgroundColor = Colors.CornflowerBlue};
+
+                    //Un Entry oculto para almacenar la imagen en base64 (no es la mejor forma, pero es una solucion rapida para no complicar el ejemplo con clases adicionales)
+                    var hiddenBase64Entry = new Entry { IsVisible = false, Text = ""};
+
+                    pickButton.Clicked += async (sender, e) =>
+                    {
+                        try
+                        {
+                            var photo = await MediaPicker.Default.PickPhotoAsync();
+                            if (photo != null)
+                            {
+                                //Mostramos la vista previa de la pantalla
+                                var streamPreview = await photo.OpenReadAsync();
+                                previewImage.Source = ImageSource.FromStream(() => streamPreview);
+                                previewImage.IsVisible = true;
+                                pickButton.Text = "Cambiar Imagen"; //Cambiar el texto del boton si ya se ha seleccionado una imagen
+
+                                //Convertimos la imagen a base64 para almacenarla en el Entry oculto
+                                using var memoryStream = new MemoryStream();
+                                using var streamForBase64 = await photo.OpenReadAsync();
+                                await streamForBase64.CopyToAsync(memoryStream);
+
+                                byte[] imageBytes = memoryStream.ToArray();
+                                // Convertimos la imagen a base64 y la almacenamos en el Entry oculto para enviarla luego al backend
+                                hiddenBase64Entry.Text = Convert.ToBase64String(imageBytes);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    };
+
+                    imageStack.Children.Add(previewImage);
+                    imageStack.Children.Add(pickButton);
+                    //Agregamos el Entry oculto al stack de la imagen para que se envíe junto con las respuestas,
+                    //aunque no se muestre en la interfaz
+                    imageStack.Children.Add(hiddenBase64Entry);
+
+                    inputControl = imageStack;
+                }
 
                 if (inputControl != null)
                 {
@@ -130,24 +180,51 @@ public partial class FillSurveyPage : ContentPage
             var elementData = View.BindingContext as FormElementDto;
             string answer = "";
 
-            if (View is Entry entry) answer = entry.Text ?? "";
-            else if (View is VerticalStackLayout stack) //Si es seleccion unica o multiple
+            if (elementData.Type == "Texto" || elementData.Type == "Campo de Entrada")
             {
-                var selectedAnswers = new List<string>();
-
-                foreach (var row in stack.Children.OfType<HorizontalStackLayout>())
+                if (View is Entry entry)
                 {
-                    var checkBox = row.Children.OfType<CheckBox>().FirstOrDefault();
-                    var radioButton = row.Children.OfType<RadioButton>().FirstOrDefault();
-                    var label = row.Children.OfType<Label>().FirstOrDefault();
-
-                    if (checkBox != null && checkBox.IsChecked)
-                        selectedAnswers.Add(label.Text);
-                    else if (radioButton != null && radioButton.IsChecked)
-                        selectedAnswers.Add(label.Text);
+                    answer = entry.Text ?? "";
                 }
-                answer = string.Join(", ", selectedAnswers); // Unir las respuestas seleccionadas en una sola cadena
             }
+            else if (elementData.Type == "Imagen")
+            {
+                if (View is VerticalStackLayout stack)
+                {
+                    var hiddenEntry = stack.Children.OfType<Entry>().FirstOrDefault();
+                    answer = hiddenEntry?.Text ?? ""; // Obtener el valor del Entry oculto que contiene la imagen en base64
+                }
+            }
+            else
+            {
+                if (View is VerticalStackLayout stack) //Si es seleccion unica o multiple
+                {
+                    var selectedAnswers = new List<string>();
+
+                    foreach (var row in stack.Children.OfType<HorizontalStackLayout>())
+                    {
+                        var checkBox = row.Children.OfType<CheckBox>().FirstOrDefault();
+                        var radioButton = row.Children.OfType<RadioButton>().FirstOrDefault();
+                        var label = row.Children.OfType<Label>().FirstOrDefault();
+
+                        //Evitamos el error si no encuentra el label
+                        if (label != null)
+                        {
+                            if (checkBox != null && checkBox.IsChecked)
+                                selectedAnswers.Add(label.Text);
+                            else if (radioButton != null && radioButton.IsChecked)
+                                selectedAnswers.Add(label.Text);
+                        }
+                    }
+                    answer = string.Join(", ", selectedAnswers); // Unir las respuestas seleccionadas en una sola cadena
+                }
+            }
+
+            awnsers.Add(new ResponseDetailDto
+            {
+                FormElementId = elementData.Id,
+                Answer = answer
+            });
         }
 
         var submitDto = new SubmitResponseDto
@@ -158,8 +235,15 @@ public partial class FillSurveyPage : ContentPage
         };
 
         var api = new ApiService();
-        await api.SubmitResponseAsync(submitDto);
-        await DisplayAlert("Exito", "Tus respuestas han sido enviadas.", "OK");
-        await Navigation.PopAsync(); // Volver a la p�gina anterior
+        bool exito = await api.SubmitResponseAsync(submitDto);
+        if (exito)
+        {
+            await DisplayAlert("Exito", "Tus respuestas han sido enviadas.", "OK");
+            await Navigation.PopAsync(); // Volver a la pagina anterior
+        }
+        else
+        {
+            await DisplayAlert("Error", "Hubo un error al enviar tus respuestas. Por favor, intenta de nuevo.", "OK");
+        }
     }
 }
