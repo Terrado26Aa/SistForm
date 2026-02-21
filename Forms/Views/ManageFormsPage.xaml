@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Forms.Views.ManageFormsPage"
+             Title="Administar Encuesta">
+    <CollectionView x:Name="FormsList" SelectionMode="None">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Frame Margin="10" Padding="15" BorderColor="Gray" CornerRadius="10">
+                    
+                    <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
+
+                        <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                            <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
+                            <Label Text="{Binding Description}" FontSize="14" TextColor="DarkGray"/>
+                        </VerticalStackLayout>
+
+                        <Button Grid.Column="1" Text="Editar" WidthRequest="50" HeightRequest="50"
+                                BackgroundColor="Transparent" TextColor="Blue" FontSize="20"
+                                Clicked="OnEditClicked" CommandParameter="{Binding .}"/>
+
+                        <Button Grid.Column="2" Text="Eliminar" WidthRequest="50" HeightRequest="50"
+                                BackgroundColor="Transparent" TextColor="Red" FontSize="20"
+                                Clicked="OnDeleteClicked" CommandParameter="{Binding .}"/>
+                    </Grid>
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentPage>
