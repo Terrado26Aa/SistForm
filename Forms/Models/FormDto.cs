@@ -23,5 +23,6 @@ namespace Forms.Models
         public int Id { get; set; }
         public string Type { get; set; }
         public string Title { get; set; }
+        public string Options { get; set; } // Solo se usará para elementos de tipo "select", "checkbox" o "radio"
     }
 }
