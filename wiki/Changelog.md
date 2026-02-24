@@ -85,3 +85,7 @@ Mejoras en logica de FillSurveyPage y Surveys.
 ## [v3.0] - Administracion
 
 Agregada ManageFormsPage para administrar formularios. Modificaciones en FormsController, FillSurveyPage, CreateForm, Surveys.
+
+## [v3.1] - Navegacion
+
+Modificaciones en AppShell (navegacion).
