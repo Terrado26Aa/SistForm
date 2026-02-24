@@ -13,7 +13,7 @@ namespace Forms
             Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
             Routing.RegisterRoute(nameof(CreateForm), typeof(CreateForm));
             Routing.RegisterRoute(nameof(Surveys), typeof(Surveys));
-
+            Routing.RegisterRoute(nameof(ManageFormsPage), typeof(ManageFormsPage));
         }
 
         // Verifica el estado de login cuando la pagina aparece
@@ -40,12 +40,6 @@ namespace Forms
                 await DisplayAlert("Debug", "¡Token encontrado! Bienvenido de nuevo.", "OK");
                 // No hace nada, se queda en el HomePage que es la página por defecto
             }
-
-            //if (string.IsNullOrEmpty(token))
-            //{
-            //    // No hay token, el usuario no ha iniciado sesion.
-            //    await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
-            //}
         }
 
         private async void OnLogoutClicked(object sender, EventArgs e)

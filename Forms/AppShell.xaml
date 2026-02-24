@@ -35,6 +35,11 @@
             ContentTemplate="{DataTemplate local1:Surveys}"
             Route="Surveys">
         </ShellContent>
+        <ShellContent
+    Title="Administrar Encuesta"
+    ContentTemplate="{DataTemplate local1:ManageFormsPage}"
+    Route="ManageFormsPage">
+        </ShellContent>
     </FlyoutItem>
 
     <ShellContent
