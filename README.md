@@ -88,6 +88,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v2.8](wiki/v2-8-Vistas-Encuestas) | Vistas Encuestas | Ajustes en vistas FillSurveyPage.xaml y Surveys.xaml. |
 | [v2.9](wiki/v2-9-Logica-Encuestas) | Logica Encuestas | Mejoras en logica de FillSurveyPage y Surveys. |
 | [v3.0](wiki/v3-0-Administracion) | Administracion | Agregada ManageFormsPage para administrar formularios. Modificaciones en FormsController, FillSurveyPage, CreateForm, Surveys. |
+| [v3.1](wiki/v3-1-Navegacion) | Navegacion | Modificaciones en AppShell (navegacion). |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
