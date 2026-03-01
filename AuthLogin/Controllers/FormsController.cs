@@ -72,6 +72,50 @@ namespace AuthLogin.Controllers
             }
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateForm(int id, [FromBody] CreateFormDto updateDto)
+        {
+            try
+            {
+                //Busca el formulario existente con sus elementos relacionados
+                var form = await _context.CForms.Include(f => f.Elements) //Incluye los elementos relacionados
+                    .FirstOrDefaultAsync(f => f.IdForm == id);
+                if (form == null) return NotFound(new { Message = "Formulario no encontrado" });
+
+                //Actualiza los campos del formulario
+                form.Title = updateDto.Title;
+                form.Description = updateDto.Description;
+                form.LastModifiedDate = DateTime.Now;
+
+                //Elimina las preguntas antiguas
+                _context.RemoveRange(form.Elements);
+
+                //Actualiza los elementos (puedes mejorar esta lógica para manejar adiciones/eliminaciones)
+                var newAnswers = new List<CFormElement>();
+                if (updateDto.Elements != null)
+                {
+                    foreach (var item in updateDto.Elements)
+                    {
+                        newAnswers.Add(new CFormElement
+                        {
+                            Title = item.Title,
+                            Type = item.Type,
+                            Options = item.Options,
+                            FormId = id
+                        });
+                    }
+                }
+                form.Elements = newAnswers;
+
+                await _context.SaveChangesAsync();
+                return Ok(new { Message = "Formulario actualizado exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al actualizar el formulario: {ex.Message}");
+            }
+        }
+
         //Para listar los formularios.
         [HttpGet("all")]
         public async Task<IActionResult> GetAllForms()
