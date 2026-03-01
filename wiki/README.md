@@ -12,6 +12,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 - API REST para formularios con Entity Framework Core y MySQL
 - Respuesta a encuestas desde dispositivo movil
 - Administracion de formularios (CRUD completo)
+- Edicion de formularios existentes
 
 ## Tecnologias
 
@@ -89,6 +90,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v2.9](wiki/v2-9-Logica-Encuestas) | Logica Encuestas | Mejoras en logica de FillSurveyPage y Surveys. |
 | [v3.0](wiki/v3-0-Administracion) | Administracion | Agregada ManageFormsPage para administrar formularios. Modificaciones en FormsController, FillSurveyPage, CreateForm, Surveys. |
 | [v3.1](wiki/v3-1-Navegacion) | Navegacion | Modificaciones en AppShell (navegacion). |
+| [v3.2](wiki/v3-2-Edicion-de-Formularios) | Edicion de Formularios | Agregada EditFormPage para editar formularios existentes. Modificaciones en FormsController, CreateForm, ManageFormsPage. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 

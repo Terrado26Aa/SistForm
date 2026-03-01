@@ -89,3 +89,7 @@ Agregada ManageFormsPage para administrar formularios. Modificaciones en FormsCo
 ## [v3.1] - Navegacion
 
 Modificaciones en AppShell (navegacion).
+
+## [v3.2] - Edicion de Formularios
+
+Agregada EditFormPage para editar formularios existentes. Modificaciones en FormsController, CreateForm, ManageFormsPage.

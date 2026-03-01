@@ -41,3 +41,4 @@
 - [v2.9 - Logica Encuestas](v2-9-Logica-Encuestas)
 - [v3.0 - Administracion](v3-0-Administracion)
 - [v3.1 - Navegacion](v3-1-Navegacion)
+- [v3.2 - Edicion de Formularios](v3-2-Edicion-de-Formularios)
