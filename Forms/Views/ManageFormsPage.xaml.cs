@@ -63,6 +63,6 @@ public partial class ManageFormsPage : ContentPage
         if (formToEdit == null) return;
 
         // Navegar a la página de edición de formularios, pasando el formulario seleccionado
-        await DisplayAlert("Editar", $"Funcionalidad de edición para el formulario '{formToEdit.Title}' aún no implementada.", "OK");
+        await Navigation.PushAsync(new EditFormPage(formToEdit.IdForm));
     }
 }
