@@ -154,6 +154,25 @@ namespace Forms.Services
             }
         }
 
+        public async Task<bool> UpdateFormAsync(int id, FormDto formDto)
+        {
+            try
+            {
+                // Obtener el token de SecureStorage
+                var token = await SecureStorage.Default.GetAsync("auth_token");
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                //endpoint para actualizar un formulario por id
+                var response = await _httpClient.PutAsJsonAsync($"api/forms/{id}", formDto);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error inesperado al actualizar el formulario: {ex.Message}");
+                return false;
+            }
+        }
+
         //logica que devuelve todos los formularios
         public async Task<List<FormDto>> GetAllFormsAsync()
         {
