@@ -40,7 +40,8 @@ namespace AuthLogin.Controllers
                     newForm.Elements.Add(new CFormElement
                     {
                         Title = item.Title,
-                        Type = item.Type
+                        Type = item.Type,
+                        Options = item.Options
                     });
                 }
             }
