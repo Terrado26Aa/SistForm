@@ -14,14 +14,10 @@
                             <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
                             <Label Text="{Binding Description}" FontSize="14" TextColor="DarkGray"/>
                         </VerticalStackLayout>
-
-                        <Button Grid.Column="1" Text="Editar" WidthRequest="50" HeightRequest="50"
-                                BackgroundColor="Transparent" TextColor="Blue" FontSize="20"
-                                Clicked="OnEditClicked" CommandParameter="{Binding .}"/>
-
-                        <Button Grid.Column="2" Text="Eliminar" WidthRequest="50" HeightRequest="50"
-                                BackgroundColor="Transparent" TextColor="Red" FontSize="20"
-                                Clicked="OnDeleteClicked" CommandParameter="{Binding .}"/>
+                        <ImageButton Grid.Column="1" Source="edit_icon.png" WidthRequest="20" HeightRequest="20" BackgroundColor="Transparent"
+                                     Clicked="OnEditClicked" CommandParameter="{Binding .}"/>
+                        <ImageButton Grid.Column="2" Source="delete_icon3.png" WidthRequest="25" HeightRequest="25" BackgroundColor="Transparent"
+                                     Clicked="OnDeleteClicked" CommandParameter="{Binding .}"/>
                     </Grid>
                 </Frame>
             </DataTemplate>
