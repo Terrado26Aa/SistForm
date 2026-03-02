@@ -27,7 +27,7 @@ public partial class ManageFormsPage : ContentPage
     private async void OnDeleteClicked(object sender, EventArgs e)
     {
         // Obtener el formulario asociado al botón de eliminar
-        var button = sender as Button;
+        var button = sender as ImageButton;
         var formToDelete = button?.CommandParameter as FormDto;
 
         if (formToDelete == null) return;
@@ -57,7 +57,7 @@ public partial class ManageFormsPage : ContentPage
     private async void OnEditClicked(object sender, EventArgs e)
     {
         // Obtener el formulario asociado al botón de editar
-        var button = sender as Button;
+        var button = sender as ImageButton;
         var formToEdit = button?.CommandParameter as FormDto;
 
         if (formToEdit == null) return;
