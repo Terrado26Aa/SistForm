@@ -93,3 +93,7 @@ Modificaciones en AppShell (navegacion).
 ## [v3.2] - Edicion de Formularios
 
 Agregada EditFormPage para editar formularios existentes. Modificaciones en FormsController, CreateForm, ManageFormsPage.
+
+## [v3.3] - Iconos y Gestion
+
+Agregados iconos delete_icon3 y edit_icon. Mejoras en ManageFormsPage.
