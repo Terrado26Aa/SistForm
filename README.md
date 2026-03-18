@@ -13,6 +13,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 - Respuesta a encuestas desde dispositivo movil
 - Administracion de formularios (CRUD completo)
 - Edicion de formularios existentes
+- Perfiles de usuario y edicion
 
 ## Tecnologias
 
@@ -92,6 +93,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v3.1](wiki/v3-1-Navegacion) | Navegacion | Modificaciones en AppShell (navegacion). |
 | [v3.2](wiki/v3-2-Edicion-de-Formularios) | Edicion de Formularios | Agregada EditFormPage para editar formularios existentes. Modificaciones en FormsController, CreateForm, ManageFormsPage. |
 | [v3.3](wiki/v3-3-Iconos-y-Gestion) | Iconos y Gestion | Agregados iconos delete_icon3 y edit_icon. Mejoras en ManageFormsPage. |
+| [v3.4](wiki/v3-4-Perfil-de-Usuario) | Perfil de Usuario | Agregado modelo UserProfileDto (frontend y backend). |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
