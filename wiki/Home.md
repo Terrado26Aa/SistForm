@@ -32,6 +32,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 | [v3.1](v3-1-Navegacion) | Navegacion | Modificaciones en AppShell (navegacion). |
 | [v3.2](v3-2-Edicion-de-Formularios) | Edicion de Formularios | Agregada EditFormPage para editar formularios existentes. Modificaciones en FormsController, CreateForm, ManageFormsPage. |
 | [v3.3](v3-3-Iconos-y-Gestion) | Iconos y Gestion | Agregados iconos delete_icon3 y edit_icon. Mejoras en ManageFormsPage. |
+| [v3.4](v3-4-Perfil-de-Usuario) | Perfil de Usuario | Agregado modelo UserProfileDto (frontend y backend). |
 
 ---
 
@@ -49,7 +50,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 | Pagina | Descripcion |
 |--------|-------------|
 | [Kernel ESSENCE](SEMAT-Kernel) | Definicion de las 7 alfas con checklist de estados para SistForm |
-| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v3.3) |
+| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v3.4) |
 | [Espacios de Actividad](SEMAT-Activity-Spaces) | Mapa de espacios de actividad cubiertos en cada fase del proyecto |
 
 ---

@@ -97,3 +97,7 @@ Agregada EditFormPage para editar formularios existentes. Modificaciones en Form
 ## [v3.3] - Iconos y Gestion
 
 Agregados iconos delete_icon3 y edit_icon. Mejoras en ManageFormsPage.
+
+## [v3.4] - Perfil de Usuario
+
+Agregado modelo UserProfileDto (frontend y backend).
