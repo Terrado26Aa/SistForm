@@ -261,5 +261,21 @@ namespace Forms.Services
                 return null;
             }
         }
+
+        public async Task<bool> UpdateUserProfileAsync(int userId, UserProfileDto profileData)
+        {
+            try
+            {
+                var token = await SecureStorage.Default.GetAsync("auth_token");
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                
+                var response = await _httpClient.PutAsJsonAsync($"api/auth/profile/{userId}", profileData);
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
