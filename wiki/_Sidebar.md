@@ -44,3 +44,4 @@
 - [v3.2 - Edicion de Formularios](v3-2-Edicion-de-Formularios)
 - [v3.3 - Iconos y Gestion](v3-3-Iconos-y-Gestion)
 - [v3.4 - Perfil de Usuario](v3-4-Perfil-de-Usuario)
+- [v3.5 - Editar Perfil](v3-5-Editar-Perfil)

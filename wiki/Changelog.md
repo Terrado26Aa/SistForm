@@ -101,3 +101,7 @@ Agregados iconos delete_icon3 y edit_icon. Mejoras en ManageFormsPage.
 ## [v3.4] - Perfil de Usuario
 
 Agregado modelo UserProfileDto (frontend y backend).
+
+## [v3.5] - Editar Perfil
+
+Agregada EditProfilePage para editar perfil de usuario. Modificaciones en ApiService y controlador de autenticacion.
