@@ -18,12 +18,12 @@ namespace Forms.Services
         private static string DetermineBaseUrl()
         {
 #if DEBUG
-            if(DeviceInfo.Platform == DevicePlatform.Android)
+            if (DeviceInfo.Platform == DevicePlatform.Android)
             {
                 return "http://10.0.2.2:5174";
             }
 
-            else if(DeviceInfo.Platform == DevicePlatform.iOS)
+            else if (DeviceInfo.Platform == DevicePlatform.iOS)
             {
                 return "http://TU_IP_DE_MAC_O_PC:5174";
             }
@@ -57,7 +57,7 @@ namespace Forms.Services
                         await SecureStorage.Default.SetAsync("user_id", loginResponse.UserId.ToString());
 
                         await Application.Current.MainPage.DisplayAlert("Token Guardado", $"El token empieza con: " +
-                            $"{loginResponse.Token.Substring(0,15)}... \nID Usuario: {loginResponse.UserId}", "OK");
+                            $"{loginResponse.Token.Substring(0, 15)}... \nID Usuario: {loginResponse.UserId}", "OK");
                     }
 
                     return loginResponse;
@@ -239,6 +239,26 @@ namespace Forms.Services
             {
                 System.Diagnostics.Debug.WriteLine($"Error al enviar la respuesta: {ex.Message}");
                 return false;
+            }
+        }
+
+        public async Task<UserProfileDto> GetUserProfileAsync(int userId)
+        {
+            try
+            {
+                var token = await SecureStorage.Default.GetAsync("auth_token");
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var response = await _httpClient.GetAsync($"api/auth/profile/{userId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<UserProfileDto>();
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
             }
         }
     }
