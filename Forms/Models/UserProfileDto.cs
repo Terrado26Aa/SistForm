@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Forms.Models
 {
-    class UserProfileDto
+    public class UserProfileDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
