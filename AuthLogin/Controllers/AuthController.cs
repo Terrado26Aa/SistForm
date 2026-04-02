@@ -148,5 +148,36 @@ namespace AuthLogin.Controllers
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
             return Ok(new { OriginalPassword = password, HashedPassword = hashedPassword });
         }
+
+        //Obtener los datos del usuario actual
+        [HttpGet("profile/{id}")]
+        public async Task<IActionResult> GetProfile(int id)
+        {
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound("Usuario no encontrado.");
+
+            return Ok(new UserProfileDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+            });
+        }
+
+        //Actualizar los datos del usuario actual
+        [HttpPut("profile/{id}")]
+        public async Task<IActionResult> UpdateProfile(int id, [FromBody] UserProfileDto dto)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound("Usuario no encontrado.");
+
+            user.FirstName = dto.FirstName;
+            user.LastName = dto.LastName;
+            user.Email = dto.Email;
+
+            await _context.SaveChangesAsync();
+            return Ok(new { Message = "Perfil actualizado exitosamente." });
+        }
     }
 }
