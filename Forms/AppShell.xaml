@@ -11,9 +11,13 @@
 
     <Shell.FlyoutHeader>
         <VerticalStackLayout HorizontalOptions="FillAndExpand" Padding="10,30,10,30">
-            <Image Source="username.png" HeightRequest="75" WidthRequest="75"/>
+            <Image Source="username.png" HeightRequest="75" WidthRequest="75">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnProfileClicked"/>
+                </Image.GestureRecognizers>
+            </Image>
             <Button Text="Perfil" Background="Transparent" TextColor="Black"
-                    HorizontalOptions="Center" Padding="0,0,0,10"/>
+                    HorizontalOptions="Center" Padding="0,0,0,10" Clicked="OnProfileClicked"/>
             <BoxView BackgroundColor="Black" HeightRequest="5" HorizontalOptions="Fill"
                      CornerRadius="40" />
         </VerticalStackLayout>

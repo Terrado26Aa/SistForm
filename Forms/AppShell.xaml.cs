@@ -16,6 +16,7 @@ namespace Forms
             Routing.RegisterRoute(nameof(ManageFormsPage), typeof(ManageFormsPage));
             Routing.RegisterRoute(nameof(FillSurveyPage), typeof(FillSurveyPage));
             Routing.RegisterRoute(nameof(EditFormPage), typeof(EditFormPage));
+            Routing.RegisterRoute(nameof(EditProfilePage), typeof(EditProfilePage));
         }
 
         // Verifica el estado de login cuando la pagina aparece
@@ -56,6 +57,13 @@ namespace Forms
                 // Navegar a la página de login y limpiar el historial de navegación
                 await Shell.Current.GoToAsync($"//{nameof(Views.Login)}");
             }
+        }
+
+        private async void OnProfileClicked(object sender, EventArgs e)
+        {
+            Current.FlyoutIsPresented = false; // Cierra el menú lateral
+
+            await Shell.Current.GoToAsync(nameof(EditProfilePage));
         }
     }
 }
