@@ -95,6 +95,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v3.3](wiki/v3-3-Iconos-y-Gestion) | Iconos y Gestion | Agregados iconos delete_icon3 y edit_icon. Mejoras en ManageFormsPage. |
 | [v3.4](wiki/v3-4-Perfil-de-Usuario) | Perfil de Usuario | Agregado modelo UserProfileDto (frontend y backend). |
 | [v3.5](wiki/v3-5-Editar-Perfil) | Editar Perfil | Agregada EditProfilePage para editar perfil de usuario. Modificaciones en ApiService y controlador de autenticacion. |
+| [v3.6](wiki/v3-6-Ajustes-Navegacion) | Ajustes Navegacion | Ajustes en AppShell (navegacion). |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
