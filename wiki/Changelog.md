@@ -105,3 +105,7 @@ Agregado modelo UserProfileDto (frontend y backend).
 ## [v3.5] - Editar Perfil
 
 Agregada EditProfilePage para editar perfil de usuario. Modificaciones en ApiService y controlador de autenticacion.
+
+## [v3.6] - Ajustes Navegacion
+
+Ajustes en AppShell (navegacion).
