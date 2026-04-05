@@ -90,6 +90,9 @@
 	  <MauiXaml Update="Views\ManageFormsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\OfflineSurveysPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Signin.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
