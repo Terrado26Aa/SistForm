@@ -49,24 +49,39 @@ public partial class EditProfilePage : ContentPage
             return;
         }
 
+        string passwordToSend = null;
+
+        //validar si el usuario quiere cambiar su contraseña, si es asi, validar que las contraseñas coincidan
+        if (!string.IsNullOrWhiteSpace(NewPasswordEntry.Text) || !string.IsNullOrWhiteSpace(ConfirmPasswordEntry.Text))
+        {
+            if (NewPasswordEntry.Text != ConfirmPasswordEntry.Text)
+            {
+                await DisplayAlert("Error", "Las contraseñas no coinciden.", "OK");
+                return;
+            }
+            // Si las contraseñas coinciden, asignar la nueva contraseña a enviar
+            passwordToSend = NewPasswordEntry.Text;
+        }
+
         var updatedProfile = new UserProfileDto
         {
             FirstName = FirstNameEntry.Text,
             LastName = LastNameEntry.Text,
-            Email = EmailEntry.Text
+            Email = EmailEntry.Text,
+            NewPassword = passwordToSend // Solo se enviará si el usuario ha ingresado una nueva contraseña
         };
 
         var api = new ApiService();
-        bool success = await api.UpdateUserProfileAsync(userId, updatedProfile);
+        var result = await api.UpdateUserProfileAsync(userId, updatedProfile);
 
-        if (success)
+        if (result.IsSuccess)
         {
             await DisplayAlert("Éxito", "Tu perfil ha sido actualizado.", "OK");
-            await Shell.Current.GoToAsync(nameof(HomePage)); // Volver a la página principal.
+            await Shell.Current.GoToAsync("//HomePage"); // Volver a la página principal.
         }
         else
         {
-            await DisplayAlert("Error", "Hubo un problema al guardar los cambios.", "OK");
+            await DisplayAlert("Error de la API", result.ErrorMessage, "OK");
         }
     }
 }
