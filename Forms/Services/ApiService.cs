@@ -262,7 +262,7 @@ namespace Forms.Services
             }
         }
 
-        public async Task<bool> UpdateUserProfileAsync(int userId, UserProfileDto profileData)
+        public async Task<(bool IsSuccess, string ErrorMessage)> UpdateUserProfileAsync(int userId, UserProfileDto profileData)
         {
             try
             {
@@ -270,11 +270,19 @@ namespace Forms.Services
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 
                 var response = await _httpClient.PutAsJsonAsync($"api/auth/profile/{userId}", profileData);
-                return response.IsSuccessStatusCode;
+                if(response.IsSuccessStatusCode)
+                {
+                    return (true, string.Empty);
+                }
+                else
+                {
+                    string errorDetails= await response.Content.ReadAsStringAsync();
+                    return (false, $"Error de la API: {response.StatusCode}: {errorDetails}");
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                return (false, $"Excepcion de MAUI: {ex.Message}");
             }
         }
     }
