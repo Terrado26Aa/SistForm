@@ -36,4 +36,35 @@ public partial class Surveys : ContentPage
         await Navigation.PushAsync(new FillSurveyPage(selectedForm.IdForm)); 
 
     }
+
+    private async void OnDownloadFormClicked(object sender, EventArgs e)
+    {
+        var button = sender as ImageButton;
+        var selectedForm = button?.CommandParameter as FormDto;
+
+        if (selectedForm == null) return;
+        
+        //Verifica si hay internet para poder descargar.
+        if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+        {
+            await DisplayAlert("Error", "No hay conexión a internet. Por favor, conéctate para descargar el formulario.", "OK");
+            return;
+        }
+
+        //Descargamos la encuesta Completa con todas sus preguntas desde la API.
+        var api = new ApiService();
+        var completeForm = await api.GetFormDetailsAsync(selectedForm.IdForm);
+
+        if (completeForm != null)
+        {
+            //la guardamos en la memoria interna del telefono.
+            await LocalDatabaseHelper.SaveFormLocallyAsync(completeForm);
+            await DisplayAlert("Exito", $"La encuesta '{completeForm.Title}' ha sido descargada y ya esta disponible offline",
+                "OK");
+        }
+        else
+        {
+            await DisplayAlert("Error", "No se pudo descargar la encuesta.", "OK");
+        }
+    }
 }

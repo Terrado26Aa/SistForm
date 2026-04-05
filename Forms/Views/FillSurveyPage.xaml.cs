@@ -17,14 +17,31 @@ public partial class FillSurveyPage : ContentPage
     {
         try
         {
-            var api = new ApiService();
-            var form = await api.GetFormDetailsAsync(id);//obtener el formulario por id
+            FormDto form = null;
 
-            //validar que el formulario se haya cargado correctamente antes de intentar acceder a sus propiedades
-            if (form == null)
+            //Verificar si hay internet.
+            var currentStack = Connectivity.Current.NetworkAccess;
+
+            if (currentStack == NetworkAccess.Internet)
             {
-                await DisplayAlert("Error", "No se pudo cargar el formulario.", "OK");
-                return; // Si no se pudo cargar el formulario, salimos del metodo para evitar errores posteriores
+                //Intentamos cargar desde la API.
+                var api = new ApiService();
+                form = await api.GetFormDetailsAsync(id);
+
+                //Fallback offline (si no hay internet o la API Fallo).
+                if (form == null)
+                {
+                    form = await LocalDatabaseHelper.GetDownloadedFormByIdAsync(id);
+                }
+
+                //Validacion final.
+                if(form == null)
+                {
+                    await DisplayAlert("Error", "No se pudo cargar el formulario. Asegúrate de tener conexión a internet o " +
+                        "de haber descargado el formulario previamente.", "OK");
+                    await Shell.Current.GoToAsync("//HomePage"); 
+                    return; // Salir del método para evitar errores posteriores.
+                }
             }
 
             //Asignamos el titulo del formulario a la pagina, si no tiene titulo le asignamos uno por defecto
@@ -227,6 +244,16 @@ public partial class FillSurveyPage : ContentPage
             });
         }
 
+        //
+        string userIsString = await SecureStorage.Default.GetAsync("user_id");
+        int finalUserId = 0; //0 Significa "Usuario anonimo u offline"
+
+        if(!string.IsNullOrEmpty(userIsString))
+        {
+            int.TryParse(userIsString, out finalUserId);
+        }
+
+        //Empaquetamos los datos con el ID seguro.
         var submitDto = new SubmitResponseDto
         {
             FormId = _formId,
@@ -234,16 +261,17 @@ public partial class FillSurveyPage : ContentPage
             Responses = awnsers
         };
 
-        var api = new ApiService();
-        bool exito = await api.SubmitResponseAsync(submitDto);
-        if (exito)
+        try
         {
-            await DisplayAlert("Exito", "Tus respuestas han sido enviadas.", "OK");
-            await Navigation.PopAsync(); // Volver a la pagina anterior
+            await LocalDatabaseHelper.SaveResponseLocallyAsync(submitDto);
+
+            await DisplayAlert("Guardado local", "Tus respuestas han sido guardadas localmente y se enviarán cuando " +
+                "tengas conexión a internet.", "OK");
+            await Shell.Current.GoToAsync("//HomePage"); // Volver a la página principal después de guardar las respuestas
         }
-        else
+        catch(Exception ex)
         {
-            await DisplayAlert("Error", "Hubo un error al enviar tus respuestas. Por favor, intenta de nuevo.", "OK");
+            await DisplayAlert("Error", $"No se pudo guardar localmente: {ex.Message}", "OK");
         }
     }
 }

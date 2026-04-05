@@ -78,4 +78,10 @@ public partial class Login : ContentPage
         // Navega a la pagina de registro
         await Shell.Current.GoToAsync(nameof(Signin));
     }
+
+    private async void OnOfflineModeClicked(object sender, EventArgs e)
+    {
+        // Navegamos a la nueva pantalla de encuestas offline
+        await Navigation.PushAsync(new OfflineSurveysPage());
+    }
 }

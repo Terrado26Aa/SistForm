@@ -6,10 +6,10 @@ namespace Forms.Views;
 public partial class Signin : ContentPage
 {
     private readonly ApiService _apiService;
-	public Signin(ApiService apiService)
+	public Signin()
 	{
 		InitializeComponent();
-        _apiService = apiService;
+        _apiService = new ApiService();
 	}
 
 	private async void OnRegisterButtonClicked(object sender, EventArgs e)
