@@ -176,6 +176,11 @@ namespace AuthLogin.Controllers
             user.LastName = dto.LastName;
             user.Email = dto.Email;
 
+            if(!string.IsNullOrEmpty(dto.NewPassword))
+            {
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            }
+
             await _context.SaveChangesAsync();
             return Ok(new { Message = "Perfil actualizado exitosamente." });
         }
