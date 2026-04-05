@@ -56,6 +56,9 @@
                             <Button Text="Iniciar Sesion" Background="#0cf4f4" TextColor="White" FontAttributes="Bold" CornerRadius="30" WidthRequest="200" Margin="0,15,0,0"
                             Clicked="OnLoginClicked"/>
                             <Label x:Name="ErrorLabel" TextColor="Red" IsVisible="False"/>
+
+                            <Button Text="Modo Offline" Background="DarkGray" TextColor="white" FontAttributes="Bold" CornerRadius="30" WidthRequest="200" Margin="0,15,0,0"
+                            Clicked="OnOfflineModeClicked"/>
                         </StackLayout>
 
                         <!--Boton para registrarse-->
