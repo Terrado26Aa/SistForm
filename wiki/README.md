@@ -14,6 +14,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 - Administracion de formularios (CRUD completo)
 - Edicion de formularios existentes
 - Perfiles de usuario y edicion
+- Soporte offline con SQLite local
 
 ## Tecnologias
 
@@ -21,6 +22,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 - **Backend:** ASP.NET Core Web API
 - **ORM:** Entity Framework Core
 - **Base de datos:** MySQL
+- **Almacenamiento local:** SQLite
 
 ## Requisitos Previos
 
@@ -96,6 +98,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v3.4](wiki/v3-4-Perfil-de-Usuario) | Perfil de Usuario | Agregado modelo UserProfileDto (frontend y backend). |
 | [v3.5](wiki/v3-5-Editar-Perfil) | Editar Perfil | Agregada EditProfilePage para editar perfil de usuario. Modificaciones en ApiService y controlador de autenticacion. |
 | [v3.6](wiki/v3-6-Ajustes-Navegacion) | Ajustes Navegacion | Ajustes en AppShell (navegacion). |
+| [v3.7](wiki/v3-7-Soporte-Offline) | Soporte Offline | Agregada OfflineSurveysPage y servicio LocalDatabaseHelper. Soporte offline para encuestas. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 

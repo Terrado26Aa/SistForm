@@ -35,6 +35,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 | [v3.4](v3-4-Perfil-de-Usuario) | Perfil de Usuario | Agregado modelo UserProfileDto (frontend y backend). |
 | [v3.5](v3-5-Editar-Perfil) | Editar Perfil | Agregada EditProfilePage para editar perfil de usuario. Modificaciones en ApiService y controlador de autenticacion. |
 | [v3.6](v3-6-Ajustes-Navegacion) | Ajustes Navegacion | Ajustes en AppShell (navegacion). |
+| [v3.7](v3-7-Soporte-Offline) | Soporte Offline | Agregada OfflineSurveysPage y servicio LocalDatabaseHelper. Soporte offline para encuestas. |
 
 ---
 
@@ -52,7 +53,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 | Pagina | Descripcion |
 |--------|-------------|
 | [Kernel ESSENCE](SEMAT-Kernel) | Definicion de las 7 alfas con checklist de estados para SistForm |
-| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v3.6) |
+| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v3.7) |
 | [Espacios de Actividad](SEMAT-Activity-Spaces) | Mapa de espacios de actividad cubiertos en cada fase del proyecto |
 
 ---

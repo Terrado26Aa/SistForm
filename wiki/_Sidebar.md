@@ -46,3 +46,4 @@
 - [v3.4 - Perfil de Usuario](v3-4-Perfil-de-Usuario)
 - [v3.5 - Editar Perfil](v3-5-Editar-Perfil)
 - [v3.6 - Ajustes Navegacion](v3-6-Ajustes-Navegacion)
+- [v3.7 - Soporte Offline](v3-7-Soporte-Offline)

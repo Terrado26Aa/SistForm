@@ -109,3 +109,7 @@ Agregada EditProfilePage para editar perfil de usuario. Modificaciones en ApiSer
 ## [v3.6] - Ajustes Navegacion
 
 Ajustes en AppShell (navegacion).
+
+## [v3.7] - Soporte Offline
+
+Agregada OfflineSurveysPage y servicio LocalDatabaseHelper. Soporte offline para encuestas.
