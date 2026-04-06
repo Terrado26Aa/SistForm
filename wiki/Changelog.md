@@ -113,3 +113,7 @@ Ajustes en AppShell (navegacion).
 ## [v3.7] - Soporte Offline
 
 Agregada OfflineSurveysPage y servicio LocalDatabaseHelper. Soporte offline para encuestas.
+
+## [v3.8] - Base Datos Local
+
+Mejoras en LocalDatabaseHelper.

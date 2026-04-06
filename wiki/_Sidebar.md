@@ -47,3 +47,4 @@
 - [v3.5 - Editar Perfil](v3-5-Editar-Perfil)
 - [v3.6 - Ajustes Navegacion](v3-6-Ajustes-Navegacion)
 - [v3.7 - Soporte Offline](v3-7-Soporte-Offline)
+- [v3.8 - Base Datos Local](v3-8-Base-Datos-Local)
