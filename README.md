@@ -99,6 +99,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v3.5](wiki/v3-5-Editar-Perfil) | Editar Perfil | Agregada EditProfilePage para editar perfil de usuario. Modificaciones en ApiService y controlador de autenticacion. |
 | [v3.6](wiki/v3-6-Ajustes-Navegacion) | Ajustes Navegacion | Ajustes en AppShell (navegacion). |
 | [v3.7](wiki/v3-7-Soporte-Offline) | Soporte Offline | Agregada OfflineSurveysPage y servicio LocalDatabaseHelper. Soporte offline para encuestas. |
+| [v3.8](wiki/v3-8-Base-Datos-Local) | Base Datos Local | Mejoras en LocalDatabaseHelper. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
