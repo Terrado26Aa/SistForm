@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Forms.Models;
 using System.Text.Json;
-using Forms.Models;
 
 namespace Forms.Services
 {
@@ -70,7 +65,7 @@ namespace Forms.Services
             string json = await File.ReadAllTextAsync(FormsFilePath);
             var savedForms = JsonSerializer.Deserialize<List<FormDto>>(json) ?? new List<FormDto>();
 
-            return savedForms.FirstOrDefault(f => f.IdForm == id);
+            return savedForms.FirstOrDefault(f => f != null && f.IdForm == id);
         }
         
         //Obtener todas las encuestad descargadas
