@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Forms.Services
 {
-    class LocalDatabaseHelper
+    public static class LocalDatabaseHelper
     {
         //ruta segura y privada para almacenar los datos de las respuestas pendientes
         private static string FilePath => Path.Combine(FileSystem.AppDataDirectory, "pending_request.json");
@@ -42,7 +42,7 @@ namespace Forms.Services
         public static async Task SaveFormLocallyAsync(FormDto form)
         {
             var savedForms = new List<FormDto>();
-            if(File.Exists(FormsFilePath))
+            if (File.Exists(FormsFilePath))
             {
                 string json = await File.ReadAllTextAsync(FormsFilePath);
                 savedForms = JsonSerializer.Deserialize<List<FormDto>>(json) ?? new List<FormDto>();
@@ -67,8 +67,8 @@ namespace Forms.Services
 
             return savedForms.FirstOrDefault(f => f != null && f.IdForm == id);
         }
-        
-        //Obtener todas las encuestad descargadas
+
+        //Obtener todas las encuestas descargadas
         public static async Task<List<FormDto>> GetAllDownloadedFormAsync()
         {
             if (!File.Exists(FormsFilePath))
@@ -76,6 +76,29 @@ namespace Forms.Services
 
             string json = await File.ReadAllTextAsync(FormsFilePath);
             return System.Text.Json.JsonSerializer.Deserialize<List<FormDto>>(json) ?? new List<FormDto>();
+        }
+
+        //Obtener todas las respuestas (Borradores) pendientes a subir
+        public static async Task<List<SubmitResponseDto>> GetPendingResponsesAsync()
+        {
+            if (!File.Exists(FilePath))
+                return new List<SubmitResponseDto>(); //Si no hay respuestas pendientes, devolvemos una lista vacía
+
+            string json = await File.ReadAllTextAsync(FilePath);
+            return JsonSerializer.Deserialize<List<SubmitResponseDto>>(json) ?? new List<SubmitResponseDto>();
+        }
+
+        public static async Task DeletePendingResponseAsync(string localId)
+        {
+            var pendingList = await GetPendingResponsesAsync();
+
+            var itemToRemove = pendingList.FirstOrDefault(x => x.LocalId == localId);
+            if (itemToRemove != null)
+            {
+                pendingList.Remove(itemToRemove);
+                string updatedJson = System.Text.Json.JsonSerializer.Serialize(pendingList);
+                await File.WriteAllTextAsync(FilePath, updatedJson);
+            }
         }
     }
 }
