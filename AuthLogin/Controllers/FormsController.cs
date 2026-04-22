@@ -41,7 +41,8 @@ namespace AuthLogin.Controllers
                     {
                         Title = item.Title,
                         Type = item.Type,
-                        Options = item.Options
+                        Options = item.Options,
+                        MaxSelections = item.MaxSelections
                     });
                 }
             }
@@ -72,6 +73,10 @@ namespace AuthLogin.Controllers
             }
         }
 
+        //Para actualizar un formulario, se elimina el formulario existente y se crea uno nuevo con los datos actualizados.
+        //Esto es más sencillo que intentar actualizar cada campo y elemento individualmente, pero ten en cuenta que esto también
+        //eliminará cualquier relación o dato asociado al formulario anterior (como respuestas). Si necesitas mantener esas relaciones,
+        //deberías implementar una lógica de actualización más detallada.
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateForm(int id, [FromBody] CreateFormDto updateDto)
         {
@@ -101,7 +106,8 @@ namespace AuthLogin.Controllers
                             Title = item.Title,
                             Type = item.Type,
                             Options = item.Options,
-                            FormId = id
+                            FormId = id,
+                            MaxSelections = item.MaxSelections
                         });
                     }
                 }
