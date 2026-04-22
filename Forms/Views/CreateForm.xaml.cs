@@ -391,6 +391,7 @@ public partial class CreateForm : ContentPage
             Placeholder = "Número máximo de selecciones",
             Keyboard = Keyboard.Numeric,
             WidthRequest = 50,
+            ClassId ="MaxLimitInput"
         };
 
         // crea el botón para agregar opciones que ira dentro del multiple choice
@@ -492,6 +493,7 @@ public partial class CreateForm : ContentPage
 
                     string elementType = "Desconocido";
                     string combinedOptions = "";
+                    int maxSelectionsLimit = 0; //variable para guardar el limite temporalmente.
 
                     //obtener el Contenido (siempre esta en la fila 1)
                     //Usamos (BindableObject) para evitar el error de compilacion
@@ -507,7 +509,17 @@ public partial class CreateForm : ContentPage
                             .Any(row => row.Children.Any(c => c is RadioButton));
 
                         if (isUnique) elementType = "Seleccion Unica";
-                        else elementType = "Checklist/Multiple";
+                        else
+                        {
+                            elementType = "Checklist/Multiple";
+
+                            //Buscamos el Entry que etiquetamos previamente
+                            var limitEntryControl = stack.Children.OfType<Entry>().FirstOrDefault(e => e.ClassId == "MaxLimitInput");
+                            if(limitEntryControl != null && int.TryParse(limitEntryControl.Text, out int parsedLimit))
+                            {
+                                maxSelectionsLimit = parsedLimit; //Si se escribe un numero, lo guardamos.
+                            }
+                        }
 
                         //extraer las opciones escritas por el usuario
                         var optionsList = new List<string>();
@@ -532,7 +544,8 @@ public partial class CreateForm : ContentPage
                     {
                         Title = titleEntry?.Text ?? "Sin titulo",
                         Type = elementType,
-                        Options = combinedOptions
+                        Options = combinedOptions,
+                        MaxSelections = maxSelectionsLimit //guardamos el limite en la Api
                     });
                 }
             }

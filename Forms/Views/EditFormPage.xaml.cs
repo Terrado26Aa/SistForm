@@ -499,6 +499,9 @@ public partial class EditFormPage : ContentPage
                     string elementType = "Desconocido";
                     string combinedOptions = "";
 
+                    //variable para capturar el limite(Multiple)
+                    int maxSelectionsLimit = 0;
+
                     //obtener el Contenido (siempre esta en la fila 1)
                     //Usamos (BindableObject) para evitar el error de compilacion
                     var content = innerGrid.Children.FirstOrDefault(c => Grid.GetRow((BindableObject)c) == 1);
@@ -513,7 +516,26 @@ public partial class EditFormPage : ContentPage
                             .Any(row => row.Children.Any(c => c is RadioButton));
 
                         if (isUnique) elementType = "Seleccion Unica";
-                        else elementType = "Checklist/Multiple";
+                        else
+                        {
+                            //Buscamos la cajita del limite para saber que tipo de pregunta es.
+                            var limitEntryControl = stack.Children.OfType<Entry>().FirstOrDefault(entry => entry.ClassId == "MaxLimitInput");
+
+                            if (limitEntryControl != null)
+                            {
+                                //Si tiene cajita es multiple.
+                                elementType = "Multiple";
+                                if (int.TryParse(limitEntryControl.Text, out int parsedLimit))
+                                {
+                                    maxSelectionsLimit = parsedLimit;
+                                }
+                            }
+                            else
+                            {
+                                //Si no tiene cajita es checklist.
+                                elementType = "CheckList";
+                            }
+                        }
 
                         //extraer las opciones escritas por el usuario
                         var optionsList = new List<string>();
@@ -538,7 +560,8 @@ public partial class EditFormPage : ContentPage
                     {
                         Title = titleEntry?.Text ?? "Sin titulo",
                         Type = elementType,
-                        Options = combinedOptions
+                        Options = combinedOptions,
+                        MaxSelections = maxSelectionsLimit
                     });
                 }
             }
@@ -551,7 +574,7 @@ public partial class EditFormPage : ContentPage
         {
             await DisplayAlert("Éxito", "El formulario se ha guardado correctamente.", "OK");
             ResetForm();
-            await Shell.Current.GoToAsync("//HomePage");
+            await Navigation.PopAsync(); // Regresa a la página anterior después de guardar
         }
         else
         {
@@ -586,6 +609,31 @@ public partial class EditFormPage : ContentPage
             {
                 var stack = new VerticalStackLayout { Spacing = 5 };
                 string groupName = Guid.NewGuid().ToString();
+
+                if(element.Type.Contains("Multiple"))
+                {
+                    var limitLable = new Label
+                    {
+                        Text = "Permitir seleccionar hasta",
+                        FontSize = 14,
+                        FontAttributes = FontAttributes.Italic,
+                    };
+                    var limitEntry = new Entry
+                    {
+                        Placeholder = "Numero",
+                        Keyboard = Keyboard.Numeric,
+                        WidthRequest = 50,
+                        ClassId = "MaxLimitInput"
+                    };
+
+                    if(element.MaxSelections > 0)
+                    {
+                        limitEntry.Text = element.MaxSelections.ToString();
+                    }
+
+                    stack.Children.Add(limitLable); 
+                    stack.Children.Add(limitEntry);
+                }
 
                 //Si tiene opciones guardadas las separamos.
                 string[] options = string.IsNullOrWhiteSpace(element.Options) ? new string[0] : element.Options.Split(',');

@@ -7,13 +7,28 @@ public partial class ManageFormsPage : ContentPage
 {
 	public ManageFormsPage()
 	{
-		InitializeComponent();
+        try
+        {
+            InitializeComponent();
+        }
+        catch (Exception ex)
+        {
+            Application.Current.MainPage.DisplayAlert("Error Fatal", $"Constructor: {ex.Message}", "OK");
+        }
+		
 	}
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await LoadForms();
+        try
+        {
+            await LoadForms();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"No se pudieron cargar los formularios: {ex.Message}\n\nDetalle: {ex.StackTrace}", "OK");
+        }
     }
 
     private async Task LoadForms()

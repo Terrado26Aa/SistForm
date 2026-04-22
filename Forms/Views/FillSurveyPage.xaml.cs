@@ -5,11 +5,13 @@ namespace Forms.Views;
 public partial class FillSurveyPage : ContentPage
 {
     private int _formId;
+    private string _editingLocalId = null; // Para identificar si estamos editando una respuesta local o creando una nueva
     private List<View> _inputControls = new List<View>(); // Lista para almacenar los controles de entrada dinamicos
-    public FillSurveyPage(int formId)
+    public FillSurveyPage(int formId, string editingLocalId = null)
     {
         InitializeComponent();
         _formId = formId;
+        _editingLocalId = editingLocalId;
         LoadForm(formId);
     }
 
@@ -78,12 +80,32 @@ public partial class FillSurveyPage : ContentPage
                 _inputControls = new List<View>();
             }
             _inputControls.Clear(); //Limpiamos por si la pagina se carga dos veces.
-            //Dibujar cada elemento del formulario en la interfaz de usuario
+            //Dibujar cada elemento del formulario en la interfaz de usuario.
+
+            //Si estamos editando una respuesta local, cargamos las respuestas anteriores para mostrarlas en la interfaz.
+            SubmitResponseDto draftToEdit = null;
+            if (!string.IsNullOrEmpty(_editingLocalId))
+            {
+                var pendingList = await LocalDatabaseHelper.GetPendingResponsesAsync();
+                draftToEdit = pendingList.FirstOrDefault(x => x.LocalId == _editingLocalId);
+            }
+
             foreach (var element in form.Elements)
             {
 
                 //Si la pregunta esta corrupta o vacia, la salta.
                 if(element == null) continue;
+
+                //Buscamos si esta pregunta ya tenia respuesta para mostrarla en la interfaz.
+                string savedAnswer = "";
+                if (draftToEdit != null && draftToEdit.Responses != null)
+                {
+                    var prevResponse = draftToEdit.Responses.FirstOrDefault(r => r.FormElementId == element.Id);
+                    if (prevResponse != null)
+                    {
+                        savedAnswer = prevResponse.Answer ?? "";
+                    }
+                }
 
                 var label = new Label
                 {
@@ -96,15 +118,22 @@ public partial class FillSurveyPage : ContentPage
 
                 // Crear controles de entrada basados en el tipo de elemento
                 View inputControl = null;
-                if (element.Type == "Texto" || element.Type == "Campo de Entrada")
+
+                //Normalizamos el texto (minusculas y sin espacios ocultos)
+                string secureType = element.Type.Trim().ToLower() ?? "";
+
+                if (secureType == "texto" || secureType == "campo de entrada")
                 {
                     inputControl = new Entry
                     {
                         Placeholder = "Escriba su respuesta",
-                        FontSize = 14
+                        FontSize = 14,
+                        Text = savedAnswer // Cargar la respuesta guardada si existe
                     };
                 }
-                else if (element.Type == "Lista" || element.Type == "Checklist/Multiple" || element.Type == "Seleccion Unica")
+                //Corregir aqui una vez resuelta lo de la base de datos.
+                else if (secureType.Contains("lista") || secureType.Contains("unica") || secureType.Contains("multiple") || 
+                    secureType.Contains("checklist"))
                 {
                     var optionStack = new VerticalStackLayout { Spacing = 5 };
 
@@ -115,20 +144,66 @@ public partial class FillSurveyPage : ContentPage
 
                     string radioGroup = Guid.NewGuid().ToString(); //para que los radios no se mezclen.
 
+                    //Separamos las respuestas guardadas en una lista limpia y sin espacios extra.
+                    string[] savedOptions = string.IsNullOrEmpty(savedAnswer)
+                        ? new string[0]
+                        : savedAnswer.Split(",").Select(s => s.Trim()).ToArray();
+
                     foreach (var option in options)
                     {
+                        string cleanOption = option.Trim(); //Limpiamos la opcion actual
                         var row = new HorizontalStackLayout { Spacing = 10, VerticalOptions = LayoutOptions.Center };
-
                         //Creamos la etiqueta de la opcion
                         var lblOption = new Label { Text = option, VerticalOptions = LayoutOptions.Center };
 
-                        if (element.Type == "Seleccion Unica")
+                        //Verificamos si esta opcion estaba seleccionada en la respuesta guardada para marcarla en la interfaz.
+                        bool isChecked = !string.IsNullOrEmpty(savedAnswer) && savedAnswer.Contains(option.Trim());
+
+                        //Si es seleccion unica RadioButton
+                        if (secureType.Contains("unica"))
                         {
-                            row.Children.Add(new RadioButton {GroupName = radioGroup, Value = option });
+                            var rb = new RadioButton { GroupName = radioGroup, Value = cleanOption, IsChecked = isChecked };
+                            row.Children.Add(rb);
                         }
+                        //Si es multiple o checklist (CheckBox)
                         else
                         {
-                            row.Children.Add(new CheckBox());
+                            var cb = new CheckBox {IsChecked = isChecked};
+                            row.Children.Add(cb);
+
+                            //activamos el limite solamente si incluye la palabra "multiple"
+                            if (secureType.Contains("multiple"))
+                            {
+                                //Leemos el limite de la base de datos (o ponemo 99 si no hay limite)
+                                int maxLimit = (element.MaxSelections != null && element.MaxSelections >0) ? element.MaxSelections.Value : 99;
+
+                                cb.CheckedChanged += (sender, e) =>
+                                {
+                                    //Solo revisamos cuando el usuario intenta marcar la casilla
+                                    if (e.Value)
+                                    {
+                                        int brand = 0;
+
+                                        //contamos cuantas casillas hay marcadas en esta pregunta especifica.
+                                        foreach (var childRow in optionStack.Children.OfType<HorizontalStackLayout>())
+                                        {
+                                            var interCb = childRow.Children.OfType<CheckBox>().FirstOrDefault();
+                                            if(interCb != null && interCb.IsChecked) brand++;
+                                        }
+
+                                        //Si se paso el limite establecido.
+                                        if(brand > maxLimit)
+                                        {
+                                            //Desmarcamos esta casilla inmediatamente.
+                                            ((CheckBox)sender).IsChecked = false;
+
+                                            //Mostramos la alerta para el usuario.
+                                            Application.Current.MainPage.DisplayAlert("Limite alcanzado", 
+                                                $"La pregunta solo permite un maximo de {maxLimit} opciones.", "OK");
+                                        }
+                                    }
+                                };
+                            }
                         }
 
                         row.Children.Add(lblOption);
@@ -137,7 +212,7 @@ public partial class FillSurveyPage : ContentPage
 
                     inputControl = optionStack;
                 }
-                else if(element.Type == "Imagen")
+                else if(secureType == "imagen")
                 {
                     var imageStack = new VerticalStackLayout { Spacing = 10 };
 
@@ -148,7 +223,23 @@ public partial class FillSurveyPage : ContentPage
                     var pickButton = new Button { Text = "Seleccionar Imagen", BackgroundColor = Colors.CornflowerBlue};
 
                     //Un Entry oculto para almacenar la imagen en base64 (no es la mejor forma, pero es una solucion rapida para no complicar el ejemplo con clases adicionales)
-                    var hiddenBase64Entry = new Entry { IsVisible = false, Text = ""};
+                    var hiddenBase64Label = new Label { IsVisible = false, Text = ""};
+
+                    if(!string.IsNullOrEmpty(savedAnswer))
+                    {
+                        try
+                        {
+                            byte[] imgBytes = Convert.FromBase64String(savedAnswer);
+                            previewImage.Source = ImageSource.FromStream(() => new MemoryStream(imgBytes));
+                            previewImage.IsVisible = true;
+                            pickButton.Text = "Cambiar Imagen";
+                            hiddenBase64Label.Text = savedAnswer; // Cargar la imagen en base64 en el Entry oculto
+                        }
+                        catch
+                        {
+                            // Si ocurre un error al cargar la imagen, simplemente dejamos el estado inicial (sin imagen)
+                        }
+                    }
 
                     pickButton.Clicked += async (sender, e) =>
                     {
@@ -168,9 +259,8 @@ public partial class FillSurveyPage : ContentPage
                                 using var streamForBase64 = await photo.OpenReadAsync();
                                 await streamForBase64.CopyToAsync(memoryStream);
 
-                                byte[] imageBytes = memoryStream.ToArray();
                                 // Convertimos la imagen a base64 y la almacenamos en el Entry oculto para enviarla luego al backend
-                                hiddenBase64Entry.Text = Convert.ToBase64String(imageBytes);
+                                hiddenBase64Label.Text = Convert.ToBase64String(memoryStream.ToArray());
                             }
                         }
                         catch (Exception ex)
@@ -183,8 +273,7 @@ public partial class FillSurveyPage : ContentPage
                     imageStack.Children.Add(pickButton);
                     //Agregamos el Entry oculto al stack de la imagen para que se envíe junto con las respuestas,
                     //aunque no se muestre en la interfaz
-                    imageStack.Children.Add(hiddenBase64Entry);
-
+                    imageStack.Children.Add(hiddenBase64Label);
                     inputControl = imageStack;
                 }
 
@@ -227,8 +316,8 @@ public partial class FillSurveyPage : ContentPage
             {
                 if (View is VerticalStackLayout stack)
                 {
-                    var hiddenEntry = stack.Children.OfType<Entry>().FirstOrDefault();
-                    answer = hiddenEntry?.Text ?? ""; // Obtener el valor del Entry oculto que contiene la imagen en base64
+                    var hiddenLabel = stack.Children.OfType<Label>().FirstOrDefault(l => !l.IsVisible);
+                    answer = hiddenLabel?.Text ?? ""; // Obtener el valor del Entry oculto que contiene la imagen en base64
                 }
             }
             else
@@ -276,17 +365,27 @@ public partial class FillSurveyPage : ContentPage
         var submitDto = new SubmitResponseDto
         {
             FormId = _formId,
-            UserId = int.Parse(await SecureStorage.Default.GetAsync("user_id")),
-            Responses = awnsers
+            UserId = finalUserId,
+            Responses = awnsers,
+            FormTitle = this.Title,
+            SaveAt = DateTime.Now
         };
 
         try
         {
+            if(!string.IsNullOrEmpty(_editingLocalId))
+            {
+                //Si estamos editando una respuesta local, eliminamos la versión anterior para reemplazarla por la nueva.
+                await LocalDatabaseHelper.DeletePendingResponseAsync(_editingLocalId);
+            }
+
+            //Guardamos la version nueva y actualizada de la respuesta localmente, ya sea que estemos editando una
+            //respuesta local existente o creando una nueva.
             await LocalDatabaseHelper.SaveResponseLocallyAsync(submitDto);
 
             await DisplayAlert("Guardado local", "Tus respuestas han sido guardadas localmente y se enviarán cuando " +
                 "tengas conexión a internet.", "OK");
-            await Shell.Current.GoToAsync("//HomePage"); // Volver a la página principal después de guardar las respuestas
+            await Navigation.PopAsync(); //Volver a la página anterior después de guardar las respuestas localmente.
         }
         catch(Exception ex)
         {
