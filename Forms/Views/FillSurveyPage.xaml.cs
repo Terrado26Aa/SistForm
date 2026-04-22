@@ -5,7 +5,7 @@ namespace Forms.Views;
 public partial class FillSurveyPage : ContentPage
 {
     private int _formId;
-    private List<View> _inputControls = new List<View>(); // Lista para almacenar los controles de entrada din�micos
+    private List<View> _inputControls = new List<View>(); // Lista para almacenar los controles de entrada dinamicos
     public FillSurveyPage(int formId)
     {
         InitializeComponent();
@@ -19,53 +19,72 @@ public partial class FillSurveyPage : ContentPage
         {
             FormDto form = null;
 
-            //Verificar si hay internet.
-            var currentStack = Connectivity.Current.NetworkAccess;
+            Title = "Cargando encuesta...";
 
-            if (currentStack == NetworkAccess.Internet)
+            //Conexion online con la encuesta.
+            try
             {
-                //Intentamos cargar desde la API.
-                var api = new ApiService();
-                form = await api.GetFormDetailsAsync(id);
-
-                //Fallback offline (si no hay internet o la API Fallo).
-                if (form == null)
+                if(Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                 {
-                    form = await LocalDatabaseHelper.GetDownloadedFormByIdAsync(id);
-                }
+                    var api = new ApiService();
+                    var apiTask = api.GetFormDetailsAsync(id);
 
-                //Validacion final.
-                if(form == null)
-                {
-                    await DisplayAlert("Error", "No se pudo cargar el formulario. Asegúrate de tener conexión a internet o " +
-                        "de haber descargado el formulario previamente.", "OK");
-                    await Shell.Current.GoToAsync("//HomePage"); 
-                    return; // Salir del método para evitar errores posteriores.
+                    if(await Task.WhenAny(apiTask, Task.Delay(5000))== apiTask)
+                    {
+                        form = await apiTask;
+                        //Guardamos la encuesta en el celular para que este disponible offline.
+                        if (form != null) await LocalDatabaseHelper.SaveFormLocallyAsync(form);
+                    }
+                    else
+                    {
+                        //Si la consulta tarda mas de 5 segundos, asumimos que hay un problema de conexion y
+                        //tratamos de cargar la encuesta offline.
+                    }
+
+                    if (form != null) await LocalDatabaseHelper.SaveFormLocallyAsync(form);
                 }
             }
+            catch { }
 
-            //Asignamos el titulo del formulario a la pagina, si no tiene titulo le asignamos uno por defecto
+            //Recupera el formulario de forma Offline.
+            if(form == null)
+            {
+                //corregir el error
+                form = await LocalDatabaseHelper.GetDownloadedFormByIdAsync(id);
+            }
+
+            if(form == null)
+            {
+                await DisplayAlert("Aviso", "No tienes conexión y este formulario no esta guardado en tu dispositivo", "OK");
+                await Navigation.PopAsync();
+                return;
+            }
+
             Title = form.Title ?? "Encuesta sin titulo";
 
-            //validar que el contenedor del formulario este disponible antes de intentar agregar controles
-            if (FormContainer == null)
+            if (FormContainer == null) return;
+            FormContainer.Children.Clear();
+
+            //Evitamos crash si Elements viene null o vacio
+            if(form.Elements == null || !form.Elements.Any())
             {
-                await DisplayAlert("Error", "El contenedor del formulario no esta disponible.", "OK");
-                return; // Si el contenedor no esta disponible, salimos del metodo para evitar errores posteriores
+                await DisplayAlert("Info", "Este formulario no tiene preguntas para responder", "OK");
+                return;
             }
 
-            FormContainer.Children.Clear(); // Limpiar cualquier contenido previo en el contenedor del formulario
-
-            //validar que el formulario tenga elementos antes de intentar iterar sobre ellos
-            if (form.Elements == null || form.Elements.Count == 0)
+            //AutoReparación: si olvidamos crear la lista arriba, la creamos aqui.
+            if(_inputControls == null)
             {
-                await DisplayAlert("Info", "Este formulario no tiene preguntas para responder.", "OK");
-                return; // Si el formulario no tiene elementos, salimos del metodo
+                _inputControls = new List<View>();
             }
-
-            //dibujar cada elemento del formulario en la interfaz de usuario
+            _inputControls.Clear(); //Limpiamos por si la pagina se carga dos veces.
+            //Dibujar cada elemento del formulario en la interfaz de usuario
             foreach (var element in form.Elements)
             {
+
+                //Si la pregunta esta corrupta o vacia, la salta.
+                if(element == null) continue;
+
                 var label = new Label
                 {
                     Text = element.Title,
@@ -185,7 +204,7 @@ public partial class FillSurveyPage : ContentPage
 
         catch (Exception ex)
         {
-            await DisplayAlert("Error", $"No se pudo cargar el formulario: {ex.Message}", "OK");
+            await DisplayAlert("Error Detallado", $"Mensaje: {ex.Message}\n\nLínea: {ex.StackTrace}", "OK");
         }
     }
 
