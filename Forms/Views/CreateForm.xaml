@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Forms.Views.CreateForm"
-             Title="CreateForm"
+             Title="Nueva Encuesta"
              BackgroundColor="#F0F2F5">
     <Grid RowDefinitions="auto, *, auto">
         <CarouselView Grid.Row="0" ItemsSource="{Binding ToolbarItems}" PeekAreaInsets="50" HeightRequest="60">

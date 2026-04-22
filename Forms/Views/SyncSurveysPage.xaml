@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Forms.Views.SyncSurveysPage"
+             Title="Sincronizar Datos">
+    <Grid>
+        <Label x:Name="EmptyMessageLabel"
+                Text="No hay encuestas para sincronizar."
+                HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center"
+                Margin="20" IsVisible="False" TextColor="Gray"/>
+
+        <CollectionView x:Name="PendingResponsesList" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="15,8" Padding="15" BorderColor="CornflowerBlue" CornerRadius="10" HasShadow="False">
+                        <Grid ColumnDefinitions="*, auto" ColumnSpacing="15">
+                            
+                            <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{Binding FormTitle, TargetNullValue='Encuesta sin titulo'}" FontSize="18" FontAttributes="Bold"
+                                       TextColor="Black" Margin="0,0,0,10"/>
+                                <Label Text="{Binding SaveAt, StringFormat='Guardado: {0:dd/MM/yyyy hh:mm tt}'}" FontSize="12"
+                                       TextColor="Gray"/>
+                                <Label Text="{Binding Responses.Count, StringFormat='Respuestas guardadas: {0}'}" FontSize="14"
+                                       TextColor="DarkGray"/>
+                            </VerticalStackLayout>
+
+                            <HorizontalStackLayout Grid.Column="1" Spacing="15" VerticalOptions="Center">
+                                
+                                <ImageButton Source="edit_icon.png" WidthRequest="24" HeightRequest="24" BackgroundColor="Transparent"
+                                             Clicked="OnEditClicked" CommandParameter="{Binding .}"/>
+
+                                <ImageButton Source="upload_icon.png" WidthRequest="30" HeightRequest="30" BackgroundColor="Transparent"
+                                             Clicked="OnUploadClicked" CommandParameter="{Binding .}"/>
+
+                                <ImageButton Source="delete_icon.png" WidthRequest="18" HeightRequest="16" BackgroundColor="Transparent"
+                                             Clicked="OnDeleteClicked" CommandParameter="{Binding .}"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
