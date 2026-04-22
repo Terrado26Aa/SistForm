@@ -44,6 +44,11 @@
     ContentTemplate="{DataTemplate local1:ManageFormsPage}"
     Route="ManageFormsPage">
         </ShellContent>
+        <ShellContent
+            Title="Subir Encuesta"
+            ContentTemplate="{DataTemplate local1:SyncSurveysPage}"
+            Route="SyncSurveysPage">
+        </ShellContent>
     </FlyoutItem>
 
     <ShellContent

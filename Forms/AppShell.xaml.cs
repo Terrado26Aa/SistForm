@@ -17,6 +17,7 @@ namespace Forms
             Routing.RegisterRoute(nameof(FillSurveyPage), typeof(FillSurveyPage));
             Routing.RegisterRoute(nameof(EditFormPage), typeof(EditFormPage));
             Routing.RegisterRoute(nameof(EditProfilePage), typeof(EditProfilePage));
+            Routing.RegisterRoute(nameof(SyncSurveysPage), typeof(SyncSurveysPage));
         }
 
         // Verifica el estado de login cuando la pagina aparece
