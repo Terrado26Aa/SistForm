@@ -15,6 +15,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 - Edicion de formularios existentes
 - Perfiles de usuario y edicion
 - Soporte offline con SQLite local
+- Sincronizacion de datos offline
 
 ## Tecnologias
 
@@ -100,6 +101,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v3.6](wiki/v3-6-Ajustes-Navegacion) | Ajustes Navegacion | Ajustes en AppShell (navegacion). |
 | [v3.7](wiki/v3-7-Soporte-Offline) | Soporte Offline | Agregada OfflineSurveysPage y servicio LocalDatabaseHelper. Soporte offline para encuestas. |
 | [v3.8](wiki/v3-8-Base-Datos-Local) | Base Datos Local | Mejoras en LocalDatabaseHelper. |
+| [v3.9](wiki/v3-9-Sincronizacion) | Sincronizacion | Agregada SyncSurveysPage para sincronizacion de encuestas. Agregado upload_icon.png. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 

@@ -4,7 +4,7 @@ El estandar **ESSENCE** (Essential Software Engineering Common Terminology) defi
 
 A continuacion se define cada alfa para el contexto de SistForm, con sus estados y checklist de progresion.
 
-> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v3.8, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
+> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v3.9, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
 
 ---
 
@@ -93,7 +93,7 @@ El conjunto de actividades que se deben realizar para construir el sistema.
 
 | Metrica | Valor |
 |---------|-------|
-| Versiones | v3.8 |
+| Versiones | v3.9 |
 
 ---
 
@@ -147,4 +147,4 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 
 > Basado en el estandar **ESSENCE v1.2** (Object Management Group) adaptado al contexto del proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v3.8.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v3.9.

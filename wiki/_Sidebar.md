@@ -48,3 +48,4 @@
 - [v3.6 - Ajustes Navegacion](v3-6-Ajustes-Navegacion)
 - [v3.7 - Soporte Offline](v3-7-Soporte-Offline)
 - [v3.8 - Base Datos Local](v3-8-Base-Datos-Local)
+- [v3.9 - Sincronizacion](v3-9-Sincronizacion)

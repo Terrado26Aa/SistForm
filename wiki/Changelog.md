@@ -117,3 +117,7 @@ Agregada OfflineSurveysPage y servicio LocalDatabaseHelper. Soporte offline para
 ## [v3.8] - Base Datos Local
 
 Mejoras en LocalDatabaseHelper.
+
+## [v3.9] - Sincronizacion
+
+Agregada SyncSurveysPage para sincronizacion de encuestas. Agregado upload_icon.png.
