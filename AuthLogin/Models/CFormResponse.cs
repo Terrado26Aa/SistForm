@@ -7,6 +7,7 @@ namespace AuthLogin.Models
     public class CFormResponse
     {
         [Key]
+        //no se esta usando, pero se puede usar para mostrar el titulo de la pregunta en la lista de respuestas pendientes
         public int Id { get; set; }
         public int FormId { get; set; } //Que encuesta respondio
         public int UserId { get; set; } //Quien respondio
@@ -15,6 +16,7 @@ namespace AuthLogin.Models
         public List<CFormResponseDetail> Details { get; set; } = new List<CFormResponseDetail>();
     }
 
+    //no se esta usando, pero se puede usar para mostrar el titulo de la pregunta en la lista de respuestas pendientes
     [Table("form_response_details")]
     public class CFormResponseDetail
     {

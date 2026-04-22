@@ -16,5 +16,8 @@
         public string Title { get; set; }
         public string Type { get; set; }
         public string? Options { get; set; } // Solo se usará para elementos de tipo "select", "checkbox" o "radio"
+
+        //no se esta usando, pero se puede usar para limitar el número de opciones seleccionables en elementos de tipo "checkbox"
+        public int MaxSelections { get; set; }
     }
 }
