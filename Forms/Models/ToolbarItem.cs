@@ -7,6 +7,7 @@ using System.Windows.Input;
 
 namespace Forms.Models
 {
+    //esta clase no se esta usando
     public class ToolbarItem
     {
         public string Text { get; set; }
