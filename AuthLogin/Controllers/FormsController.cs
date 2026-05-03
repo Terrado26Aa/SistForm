@@ -2,6 +2,9 @@
 using AuthLogin.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using GeoJSON.Net.Geometry;
+using GeoJSON.Net.Feature;
+using Newtonsoft.Json;
 
 namespace AuthLogin.Controllers
 {
@@ -159,38 +162,102 @@ namespace AuthLogin.Controllers
         {
             public int FormId { get; set; }
             public int UserId { get; set; }
-            public List<ResponseDetailDto> Answer { get; set; }
+            public List<ResponseDetailDto> Responses { get; set; }
+
+            // Para identificar la respuesta localmente antes de enviarla al servidor
+            public string? FormTitle { get; set; }
+            public DateTime SaveAt { get; set; } = DateTime.Now;
+            public double? LatitudeA { get; set; }
+            public double? LongitudeA { get; set; }
+            public double? LatitudeB { get; set; }
+            public double? LongitudeB { get; set; }
+
+            public List<TrackPoint>? TrackPoints { get; set; } //Lista de puntos para el camino recorrido entre A y B
+        }
+
+        public class TrackPoint
+        {
+            public double Lat { get; set; }
+            public double Lon { get; set; }
         }
 
         public class ResponseDetailDto
         {
-            public string Question { get; set; }
-            public string Answer { get; set; }
+            public int FormElementId { get; set; }
+            public string? Question { get; set; }
+            public string? Answer { get; set; }
         }
 
         //Para enviar las respuestas de un formulario.
         [HttpPost("submit")]
         public async Task<IActionResult> SubmitResponse([FromBody] SubmitResponseDto data)
         {
-            var response = new CFormResponse
+            try
             {
-                FormId = data.FormId,
-                UserId = data.UserId,
-                Date = DateTime.Now
-            };
-
-            foreach (var ans in data.Answer)
-            {
-                response.Details.Add(new CFormResponseDetail
+                //proteccion contra datos vacios.
+                if (data == null || data.Responses == null)
                 {
-                    QuestionTitle = ans.Question,
-                    Answer = ans.Answer
-                });
-            }
+                    Console.WriteLine("Datos recibidos son nulos o vacios");
+                    return BadRequest("Datos invalidos o vacios");
+                }
 
-            _context.FormResponses.Add(response);
-            await _context.SaveChangesAsync();
-            return Ok(new { Message = "Respuesta enviada exitosamente" });
+                //Conversion de la ruta a GeoJSON (si se proporcionan puntos de seguimiento)
+                string finalRouteJson = null;
+                if (data.TrackPoints != null && data.TrackPoints.Count > 0)
+                {
+                    //Convierte la lista de puntos a GeoJSON
+                    var locations = data.TrackPoints.Select(p => new Position(p.Lat, p.Lon)).ToList();
+                    if(locations.Count >= 2)
+                    {
+                        var lineString = new LineString(locations);
+                        var feature = new Feature(lineString);
+                        finalRouteJson = JsonConvert.SerializeObject(feature);
+                    }
+                }
+
+                var response = new CFormResponse
+                {
+                    FormId = data.FormId,
+                    UserId = data.UserId,
+                    Date = DateTime.Now, //Usamos la fecha real en la que se guardo offline.
+                    LatitudeA = data.LatitudeA,
+                    LongitudeA = data.LongitudeA,
+                    LatitudeB = data.LatitudeB,
+                    LongitudeB = data.LongitudeB,
+                    RoutePath = finalRouteJson, //Guarda la ruta en formato GeoJSON
+                    Details = new List<CFormResponseDetail>() //Inicializa la lista de detalles
+                };
+
+                //Mapea las respuestas que mando el celular.
+                foreach (var ans in data.Responses)
+                {
+                    response.Details.Add(new CFormResponseDetail
+                    {
+                        QuestionTitle = ans.Question,
+                        Answer = ans.Answer
+                    });
+                }
+
+                _context.FormResponses.Add(response);
+                await _context.SaveChangesAsync();
+
+                Console.WriteLine($"Respuesta recibida para FormId {data.FormId} del UserId {data.UserId} con {data.Responses.Count} respuestas.");
+                return Ok(new { Message = "Respuesta enviada exitosamente" });
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException dbEx)
+            {
+                //Maneja errores específicos de la base de datos, como violaciones de clave foránea o problemas de conexión
+                string errorMsg = $"ERROR MySQL (Llave Foránea. ¿Existe el Usuario {data?.UserId}?): {dbEx.InnerException?.Message ?? dbEx.Message}";
+                Console.WriteLine(errorMsg);
+                return StatusCode(500, errorMsg);
+            }
+            catch (Exception ex)
+            {
+                // Maneja cualquier otro tipo de error
+                Console.WriteLine($"ERROR GENERAL: {ex.Message}");
+                return StatusCode(500, $"Error interno: {ex.Message}");
+            }
         }
+
     }
 }
