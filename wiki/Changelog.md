@@ -121,3 +121,7 @@ Mejoras en LocalDatabaseHelper.
 ## [v3.9] - Sincronizacion
 
 Agregada SyncSurveysPage para sincronizacion de encuestas. Agregado upload_icon.png.
+
+## [v4.0] - Coordenadas y Limpieza
+
+Agregadas migraciones de base de datos para coordenadas. Eliminado ToolbarItem (modelo obsoleto).

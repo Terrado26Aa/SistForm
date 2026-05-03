@@ -49,3 +49,4 @@
 - [v3.7 - Soporte Offline](v3-7-Soporte-Offline)
 - [v3.8 - Base Datos Local](v3-8-Base-Datos-Local)
 - [v3.9 - Sincronizacion](v3-9-Sincronizacion)
+- [v4.0 - Coordenadas y Limpieza](v4-0-Coordenadas-y-Limpieza)

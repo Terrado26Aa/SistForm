@@ -1,6 +1,6 @@
 # SistForm
 
-Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta de encuestas, desarrollado en **.NET MAUI** (frontend) y **ASP.NET Core** (backend).
+Sistema de Encuestas (SistForm) es un sistema completo de creacion, gestion y respuesta de encuestas con soporte offline y sincronizacion, desarrollado en **.NET MAUI** (frontend) y **ASP.NET Core** (backend).
 
 ## Funcionalidades
 
@@ -16,6 +16,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 - Perfiles de usuario y edicion
 - Soporte offline con SQLite local
 - Sincronizacion de datos offline
+- Captura de coordenadas geograficas
 
 ## Tecnologias
 
@@ -102,6 +103,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v3.7](wiki/v3-7-Soporte-Offline) | Soporte Offline | Agregada OfflineSurveysPage y servicio LocalDatabaseHelper. Soporte offline para encuestas. |
 | [v3.8](wiki/v3-8-Base-Datos-Local) | Base Datos Local | Mejoras en LocalDatabaseHelper. |
 | [v3.9](wiki/v3-9-Sincronizacion) | Sincronizacion | Agregada SyncSurveysPage para sincronizacion de encuestas. Agregado upload_icon.png. |
+| [v4.0](wiki/v4-0-Coordenadas-y-Limpieza) | Coordenadas y Limpieza | Agregadas migraciones de base de datos para coordenadas. Eliminado ToolbarItem (modelo obsoleto). |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 

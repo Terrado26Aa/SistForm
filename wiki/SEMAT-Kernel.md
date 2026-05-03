@@ -4,7 +4,7 @@ El estandar **ESSENCE** (Essential Software Engineering Common Terminology) defi
 
 A continuacion se define cada alfa para el contexto de SistForm, con sus estados y checklist de progresion.
 
-> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v3.9, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
+> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v4.0, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
 
 ---
 
@@ -19,6 +19,7 @@ La necesidad o el problema que motiva el desarrollo del sistema.
 | **Identified** | Se reconoce la falta de una herramienta unificada de recoleccion de datos geoespaciales en Panama |
 | **Solution Needed** | Se determina que una plataforma ubicua con soporte offline resuelve el problema |
 | **Value Established** | Investigadores y tecnicos validan que la plataforma ahorra tiempo y reduce errores |
+| **Addressed** | SistForm se entrega como solucion funcional |
 
 ---
 
@@ -34,6 +35,7 @@ Las personas, grupos u organizaciones que afectan o son afectados por el sistema
 | **Represented** | Los requerimientos de los interesados se documentan en el anteproyecto |
 | **Involved** | Los interesados participan en la validacion de funcionalidades |
 | **In Agreement** | Los interesados aceptan los requisitos y el alcance definido |
+| **Satisfied for Deployment** | Los interesados confirman que el sistema satisface sus necesidades |
 
 ---
 
@@ -60,6 +62,9 @@ Lo que el sistema debe hacer para satisfacer a los interesados y la oportunidad.
 - RF-05: Perfil de usuario (edicion)
 - RF-06: Soporte offline (SQLite local)
 - RF-07: Sincronizacion de datos offline
+- RF-08: Captura de coordenadas geograficas
+- RF-09: Panel de resultados y dashboard
+- RF-10: Gestion de usuarios (admin)
 
 ---
 
@@ -75,6 +80,7 @@ El sistema de software que se esta construyendo.
 | **Demonstrable** | La autenticacion funciona (Login, Signin, HomePage) |
 | **Usable** | Se pueden crear, ver y responder encuestas |
 | **Ready** | Funcionalidades completas: administracion, perfiles, offline |
+| **Operational** | Sistema completo con geolocalizacion, sincronizacion y tests |
 
 ---
 
@@ -93,7 +99,7 @@ El conjunto de actividades que se deben realizar para construir el sistema.
 
 | Metrica | Valor |
 |---------|-------|
-| Versiones | v3.9 |
+| Versiones | v4.0 |
 
 ---
 
@@ -130,6 +136,7 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 | **Principles Established** | Se adopta SEMAT/ESSENCE como metodologia base |
 | **Foundation Established** | Se define el kernel, las alfas y los espacios de actividad |
 | **In Use** | Se aplica SEMAT durante todo el desarrollo, version a version |
+| **In Place** | Las practicas de trabajo estan establecidas y documentadas |
 
 ### Herramientas
 
@@ -147,4 +154,4 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 
 > Basado en el estandar **ESSENCE v1.2** (Object Management Group) adaptado al contexto del proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v3.9.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v4.0.

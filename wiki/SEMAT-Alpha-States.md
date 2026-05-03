@@ -2,7 +2,7 @@
 
 Este documento registra el estado de cada alfa del kernel ESSENCE a lo largo de las versiones de SistForm.
 
-> *Esta matriz se ha ido completando progresivamente desde v1.0 hasta v3.9. Cada nueva version agrega su fila a la tabla.*
+> *Esta matriz se ha ido completando progresivamente desde v1.0 hasta v4.0. Cada nueva version agrega su fila a la tabla.*
 
 ## Matriz de Estados por Version
 
@@ -38,23 +38,24 @@ Este documento registra el estado de cada alfa del kernel ESSENCE a lo largo de 
 | [v3.7](v3-7-Soporte-Offline) | Value Established | Involved | Coherent | Usable | Under Control | Collaborating | In Use |
 | [v3.8](v3-8-Base-Datos-Local) | Value Established | Involved | Coherent | Usable | Under Control | Collaborating | In Use |
 | [v3.9](v3-9-Sincronizacion) | Value Established | Involved | Coherent | Usable | Under Control | Collaborating | In Use |
+| [v4.0](v4-0-Coordenadas-y-Limpieza) | Addressed | Satisfied for Deployment | Addressed | Operational | Under Control | Performing | In Place |
 
 ---
 
 ## Resumen de Progresion
 
 ```
-Oportunidad:     Identified --► Value Established
-Interesados:     Identified --► Involved
-Requisitos:      Conceived --► Coherent
-Sistema:         Architecture Selected --► Usable
+Oportunidad:     Identified --► Addressed
+Interesados:     Identified --► Satisfied for Deployment
+Requisitos:      Conceived --► Addressed
+Sistema:         Architecture Selected --► Operational
 Trabajo:         Started --► Under Control
-Equipo:          Formed --► Collaborating
-WoW:             Principles Established --► In Use
+Equipo:          Formed --► Performing
+WoW:             Principles Established --► In Place
 ```
 
 ---
 
 > Basado en el estandar **ESSENCE v1.2** adaptado al proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Matriz generada progresivamente desde v1.0 hasta v3.9.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Matriz generada progresivamente desde v1.0 hasta v4.0.

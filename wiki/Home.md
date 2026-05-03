@@ -1,6 +1,6 @@
 # SistForm
 
-Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta de encuestas, desarrollado en **.NET MAUI** (frontend) y **ASP.NET Core** (backend).
+Sistema de Encuestas (SistForm) es un sistema completo de creacion, gestion y respuesta de encuestas con soporte offline y sincronizacion, desarrollado en **.NET MAUI** (frontend) y **ASP.NET Core** (backend).
 
 ---
 
@@ -38,6 +38,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 | [v3.7](v3-7-Soporte-Offline) | Soporte Offline | Agregada OfflineSurveysPage y servicio LocalDatabaseHelper. Soporte offline para encuestas. |
 | [v3.8](v3-8-Base-Datos-Local) | Base Datos Local | Mejoras en LocalDatabaseHelper. |
 | [v3.9](v3-9-Sincronizacion) | Sincronizacion | Agregada SyncSurveysPage para sincronizacion de encuestas. Agregado upload_icon.png. |
+| [v4.0](v4-0-Coordenadas-y-Limpieza) | Coordenadas y Limpieza | Agregadas migraciones de base de datos para coordenadas. Eliminado ToolbarItem (modelo obsoleto). |
 
 ---
 
@@ -55,7 +56,7 @@ Sistema de Encuestas (SistForm) es un sistema de creacion, gestion y respuesta d
 | Pagina | Descripcion |
 |--------|-------------|
 | [Kernel ESSENCE](SEMAT-Kernel) | Definicion de las 7 alfas con checklist de estados para SistForm |
-| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v3.9) |
+| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v4.0) |
 | [Espacios de Actividad](SEMAT-Activity-Spaces) | Mapa de espacios de actividad cubiertos en cada fase del proyecto |
 
 ---
