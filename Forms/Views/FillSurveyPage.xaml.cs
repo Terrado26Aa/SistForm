@@ -7,12 +7,76 @@ public partial class FillSurveyPage : ContentPage
     private int _formId;
     private string _editingLocalId = null; // Para identificar si estamos editando una respuesta local o creando una nueva
     private List<View> _inputControls = new List<View>(); // Lista para almacenar los controles de entrada dinamicos
+
+    //variables para guardar la ubicacion inicial o punto A.
+    private double? _latitudeA = null;
+    private double? _longitudeA = null;
+    private IDispatcherTimer _trackerTimer;
+    private List<TrackPoint> _routePoints = new List<TrackPoint>();
     public FillSurveyPage(int formId, string editingLocalId = null)
     {
         InitializeComponent();
         _formId = formId;
         _editingLocalId = editingLocalId;
         LoadForm(formId);
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await GetPointA();
+
+        _trackerTimer = Dispatcher.CreateTimer();
+        _trackerTimer.Interval = TimeSpan.FromSeconds(15);
+        _trackerTimer.Tick += async (s, e) => await CaptureWayPoint();
+        _trackerTimer.Start();
+    }
+
+    //El motor que lee el gps y guarda el punto A para luego calcular la distancia al punto B
+    //(si se implementa esa funcionalidad en el futuro).
+    private async Task GetPointA()
+    {
+        try
+        {
+            //Solicitar permiso de ubicación al usuario (esto es necesario en Android e iOS).
+            var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+            var location = await Geolocation.Default.GetLocationAsync(request);
+
+            if (location != null)
+            {
+                _latitudeA = location.Latitude;
+                _longitudeA = location.Longitude;
+            }
+        }
+        catch (Exception ex)
+        {
+            //Si el usuario tiene el gps apagado, o no da permisos, simplemente dejamos el punto A como null y seguimos adelante sin
+            //la funcionalidad de ubicación.
+            System.Diagnostics.Debug.WriteLine($"GPS apagado o sin permisos: {ex.Message}");
+        }
+    }
+
+    //Este metodo se ejecuta cada 15 segundos para capturar puntos de ruta intermedios entre A y B, que luego se pueden usar para mostrar
+    //el camino recorrido o calcular la distancia real recorrida.
+    private async Task CaptureWayPoint()
+    {
+        try
+        {
+            var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(5));
+            var location = await Geolocation.Default.GetLocationAsync(request);
+            if (location != null)
+            {
+                _routePoints.Add(new TrackPoint
+                {
+                    Lat = location.Latitude,
+                    Lon = location.Longitude
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error capturando punto de ruta: {ex.Message}");
+        }
     }
 
     private async void LoadForm(int id)
@@ -299,6 +363,8 @@ public partial class FillSurveyPage : ContentPage
 
     private async void OnSubmitClicked(object sender, EventArgs e)
     {
+        //Apagamos el tracker de puntos de ruta para evitar que siga capturando ubicacion mientras procesamos las respuestas y el punto B.
+        _trackerTimer.Stop();
         var awnsers = new List<ResponseDetailDto>();
         foreach (var View in _inputControls)
         {
@@ -348,6 +414,7 @@ public partial class FillSurveyPage : ContentPage
             awnsers.Add(new ResponseDetailDto
             {
                 FormElementId = elementData.Id,
+                Question = elementData.Title, // Guardamos la pregunta por si cambia el form original
                 Answer = answer
             });
         }
@@ -360,6 +427,22 @@ public partial class FillSurveyPage : ContentPage
         {
             int.TryParse(userIsString, out finalUserId);
         }
+        
+        //Capturamos el punto B(con un limite de 5 segundos)
+        double? currentLatB = null;
+        double? currentLonB = null;
+        try
+        {
+            var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(5));
+            var location = await Geolocation.Default.GetLocationAsync(request);
+            if(location != null)
+            {
+                currentLatB = location.Latitude;
+                currentLonB = location.Longitude;
+            }
+        }
+        //Si falla el GPS, Seguimos adelante.
+        catch { }
 
         //Empaquetamos los datos con el ID seguro.
         var submitDto = new SubmitResponseDto
@@ -368,7 +451,16 @@ public partial class FillSurveyPage : ContentPage
             UserId = finalUserId,
             Responses = awnsers,
             FormTitle = this.Title,
-            SaveAt = DateTime.Now
+            SaveAt = DateTime.Now,
+            //Punto A(Guardado al abrir la pagina)
+            LatitudeA = _latitudeA,
+            LongitudeA = _longitudeA,
+            //Punto B(Capturado en este instante)
+            LatitudeB = currentLatB,
+            LongitudeB = currentLonB,
+            //Le pasamos los puntos de ruta intermedios capturados durante el proceso de respuesta para que se puedan usar luego en el
+            //backend o para mostrar el camino recorrido.
+            TrackPoints = _routePoints
         };
 
         try
