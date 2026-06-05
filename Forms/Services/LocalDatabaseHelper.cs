@@ -1,15 +1,24 @@
-﻿using Forms.Models;
+using Forms.Models;
 using System.Text.Json;
 
 namespace Forms.Services
 {
     public static class LocalDatabaseHelper
     {
-        //ruta segura y privada para almacenar los datos de las respuestas pendientes
+        // Archivo de respuestas pendientes (compartido: las respuestas son del usuario autenticado)
         private static string FilePath => Path.Combine(FileSystem.AppDataDirectory, "pending_request.json");
 
-        //Guardar una encuesta en el celular.
-        private static string FormsFilePath => Path.Combine(FileSystem.AppDataDirectory, "forms_data.json");
+        // Archivo de formularios descargados, aislado por usuario
+        private static string FormsFilePath(string userId) =>
+            Path.Combine(FileSystem.AppDataDirectory, $"forms_data_{userId}.json");
+
+        // Obtiene el ID del usuario activo según la plataforma
+        private static string GetCurrentUserId()
+        {
+            return DeviceInfo.Platform == DevicePlatform.MacCatalyst
+                ? Preferences.Default.Get("user_id", "anon")
+                : SecureStorage.Default.GetAsync("user_id").GetAwaiter().GetResult() ?? "anon";
+        }
 
         public static async Task SaveResponseLocallyAsync(SubmitResponseDto newResponse)
         {
@@ -41,41 +50,58 @@ namespace Forms.Services
 
         public static async Task SaveFormLocallyAsync(FormDto form)
         {
+            string userId = GetCurrentUserId();
+            string path = FormsFilePath(userId);
+
             var savedForms = new List<FormDto>();
-            if (File.Exists(FormsFilePath))
+            if (File.Exists(path))
             {
-                string json = await File.ReadAllTextAsync(FormsFilePath);
+                string json = await File.ReadAllTextAsync(path);
                 savedForms = JsonSerializer.Deserialize<List<FormDto>>(json) ?? new List<FormDto>();
             }
 
-            //Si la encuesta ya esta descargada, la eliminamos para reemplazarla por la nueva version.
             savedForms.RemoveAll(f => f.IdForm == form.IdForm);
-
-            //agregamos la nueva version.
             savedForms.Add(form);
 
             string updateJson = JsonSerializer.Serialize(savedForms);
-            await File.WriteAllTextAsync(FormsFilePath, updateJson);
+            await File.WriteAllTextAsync(path, updateJson);
         }
 
         public static async Task<FormDto> GetDownloadedFormByIdAsync(int id)
         {
-            if (!File.Exists(FormsFilePath)) return null;
+            string path = FormsFilePath(GetCurrentUserId());
+            if (!File.Exists(path)) return null;
 
-            string json = await File.ReadAllTextAsync(FormsFilePath);
+            string json = await File.ReadAllTextAsync(path);
             var savedForms = JsonSerializer.Deserialize<List<FormDto>>(json) ?? new List<FormDto>();
 
             return savedForms.FirstOrDefault(f => f != null && f.IdForm == id);
         }
 
-        //Obtener todas las encuestas descargadas
+        // Elimina una encuesta descargada específica por su IdForm
+        public static async Task DeleteDownloadedFormAsync(int formId)
+        {
+            string path = FormsFilePath(GetCurrentUserId());
+            if (!File.Exists(path)) return;
+
+            string json = await File.ReadAllTextAsync(path);
+            var savedForms = JsonSerializer.Deserialize<List<FormDto>>(json) ?? new List<FormDto>();
+
+            savedForms.RemoveAll(f => f.IdForm == formId);
+
+            string updatedJson = JsonSerializer.Serialize(savedForms);
+            await File.WriteAllTextAsync(path, updatedJson);
+        }
+
+        //Obtener todas las encuestas descargadas del usuario activo
         public static async Task<List<FormDto>> GetAllDownloadedFormAsync()
         {
-            if (!File.Exists(FormsFilePath))
-                return new List<FormDto>(); //Sino hay archivos devolvemos una lista vacia
+            string path = FormsFilePath(GetCurrentUserId());
+            if (!File.Exists(path))
+                return new List<FormDto>();
 
-            string json = await File.ReadAllTextAsync(FormsFilePath);
-            return System.Text.Json.JsonSerializer.Deserialize<List<FormDto>>(json) ?? new List<FormDto>();
+            string json = await File.ReadAllTextAsync(path);
+            return JsonSerializer.Deserialize<List<FormDto>>(json) ?? new List<FormDto>();
         }
 
         //Obtener todas las respuestas (Borradores) pendientes a subir
