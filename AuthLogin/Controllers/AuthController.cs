@@ -1,12 +1,8 @@
-﻿using AuthLogin.Data;
 using AuthLogin.Models;
+using AuthLogin.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using System.Text;
 
 namespace AuthLogin.Controllers
 {
@@ -14,175 +10,132 @@ namespace AuthLogin.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly ApplicationDbContext _context; //Inyecta tu DbContext
-        private readonly IConfiguration _configuration; //Inyecta la Configuracion
+        private readonly IAuthService _authService;
 
-        public AuthController(ApplicationDbContext context, IConfiguration configuration)
+        public AuthController(IAuthService authService)
         {
-            _context = context;
-            _configuration = configuration;
+            _authService = authService;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequest)
         {
-            // validar que no sea nulo o vacio
-            if (loginRequest == null || string.IsNullOrWhiteSpace(loginRequest.UserName)
-                || string.IsNullOrWhiteSpace(loginRequest.Password))
+            var result = await _authService.LoginAsync(loginRequest);
+            if (!result.success)
             {
-                return BadRequest("Usuario y contraseña son requeridos");
+                return Unauthorized(result.message);
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.UserName.ToLower() == loginRequest.UserName.ToLower());
-
-            if (user == null)
-            {
-                // Usuario no encontrado
-                return Unauthorized("Usuario o contraseña incorrecto");
-            }
-
-            // Verifica la contraseña usando BCrypt
-            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.PasswordHash);
-
-            if (!isPasswordValid)
-            {
-                return Unauthorized("Usuario o contraseña incorrecta");
-            }
-
-            var tokenString = GenerateTokenJWT(user);
-            return Ok(new { Message = $"Bienvenido {user.UserName}!", UserId = user.Id, Token = tokenString });
-        }
-
-        // Generar el token JWT
-        private string GenerateTokenJWT(User user)
-        {
-            // Obtener la clave secreta desde la configuración appsettings.json
-            var secretKey = _configuration["Jwt:Key"];
-            if (string.IsNullOrEmpty(secretKey))
-            {
-                throw new InvalidOperationException("La clave secreta JWT no está configurada en appsettings.json");
-            }
-            var keyBytes = Encoding.ASCII.GetBytes(secretKey);
-
-            // Crea los claims(informacion que ira dentro del token)
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-            // Crea las credenciales de firma
-            var singingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(keyBytes),
-                SecurityAlgorithms.HmacSha256Signature
-                );
-
-            // Crea el descriptor del token
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(8),
-                SigningCredentials = singingCredentials,
-                Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"]
-            };
-
-            // Crea el token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            // Devuelve el token en formato string
-            return tokenHandler.WriteToken(token);
+            return Ok(new { Message = result.message, UserId = result.userId, Token = result.token, Role = result.role });
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequest)
         {
-            //validación del modelo automatica (gracias a [ApiController]).
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            //verificar si el usuario o email ya existe en la base de datos.
-            if (await _context.Users.AnyAsync(u => u.UserName == registerRequest.Username))
+            var result = await _authService.RegisterAsync(registerRequest);
+            if (!result.success)
             {
-                return BadRequest("El nombre de usuario ya esta en uso.");
+                return BadRequest(result.message);
             }
 
-            if (await _context.Users.AnyAsync(u => u.Email == registerRequest.Email))
-            {
-                return BadRequest("El correo electronico ya esta registrado");
-            }
-
-            //Crear la nueva entidad de Usuario.
-            var newUser = new User
-            {
-                UserName = registerRequest.Username,
-                FirstName = registerRequest.Firstname,
-                LastName = registerRequest.Lastname,
-                Email = registerRequest.Email,
-                //Hashear la contraseña antes de guardar
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password)
-            };
-
-            //Guardar el nuevo usuario en la base de datos.
-            _context.Users.Add(newUser);
-            await _context.SaveChangesAsync();
-
-            //Devolver una respuesta exitosa.
-            return Ok(new { Message = "Usuario registrado exitosamente." });
+            return Ok(new { Message = result.message });
         }
 
-        [HttpGet("hash/{password}")]
-        public IActionResult HashPassword(string password)
-        {
-            if (string.IsNullOrEmpty(password))
-            {
-                return BadRequest("Password no puede ser vacía.");
-            }
-
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
-            return Ok(new { OriginalPassword = password, HashedPassword = hashedPassword });
-        }
-
-        //Obtener los datos del usuario actual
+        [Authorize]
         [HttpGet("profile/{id}")]
         public async Task<IActionResult> GetProfile(int id)
         {
-
-            var user = await _context.Users.FindAsync(id);
-            if (user == null) return NotFound("Usuario no encontrado.");
-
-            return Ok(new UserProfileDto
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId != id.ToString())
             {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-            });
+                return Forbid();
+            }
+
+            var profile = await _authService.GetProfileAsync(id);
+            if (profile == null) return NotFound("Usuario no encontrado.");
+
+            return Ok(profile);
         }
 
-        //Actualizar los datos del usuario actual
+        [Authorize]
         [HttpPut("profile/{id}")]
         public async Task<IActionResult> UpdateProfile(int id, [FromBody] UserProfileDto dto)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null) return NotFound("Usuario no encontrado.");
-
-            user.FirstName = dto.FirstName;
-            user.LastName = dto.LastName;
-            user.Email = dto.Email;
-
-            if(!string.IsNullOrEmpty(dto.NewPassword))
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId != id.ToString())
             {
-                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+                return Forbid();
             }
 
-            await _context.SaveChangesAsync();
-            return Ok(new { Message = "Perfil actualizado exitosamente." });
+            var result = await _authService.UpdateProfileAsync(id, dto);
+            if (!result.success)
+            {
+                return NotFound(result.message);
+            }
+
+            return Ok(new { Message = result.message });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("register-admin")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterRequestDto registerRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _authService.RegisterAdminAsync(registerRequest);
+            if (!result.success)
+            {
+                return BadRequest(result.message);
+            }
+
+            return Ok(new { Message = result.message });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _authService.GetAllUsersAsync();
+            return Ok(users);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("users/{id}/role")]
+        public async Task<IActionResult> UpdateUserRole(int id, [FromBody] string newRole)
+        {
+            if (newRole != "Admin" && newRole != "User")
+            {
+                return BadRequest("Rol invalido. Debe ser 'Admin' o 'User'.");
+            }
+
+            var result = await _authService.UpdateUserRoleAsync(id, newRole);
+            if (!result.success)
+            {
+                return NotFound(result.message);
+            }
+
+            return Ok(new { Message = result.message });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("users/{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var result = await _authService.DeleteUserAsync(id);
+            if (!result.success)
+            {
+                return NotFound(result.message);
+            }
+
+            return Ok(new { Message = result.message });
         }
     }
 }
