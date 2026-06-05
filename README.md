@@ -17,6 +17,8 @@ Sistema de Encuestas (SistForm) es un sistema completo de creacion, gestion y re
 - Soporte offline con SQLite local
 - Sincronizacion de datos offline
 - Captura de coordenadas geograficas
+- Panel de resultados y gestion de usuarios
+- Pruebas unitarias con xUnit y Moq
 
 ## Tecnologias
 
@@ -25,6 +27,7 @@ Sistema de Encuestas (SistForm) es un sistema completo de creacion, gestion y re
 - **ORM:** Entity Framework Core
 - **Base de datos:** MySQL
 - **Almacenamiento local:** SQLite
+- **Testing:** xUnit + Moq
 
 ## Requisitos Previos
 
@@ -104,6 +107,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v3.8](wiki/v3-8-Base-Datos-Local) | Base Datos Local | Mejoras en LocalDatabaseHelper. |
 | [v3.9](wiki/v3-9-Sincronizacion) | Sincronizacion | Agregada SyncSurveysPage para sincronizacion de encuestas. Agregado upload_icon.png. |
 | [v4.0](wiki/v4-0-Coordenadas-y-Limpieza) | Coordenadas y Limpieza | Agregadas migraciones de base de datos para coordenadas. Eliminado ToolbarItem (modelo obsoleto). |
+| [v4.1](wiki/v4-1-Gestion-y-Tests) | Gestion y Tests | Agregados servicios backend AuthService y FormsService. Agregadas AssignFormPage, ResultsDashboardPage, UserManagementPage. Agregado GlobalExceptionMiddleware. Agregados tests unitarios. Agregado script de base de datos. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 
