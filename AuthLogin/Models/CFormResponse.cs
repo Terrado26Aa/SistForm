@@ -7,10 +7,9 @@ namespace AuthLogin.Models
     public class CFormResponse
     {
         [Key]
-        //no se esta usando, pero se puede usar para mostrar el titulo de la pregunta en la lista de respuestas pendientes
         public int Id { get; set; }
-        public int FormId { get; set; } //Que encuesta respondio
-        public int UserId { get; set; } //Quien respondio
+        public int FormId { get; set; } //Qué encuesta respondió
+        public int UserId { get; set; } //Quién respondió
         public DateTime Date { get; set; } = DateTime.Now;
         public double? LatitudeA { get; set; }
         public double? LongitudeA { get; set; }
@@ -21,17 +20,16 @@ namespace AuthLogin.Models
         public List<CFormResponseDetail> Details { get; set; } = new List<CFormResponseDetail>();
     }
 
-    //no se esta usando, pero se puede usar para mostrar el titulo de la pregunta en la lista de respuestas pendientes
     [Table("form_response_details")]
     public class CFormResponseDetail
     {
         [Key]
         public int Id { get; set; }
         public int ResponseId { get; set; } //Referencia a la respuesta padre
-        public string QuestionTitle { get; set; } //Guardamos la pregunta por si cambia el form original
-        public string Answer { get; set; } //Lo que el usuario escribio o seleccionó
+        public string QuestionTitle { get; set; } = ""; //Guardamos la pregunta por si cambia el form original
+        public string Answer { get; set; } = ""; //Lo que el usuario escribió o seleccionó
 
-        [ForeignKey ("ResponseId")]
-        public CFormResponse CFormResponse { get; set; }
+        [ForeignKey("ResponseId")]
+        public CFormResponse? CFormResponse { get; set; }
     }
 }
