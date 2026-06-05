@@ -125,3 +125,7 @@ Agregada SyncSurveysPage para sincronizacion de encuestas. Agregado upload_icon.
 ## [v4.0] - Coordenadas y Limpieza
 
 Agregadas migraciones de base de datos para coordenadas. Eliminado ToolbarItem (modelo obsoleto).
+
+## [v4.1] - Gestion y Tests
+
+Agregados servicios backend AuthService y FormsService. Agregadas AssignFormPage, ResultsDashboardPage, UserManagementPage. Agregado GlobalExceptionMiddleware. Agregados tests unitarios. Agregado script de base de datos.

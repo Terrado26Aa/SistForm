@@ -4,7 +4,7 @@ El estandar **ESSENCE** (Essential Software Engineering Common Terminology) defi
 
 A continuacion se define cada alfa para el contexto de SistForm, con sus estados y checklist de progresion.
 
-> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v4.0, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
+> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v4.1, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
 
 ---
 
@@ -20,6 +20,7 @@ La necesidad o el problema que motiva el desarrollo del sistema.
 | **Solution Needed** | Se determina que una plataforma ubicua con soporte offline resuelve el problema |
 | **Value Established** | Investigadores y tecnicos validan que la plataforma ahorra tiempo y reduce errores |
 | **Addressed** | SistForm se entrega como solucion funcional |
+| **Benefit Realized** | La plataforma es utilizada por investigadores para captura de datos en campo |
 
 ---
 
@@ -36,6 +37,7 @@ Las personas, grupos u organizaciones que afectan o son afectados por el sistema
 | **Involved** | Los interesados participan en la validacion de funcionalidades |
 | **In Agreement** | Los interesados aceptan los requisitos y el alcance definido |
 | **Satisfied for Deployment** | Los interesados confirman que el sistema satisface sus necesidades |
+| **Satisfied in Use** | Los interesados usan el sistema y confirman su utilidad |
 
 ---
 
@@ -52,6 +54,7 @@ Lo que el sistema debe hacer para satisfacer a los interesados y la oportunidad.
 | **Coherent** | Los requisitos se organizan en funcionales y no funcionales |
 | **Acceptable** | Los requisitos son aprobados para implementacion |
 | **Addressed** | Los requisitos se implementan en su totalidad |
+| **Fulfilled** | El sistema cumple con todos los requisitos y pasa las pruebas |
 
 ### Requisitos Funcionales Implementados
 
@@ -94,12 +97,13 @@ El conjunto de actividades que se deben realizar para construir el sistema.
 |--------|-----------|
 | **Started** | Se inicia el repositorio y la configuracion del proyecto |
 | **Under Control** | El trabajo se organiza en versiones con commits atomicos |
+| **Completed** | Todo el trabajo planificado se ha ejecutado |
 
 ### Metricas
 
 | Metrica | Valor |
 |---------|-------|
-| Versiones | v4.0 |
+| Versiones | v4.1 |
 
 ---
 
@@ -114,6 +118,7 @@ El grupo de personas responsables de construir el sistema.
 | **Seeded** | Se asigna Cesar Terrado como unico desarrollador |
 | **Formed** | Se definen roles y herramientas de desarrollo |
 | **Collaborating** | El equipo trabaja de forma consistente |
+| **Performing** | El equipo entrega el sistema completo |
 
 ### Roles
 
@@ -137,6 +142,7 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 | **Foundation Established** | Se define el kernel, las alfas y los espacios de actividad |
 | **In Use** | Se aplica SEMAT durante todo el desarrollo, version a version |
 | **In Place** | Las practicas de trabajo estan establecidas y documentadas |
+| **Working Well** | La metodologia demuestra ser efectiva para el proyecto |
 
 ### Herramientas
 
@@ -147,6 +153,7 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 | Entity Framework Core | ORM para base de datos |
 | MySQL | Base de datos relacional |
 | SQLite | Base de datos local offline |
+| xUnit + Moq | Pruebas unitarias |
 | Git + GitHub | Control de versiones |
 | GitHub Wiki | Documentacion del proyecto |
 
@@ -154,4 +161,4 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 
 > Basado en el estandar **ESSENCE v1.2** (Object Management Group) adaptado al contexto del proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v4.0.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v4.1.

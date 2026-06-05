@@ -39,6 +39,7 @@ Sistema de Encuestas (SistForm) es un sistema completo de creacion, gestion y re
 | [v3.8](v3-8-Base-Datos-Local) | Base Datos Local | Mejoras en LocalDatabaseHelper. |
 | [v3.9](v3-9-Sincronizacion) | Sincronizacion | Agregada SyncSurveysPage para sincronizacion de encuestas. Agregado upload_icon.png. |
 | [v4.0](v4-0-Coordenadas-y-Limpieza) | Coordenadas y Limpieza | Agregadas migraciones de base de datos para coordenadas. Eliminado ToolbarItem (modelo obsoleto). |
+| [v4.1](v4-1-Gestion-y-Tests) | Gestion y Tests | Agregados servicios backend AuthService y FormsService. Agregadas AssignFormPage, ResultsDashboardPage, UserManagementPage. Agregado GlobalExceptionMiddleware. Agregados tests unitarios. Agregado script de base de datos. |
 
 ---
 
@@ -56,7 +57,7 @@ Sistema de Encuestas (SistForm) es un sistema completo de creacion, gestion y re
 | Pagina | Descripcion |
 |--------|-------------|
 | [Kernel ESSENCE](SEMAT-Kernel) | Definicion de las 7 alfas con checklist de estados para SistForm |
-| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v4.0) |
+| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v4.1) |
 | [Espacios de Actividad](SEMAT-Activity-Spaces) | Mapa de espacios de actividad cubiertos en cada fase del proyecto |
 
 ---
