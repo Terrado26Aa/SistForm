@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:Forms.Converters"
+             x:Class="Forms.Views.UserManagementPage"
+             Title="Gestión de Usuarios">
+    <ContentPage.Resources>
+        <converters:RoleToColorConverter x:Key="RoleToColor"/>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Button Grid.Row="0" Text="Nuevo Usuario" Clicked="OnCreateUserClicked" 
+                BackgroundColor="SkyBlue" TextColor="White" Margin="10" CornerRadius="10"/>
+        
+        <CollectionView x:Name="UsersList" Grid.Row="1" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="10" Padding="15" CornerRadius="10">
+                        <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="{Binding UserName}" FontSize="18" FontAttributes="Bold"/>
+                                <Label Text="{Binding Email}" FontSize="14" TextColor="Gray"/>
+                                <Label Text="{Binding Role}" FontSize="12" 
+                                       TextColor="{Binding Role, Converter={StaticResource RoleToColor}}"/>
+                            </VerticalStackLayout>
+                            <Button Grid.Column="1" Text="Editar" Clicked="OnEditRoleClicked" 
+                                    CommandParameter="{Binding .}" BackgroundColor="Orange" 
+                                    TextColor="White" Margin="5"/>
+                            <Button Grid.Column="2" Text="Eliminar" Clicked="OnDeleteClicked" 
+                                    CommandParameter="{Binding .}" BackgroundColor="Red" 
+                                    TextColor="White" Margin="5"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

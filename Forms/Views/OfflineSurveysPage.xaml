@@ -12,14 +12,37 @@
         <CollectionView x:Name="OfflineFormList" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="10,5" Padding="15" BorderColor="Gray" CornerRadius="10">
-                        <VerticalStackLayout>
-                            <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
-                            <Label Text="{Binding Description}" FontSize="14" TextColor="DarkGray" Margin="0,5,0,0"/>
+                    <Frame Margin="10,5" Padding="15" BorderColor="Gray" CornerRadius="10"
+                           BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}">
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto" RowSpacing="8">
 
-                            <Button Text="Llenar Encuesta" Margin="0,10,0,0" BackgroundColor="CornflowerBlue"
-                                    Clicked="OnFillOfflineSurveyClicked" CommandParameter="{Binding .}"/>
-                        </VerticalStackLayout>
+                            <!-- Título y descripción -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" VerticalOptions="Center">
+                                <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                                <Label Text="{Binding Description}" FontSize="14"
+                                       TextColor="{AppThemeBinding Light=DarkGray, Dark=LightGray}"
+                                       Margin="0,3,0,0"/>
+                            </VerticalStackLayout>
+
+                            <!-- Botón eliminar encuesta (esquina superior derecha) -->
+                            <ImageButton Grid.Row="0" Grid.Column="1"
+                                         Source="delete_icon3.png"
+                                         WidthRequest="22" HeightRequest="22"
+                                         BackgroundColor="Transparent"
+                                         VerticalOptions="Start"
+                                         Clicked="OnDeleteOfflineFormClicked"
+                                         CommandParameter="{Binding .}"
+                                         ToolTipProperties.Text="Eliminar del dispositivo"/>
+
+                            <!-- Botón Llenar -->
+                            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                    Text="Llenar Encuesta"
+                                    BackgroundColor="CornflowerBlue" TextColor="White"
+                                    CornerRadius="8" HeightRequest="44"
+                                    Clicked="OnFillOfflineSurveyClicked"
+                                    CommandParameter="{Binding .}"/>
+                        </Grid>
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

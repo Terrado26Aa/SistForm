@@ -5,26 +5,28 @@
              Title="Mi Perfil">
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
-            <Image Source="username.png" WidthRequest="100" HeightRequest="100" HorizontalOptions="Center" Margin="0,20,0,20"/>
+            <Image Source="username.png" WidthRequest="100" HeightRequest="100" HorizontalOptions="Center" Margin="0,20,0,10"/>
             
-            <Label Text="Nombre" FontSize="14" TextColor="Gray" FontAttributes="Bold" Margin="0,0,0,-15"/>
-            <Entry x:Name="FirstNameEntry" Placeholder="tu nombre" FontSize="16"/>
+            <Label x:Name="RoleLabel" Text="Rol:" FontSize="16" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}" FontAttributes="Bold" Margin="0,0,0,20"/>
 
-            <Label Text="Apellido" FontSize="14" TextColor="Gray" FontAttributes="Bold" Margin="0,0,0,-15"/>
-            <Entry x:Name="LastNameEntry" Placeholder="tu apellido" FontSize="16"/>
+            <Label Text="Nombre" FontSize="14" TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}" FontAttributes="Bold" Margin="0,0,0,-15"/>
+            <Entry x:Name="FirstNameEntry" Placeholder="tu nombre" FontSize="16" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
 
-            <Label Text="correo electronico" FontSize="14" TextColor="Gray" FontAttributes="Bold" Margin="0,0,0,-15"/>
-            <Entry x:Name="EmailEntry" Placeholder="tu@correo.com" FontSize="16" Keyboard="Email"/>
+            <Label Text="Apellido" FontSize="14" TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}" FontAttributes="Bold" Margin="0,0,0,-15"/>
+            <Entry x:Name="LastNameEntry" Placeholder="tu apellido" FontSize="16" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
 
-            <BoxView HeightRequest="1" BackgroundColor="LightGray" Margin="0,15,0,5"/>
-            <Label Text="Cambiar contraseña (Opcional)" FontSize="16" TextColor="Black" FontAttributes="Bold" 
+            <Label Text="correo electronico" FontSize="14" TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}" FontAttributes="Bold" Margin="0,0,0,-15"/>
+            <Entry x:Name="EmailEntry" Placeholder="tu@correo.com" FontSize="16" Keyboard="Email" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+
+            <BoxView HeightRequest="1" BackgroundColor="{AppThemeBinding Light=LightGray, Dark=#444444}" Margin="0,15,0,5"/>
+            <Label Text="Cambiar contraseña (Opcional)" FontSize="16" TextColor="{AppThemeBinding Light=Black, Dark=White}" FontAttributes="Bold" 
                    Margin="0,0,0,-5" HorizontalOptions="Center"/>
 
-            <Label Text="Nueva Contraseña" FontSize="14" TextColor="Gray" FontAttributes="Bold" Margin="0,0,0,-15"/>
-            <Entry x:Name="NewPasswordEntry" Placeholder="nueva contraseña" FontSize="16" IsPassword="True"/>
+            <Label Text="Nueva Contraseña" FontSize="14" TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}" FontAttributes="Bold" Margin="0,0,0,-15"/>
+            <Entry x:Name="NewPasswordEntry" Placeholder="nueva contraseña" FontSize="16" IsPassword="True" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
 
-            <Label Text="Confirmar Contraseña" FontSize="14" TextColor="Gray" FontAttributes="Bold" Margin="0,0,0,-15"/>
-            <Entry x:Name="ConfirmPasswordEntry" Placeholder="repite la contraseña" FontSize="16" IsPassword="True"/>
+            <Label Text="Confirmar Contraseña" FontSize="14" TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}" FontAttributes="Bold" Margin="0,0,0,-15"/>
+            <Entry x:Name="ConfirmPasswordEntry" Placeholder="repite la contraseña" FontSize="16" IsPassword="True" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
 
             <Button Text="Guardar cambios" BackgroundColor="CornflowerBlue" TextColor="White" HeightRequest="50" 
                     CornerRadius="10" Margin="0,30,0,0" Clicked="OnSaveProfileClicked"/>

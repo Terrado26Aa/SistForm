@@ -6,14 +6,17 @@
     <CollectionView x:Name="FormsList" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate>
-                <Frame Margin="10" Padding="15" BorderColor="Gray" CornerRadius="10">
+                <Frame Margin="10" Padding="15" BorderColor="{AppThemeBinding Light=Gray, Dark=DarkGray}" 
+                       BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}" CornerRadius="10">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnFrameTapped" CommandParameter="{Binding .}"/>
                     </Frame.GestureRecognizers>
                     <Grid ColumnDefinitions="*, auto" ColumnSpacing="10">
                         <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
-                            <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
-                            <Label Text="{Binding Description}" FontSize="14" TextColor="Gray"/>
+                            <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" 
+                                   TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                            <Label Text="{Binding Description}" FontSize="14" 
+                                   TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}"/>
                         </VerticalStackLayout>
 
                         <ImageButton Grid.Column="1" Source="download.png" WidthRequest="24" HeightRequest="24" 

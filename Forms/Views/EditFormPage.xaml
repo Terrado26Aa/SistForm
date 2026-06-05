@@ -2,47 +2,51 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Forms.Views.EditFormPage"
-             Title="EditFormPage"
-             BackgroundColor="#F0F2F5">
+             Title="Editar Encuesta"
+             BackgroundColor="{AppThemeBinding Light=#F0F2F5, Dark=#121212}">
     <Grid RowDefinitions="auto, *, auto">
-        <CarouselView Grid.Row="0" ItemsSource="{Binding ToolbarItems}" PeekAreaInsets="50" HeightRequest="60">
-            <CarouselView.ItemTemplate>
+        <CollectionView Grid.Row="0" x:Name="ToolbarCollection" HeightRequest="70" BackgroundColor="{AppThemeBinding Light=#F0F2F5, Dark=#1E1E1E}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Padding="0" Margin="5" HasShadow="False" BorderColor="#2B0B98" BackgroundColor="#512BD4">
-                        <HorizontalStackLayout Padding="5" Spacing="8" HorizontalOptions="Center">
-                            <Image Source="{Binding IconImageSource}" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center"/>
-                            <Label Text="{Binding Text}" FontSize="20" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
-
-                            <HorizontalStackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Command}" />
-                            </HorizontalStackLayout.GestureRecognizers>
+                    <Frame Padding="10,5" Margin="5" HasShadow="True" CornerRadius="8"
+                           BorderColor="{AppThemeBinding Light=#512BD4, Dark=#ac99ea}" 
+                           BackgroundColor="{AppThemeBinding Light=#512BD4, Dark=#333333}">
+                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Image Source="{Binding IconImageSource}" HeightRequest="24" WidthRequest="24"/>
+                            <Label Text="{Binding Text}" FontSize="14" TextColor="White" FontAttributes="Bold"/>
                         </HorizontalStackLayout>
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Command}" />
+                        </Frame.GestureRecognizers>
                     </Frame>
                 </DataTemplate>
-            </CarouselView.ItemTemplate>
-        </CarouselView>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="20" Spacing="15">
                 <Frame HasShadow="True" 
-                       BorderColor="LightGray" 
+                       BorderColor="{AppThemeBinding Light=LightGray, Dark=#333333}" 
                        CornerRadius="10" 
-                       BackgroundColor="White"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
                        Padding="20">
                     <VerticalStackLayout Spacing="10">
                         <Entry x:Name="FormTitleEntry"
                                Placeholder="Titulo del formulario"
                                FontSize="24"
                                FontAttributes="Bold"
-                               TextColor="{StaticResource Primary}"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
                                PlaceholderColor="Gray"/>
 
-                        <BoxView HeightRequest="1" BackgroundColor="LightGray"/>
+                        <BoxView HeightRequest="1" BackgroundColor="{AppThemeBinding Light=LightGray, Dark=#444444}"/>
 
                         <Editor x:Name="FormDescriptionEditor"
                                 Placeholder="Descripción del formulario"
                                 FontSize="16"
-                                TextColor="Black"
+                                TextColor="{AppThemeBinding Light=Black, Dark=White}"
                                 PlaceholderColor="Gray"
                                 AutoSize="TextChanges"
                                 BackgroundColor="Transparent"/>
@@ -50,17 +54,20 @@
                 </Frame>
 
                 <Frame HasShadow="True"
-                       BorderColor="LightGray"
+                       BorderColor="{AppThemeBinding Light=LightGray, Dark=#333333}"
                        CornerRadius="5"
-                       BackgroundColor="White"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
                        MinimumHeightRequest="400">
                     <Grid x:Name="CanvasGrid" RowSpacing="10" Padding="15">
-
+                        
                     </Grid>
                 </Frame>
             </VerticalStackLayout>
         </ScrollView>
 
-        <Button Grid.Row="2" Text="Guardar Formulario" Margin="20" Clicked="UpdateFormAsync"/>
+        <Grid Grid.Row="2" ColumnDefinitions="*, *" Margin="20" ColumnSpacing="15">
+            <Button Grid.Column="0" Text="Volver Atrás" BackgroundColor="{AppThemeBinding Light=Gray, Dark=DarkGray}" TextColor="White" Clicked="OnBackClicked"/>
+            <Button Grid.Column="1" Text="Guardar Formulario" Clicked="UpdateFormAsync"/>
+        </Grid>
     </Grid>
 </ContentPage>

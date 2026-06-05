@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Forms.Views.HomePage"
-             Title="HomePage"
+             Title="Dashboard"
              Shell.NavBarIsVisible="True"
              Shell.FlyoutBehavior="Flyout">
 
@@ -10,50 +10,74 @@
         <BackButtonBehavior IsVisible="False"/>
     </Shell.BackButtonBehavior>
 
-    <VerticalStackLayout>
-        <Grid RowDefinitions="*,*,*,*,*" ColumnDefinitions="*,*">
-            <StackLayout Padding="10,10,0,20" Grid.ColumnSpan="2">
-                <Label Text="Bienvenido Usuario" FontSize="20" FontAttributes="Bold" Margin="10,10,0,0"/>
-            </StackLayout>
-            <Frame Grid.Row="1" Grid.ColumnSpan="2" Padding="0" Margin="10" CornerRadius="10">
-                <SearchBar/>
+    <ScrollView>
+        <VerticalStackLayout Padding="10">
+            <Label x:Name="WelcomeLabel" Text="Bienvenido" FontSize="24" FontAttributes="Bold" Margin="0,10,0,5"/>
+            
+            <!-- Stats Cards -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" RowSpacing="10" Margin="0,10,0,10">
+                <Frame Grid.Column="0" CornerRadius="10" BackgroundColor="SkyBlue" Padding="15">
+                    <VerticalStackLayout>
+                        <Label Text="Encuestas" FontSize="14" TextColor="White"/>
+                        <Label x:Name="TotalFormsLabel" Text="0" FontSize="32" FontAttributes="Bold" TextColor="White"/>
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="1" CornerRadius="10" BackgroundColor="Orange" Padding="15">
+                    <VerticalStackLayout>
+                        <Label Text="Usuarios" FontSize="14" TextColor="White"/>
+                        <Label x:Name="TotalUsersLabel" Text="0" FontSize="32" FontAttributes="Bold" TextColor="White"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+            
+            <Frame CornerRadius="10" BackgroundColor="Green" Padding="15" Margin="0,0,0,10">
+                <VerticalStackLayout>
+                    <Label Text="Respuestas" FontSize="14" TextColor="White"/>
+                    <Label x:Name="TotalResponsesLabel" Text="0" FontSize="32" FontAttributes="Bold" TextColor="White"/>
+                </VerticalStackLayout>
             </Frame>
-            <Label Grid.Row="2" Text="Proyectos en Curso" FontSize="18" FontAttributes="Bold"
-                   HorizontalOptions="Start" VerticalOptions="Center" Margin="10,10,0,10"/>
-            <Label Grid.Row="2" Grid.Column="1" Text="Ver todo" HorizontalOptions="EndAndExpand"
-                   VerticalOptions="Center" Margin="0,10,10,10"/>
-            <Frame Grid.Row="3" CornerRadius="10" Padding="0,5,0,0" Margin="10">
-                <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
-                    <Label Padding="10,5,0,0" Text="Dic. 12, 2024" FontSize="10"/>
-                    <Image Grid.Column="1" Source="puntos2.png" WidthRequest="15" HeightRequest="15"
-                           VerticalOptions="Start" HorizontalOptions="End"/>
-                    <Label Padding="10,15,25,25" Grid.Row="1" Grid.ColumnSpan="2" Text="Aves en Peligro de Extinsion" FontSize="12"/>
-                </Grid>
-            </Frame>
-            <Frame Grid.Row="3" Grid.Column="1" CornerRadius="10" Padding="0,5,0,0" Margin="10">
-                <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
-                    <Label Padding="10,5,0,0" Text="Dic. 15, 2024" FontSize="10"/>
-                    <Image Grid.Column="1" Source="puntos2.png" WidthRequest="15" HeightRequest="15"
-                           VerticalOptions="Start" HorizontalOptions="End"/>
-                    <Label Padding="10,15,25,25" Grid.Row="1" Grid.ColumnSpan="2" Text="Tipos de Plantas Medicinales" FontSize="12"/>
-                </Grid>
-            </Frame>
-            <Frame Grid.Row="4" CornerRadius="10" Padding="0,5,0,0" Margin="10">
-                <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
-                    <Label Padding="10,5,0,0" Text="Dic. 17, 2024" FontSize="10"/>
-                    <Image Grid.Column="1" Source="puntos2.png" WidthRequest="15" HeightRequest="15"
-               VerticalOptions="Start" HorizontalOptions="End"/>
-                    <Label Padding="10,15,25,25" Grid.Row="1" Grid.ColumnSpan="2" Text="Reptiles" FontSize="12"/>
-                </Grid>
-            </Frame>
-            <Frame Grid.Row="4" Grid.Column="1" CornerRadius="10" Padding="0,5,0,0" Margin="10">
-                <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
-                    <Label Padding="10,5,0,0" Text="Dic. 19, 2024" FontSize="10"/>
-                    <Image Grid.Column="1" Source="puntos2.png" WidthRequest="15" HeightRequest="15"
-                           VerticalOptions="Start" HorizontalOptions="End"/>
-                    <Label Padding="10,15,25,25" Grid.Row="1" Grid.ColumnSpan="2" Text="Mamiferos" FontSize="12"/>
-                </Grid>
-            </Frame>
-        </Grid>
-    </VerticalStackLayout>
+
+            <!-- Recent Forms -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,10,0,5">
+                <Label Text="Encuestas Recientes" FontSize="18" FontAttributes="Bold" 
+                       VerticalOptions="Center"/>
+                <Button Grid.Column="1" Text="Ver todo" Clicked="OnViewAllClicked" 
+                        BackgroundColor="Transparent" TextColor="SkyBlue"/>
+            </Grid>
+
+            <CollectionView x:Name="RecentFormsList" SelectionMode="None" HeightRequest="200">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="0,5,0,5" Padding="15" CornerRadius="10">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Title}" FontSize="16" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Description}" FontSize="12" TextColor="Gray"/>
+                                </VerticalStackLayout>
+                                <Label Grid.Column="1" Text="{Binding CreationDate, StringFormat='{0:dd/MM/yyyy}'}" 
+                                       FontSize="12" TextColor="Gray" VerticalOptions="Center"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Admin Actions -->
+            <Button x:Name="CreateSurveyButton" Text="Crear Nueva Encuesta" 
+                    Clicked="OnCreateClicked" 
+                    BackgroundColor="SkyBlue" 
+                    TextColor="White" 
+                    Margin="0,20,0,10"
+                    CornerRadius="10"
+                    IsVisible="False"/>
+            
+            <Button x:Name="ManageUsersButton" Text="Gestionar Usuarios" 
+                    Clicked="OnManageUsersClicked" 
+                    BackgroundColor="Orange" 
+                    TextColor="White" 
+                    Margin="0,10,0,10"
+                    CornerRadius="10"
+                    IsVisible="False"/>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
