@@ -23,38 +23,51 @@
         </VerticalStackLayout>
     </Shell.FlyoutHeader>
 
-    <FlyoutItem Title="Menu" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent 
-            Title="Página Principal"
-            ContentTemplate="{DataTemplate local1:HomePage}"
-            Route="HomePage">
-        </ShellContent>
-        <ShellContent
-            Title="Crear Formulario"
-            ContentTemplate="{DataTemplate local1:CreateForm}"
-            Route="CreateForm">
-        </ShellContent>
-        <ShellContent
-            Title="Encuestas"
-            ContentTemplate="{DataTemplate local1:Surveys}"
-            Route="Surveys">
-        </ShellContent>
-        <ShellContent
-    Title="Administrar Encuesta"
-    ContentTemplate="{DataTemplate local1:ManageFormsPage}"
-    Route="ManageFormsPage">
-        </ShellContent>
-        <ShellContent
-            Title="Subir Encuesta"
-            ContentTemplate="{DataTemplate local1:SyncSurveysPage}"
-            Route="SyncSurveysPage">
-        </ShellContent>
-    </FlyoutItem>
-
     <ShellContent
         ContentTemplate="{DataTemplate local1:Login}"
         Route="Login"
         Shell.FlyoutBehavior="Disabled"/>
+    <ShellContent 
+        x:Name="MenuHomePage"
+        Title="Página Principal"
+        ContentTemplate="{DataTemplate local1:HomePage}"
+        Route="HomePage" />
+        
+    <ShellContent
+        x:Name="MenuCreateForm"
+        Title="Crear Formulario"
+        ContentTemplate="{DataTemplate local1:CreateForm}"
+        Route="CreateForm" />
+        
+    <ShellContent
+        x:Name="MenuSurveys"
+        Title="Encuestas"
+        ContentTemplate="{DataTemplate local1:Surveys}"
+        Route="Surveys" />
+        
+    <ShellContent
+        x:Name="MenuOfflineSurveys"
+        Title="Encuestas Offline"
+        ContentTemplate="{DataTemplate local1:OfflineSurveysPage}"
+        Route="OfflineSurveysPage" />
+        
+    <ShellContent
+        x:Name="MenuManageForms"
+        Title="Administrar Encuesta"
+        ContentTemplate="{DataTemplate local1:ManageFormsPage}"
+        Route="ManageFormsPage" />
+        
+    <ShellContent
+        x:Name="MenuUserManagement"
+        Title="Gestionar Usuarios"
+        ContentTemplate="{DataTemplate local1:UserManagementPage}"
+        Route="UserManagementPage" />
+        
+    <ShellContent
+        x:Name="MenuSyncSurveys"
+        Title="Subir Encuesta"
+        ContentTemplate="{DataTemplate local1:SyncSurveysPage}"
+        Route="SyncSurveysPage" />
 
     <MenuItem
         Text="Cerrar Sesión"

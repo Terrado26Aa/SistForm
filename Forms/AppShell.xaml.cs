@@ -1,4 +1,5 @@
-﻿using Forms.Views;
+using Forms.Views;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Forms
 {
@@ -25,24 +26,86 @@ namespace Forms
         {
             base.OnAppearing();
 
-            // Solo verifica el estado de login una vez
             if (_hasCheckedLogin) return;
-
             _hasCheckedLogin = true;
 
-            // Busca el token
-            string token = await SecureStorage.Default.GetAsync("auth_token");
+            string token = DeviceInfo.Platform == DevicePlatform.MacCatalyst 
+                ? Preferences.Default.Get("auth_token", "") 
+                : await SecureStorage.Default.GetAsync("auth_token");
 
-            //borrar despues
-            if (string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(token) && !IsTokenExpired(token))
             {
-                await DisplayAlert("Debug", "No hay token. Debería ir al Login.", "OK");
-                await Shell.Current.GoToAsync("//Login");
+                string role = DeviceInfo.Platform == DevicePlatform.MacCatalyst 
+                    ? Preferences.Default.Get("user_role", "User") 
+                    : await SecureStorage.Default.GetAsync("user_role") ?? "User";
+                
+                ConfigureMenu(role, false);
+
+                if (role == "Admin")
+                    await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
+                else
+                    await Shell.Current.GoToAsync($"//{nameof(Surveys)}");
+            }
+            else if (!string.IsNullOrEmpty(token))
+            {
+                // El token expiró: limpiar sesión y quedarse en el Login
+                await ForceLogoutAsync();
+            }
+        }
+
+        public void ConfigureMenu(string role, bool isOffline)
+        {
+            MenuHomePage.IsVisible = !isOffline && role == "Admin";
+            MenuCreateForm.IsVisible = !isOffline && role == "Admin";
+            MenuSurveys.IsVisible = !isOffline;
+            MenuOfflineSurveys.IsVisible = isOffline || role == "User";
+            MenuManageForms.IsVisible = !isOffline && role == "Admin";
+            MenuUserManagement.IsVisible = !isOffline && role == "Admin";
+            MenuSyncSurveys.IsVisible = true;
+        }
+
+        // Detecta si un JWT está expirado sin necesitar la clave secreta
+        private static bool IsTokenExpired(string token)
+        {
+            try
+            {
+                var handler = new JsonWebTokenHandler();
+                var jwt = handler.ReadJsonWebToken(token);
+                return jwt.ValidTo < DateTime.UtcNow;
+            }
+            catch
+            {
+                return true; // Si no puede leerlo, lo consideramos expirado
+            }
+        }
+
+        // Llamado desde ApiService cuando detecta un 401 en cualquier petición
+        public static async Task ForceLogoutAsync()
+        {
+            if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
+            {
+                Preferences.Default.Remove("auth_token");
+                Preferences.Default.Remove("user_id");
+                Preferences.Default.Remove("user_role");
             }
             else
             {
-                await DisplayAlert("Debug", "¡Token encontrado! Bienvenido de nuevo.", "OK");
-                // No hace nada, se queda en el HomePage que es la página por defecto
+                SecureStorage.Default.Remove("auth_token");
+                SecureStorage.Default.Remove("user_id");
+                SecureStorage.Default.Remove("user_role");
+            }
+
+            // Notificar al usuario y redirigir al login
+            if (Shell.Current != null)
+            {
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Shell.Current.DisplayAlert(
+                        "Sesión Expirada",
+                        "Tu sesión ha expirado. Por favor, inicia sesión nuevamente.",
+                        "OK");
+                    await Shell.Current.GoToAsync($"//{nameof(Login)}");
+                });
             }
         }
 
@@ -52,10 +115,20 @@ namespace Forms
 
             if (confirm)
             {
-                // Borra el token guardado
-                SecureStorage.Default.Remove("auth_token");
+                if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
+                {
+                    Preferences.Default.Remove("auth_token");
+                    Preferences.Default.Remove("user_id");
+                    Preferences.Default.Remove("user_role");
+                }
+                else
+                {
+                    SecureStorage.Default.Remove("auth_token");
+                    SecureStorage.Default.Remove("user_id");
+                    SecureStorage.Default.Remove("user_role");
+                }
 
-                // Navegar a la página de login y limpiar el historial de navegación
+                _hasCheckedLogin = false;
                 await Shell.Current.GoToAsync($"//{nameof(Views.Login)}");
             }
         }

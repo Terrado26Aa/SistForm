@@ -1,5 +1,6 @@
-﻿using Forms.Services;
+using Forms.Services;
 using Forms.Views;
+using Forms.ViewModels;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 
@@ -13,6 +14,7 @@ public static class MauiProgram
 		builder
 			.UseMauiApp<App>()
 			.UseMauiCommunityToolkit()
+			.UseMauiMaps()
             .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -23,11 +25,15 @@ public static class MauiProgram
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
-        //Registramos el servicio y la pagina de login
-        //AddSingleton mantiene la misma instancia de ApiService durante toda la app
+        // Servicios
         builder.Services.AddSingleton<ApiService>();
-        //AddTransient crea una nueva instancia de Login cada vez que se solicita
+
+        // ViewModels
+        builder.Services.AddTransient<LoginViewModel>();
+
+        // Views
         builder.Services.AddTransient<Login>();
+        
         return builder.Build();
 	}
 }
