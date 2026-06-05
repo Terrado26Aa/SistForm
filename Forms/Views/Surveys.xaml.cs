@@ -10,7 +10,6 @@ public partial class Surveys : ContentPage
 		InitializeComponent();
 	}
 
-    //Cargar la lista de formularios cada vez que la página aparezca
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -20,21 +19,22 @@ public partial class Surveys : ContentPage
     private async Task LoadForms()
     {
         var api = new ApiService();
-        //ActivityIndicator.IsRunning = true; // Mostrar el indicador de actividad mientras se cargan los datos
-        var forms = await api.GetAllFormsAsync(); // Obtener la lista de formularios desde la API
-        FormsList.ItemsSource = forms; // Asignar la lista al CollectionView
+        var result = await api.GetAllFormsAsync();
+        if (result.IsSuccess)
+        {
+            FormsList.ItemsSource = result.Value;
+        }
+        else
+        {
+            await DisplayAlert("Error", result.ErrorMessage, "OK");
+        }
     }
 
     private async void OnFrameTapped(object sender, TappedEventArgs e)
     {
-        // Obtener el formulario seleccionado a través del parámetro del evento
         var selectedForm = e.Parameter as FormDto; 
-
         if (selectedForm == null) return;
-
-        // Navegar a la página de llenado de formulario, pasando el ID del formulario seleccionado
         await Navigation.PushAsync(new FillSurveyPage(selectedForm.IdForm)); 
-
     }
 
     private async void OnDownloadFormClicked(object sender, EventArgs e)
@@ -44,27 +44,23 @@ public partial class Surveys : ContentPage
 
         if (selectedForm == null) return;
         
-        //Verifica si hay internet para poder descargar.
         if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
         {
-            await DisplayAlert("Error", "No hay conexión a internet. Por favor, conéctate para descargar el formulario.", "OK");
+            await DisplayAlert("Error", "No hay conexiÃ³n a internet. Por favor, conÃ©ctate para descargar el formulario.", "OK");
             return;
         }
 
-        //Descargamos la encuesta Completa con todas sus preguntas desde la API.
         var api = new ApiService();
-        var completeForm = await api.GetFormDetailsAsync(selectedForm.IdForm);
+        var result = await api.GetFormDetailsAsync(selectedForm.IdForm);
 
-        if (completeForm != null)
+        if (result.IsSuccess && result.Value != null)
         {
-            //la guardamos en la memoria interna del telefono.
-            await LocalDatabaseHelper.SaveFormLocallyAsync(completeForm);
-            await DisplayAlert("Exito", $"La encuesta '{completeForm.Title}' ha sido descargada y ya esta disponible offline",
-                "OK");
+            await LocalDatabaseHelper.SaveFormLocallyAsync(result.Value);
+            await DisplayAlert("Exito", $"La encuesta '{result.Value.Title}' ha sido descargada y ya esta disponible offline", "OK");
         }
         else
         {
-            await DisplayAlert("Error", "No se pudo descargar la encuesta.", "OK");
+            await DisplayAlert("Error", result.ErrorMessage ?? "No se pudo descargar la encuesta.", "OK");
         }
     }
 }

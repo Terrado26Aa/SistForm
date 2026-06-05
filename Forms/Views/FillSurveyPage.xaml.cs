@@ -1,4 +1,4 @@
-﻿using Forms.Services;
+using Forms.Services;
 using Forms.Models;
 namespace Forms.Views;
 
@@ -97,7 +97,9 @@ public partial class FillSurveyPage : ContentPage
 
                     if(await Task.WhenAny(apiTask, Task.Delay(5000))== apiTask)
                     {
-                        form = await apiTask;
+                        var result = await apiTask;
+                        if (result.IsSuccess) form = result.Value;
+
                         //Guardamos la encuesta en el celular para que este disponible offline.
                         if (form != null) await LocalDatabaseHelper.SaveFormLocallyAsync(form);
                     }
@@ -239,7 +241,7 @@ public partial class FillSurveyPage : ContentPage
                             if (secureType.Contains("multiple"))
                             {
                                 //Leemos el limite de la base de datos (o ponemo 99 si no hay limite)
-                                int maxLimit = (element.MaxSelections != null && element.MaxSelections >0) ? element.MaxSelections.Value : 99;
+                                int maxLimit = (element.MaxSelections > 0) ? element.MaxSelections : 99;
 
                                 cb.CheckedChanged += (sender, e) =>
                                 {
@@ -420,7 +422,10 @@ public partial class FillSurveyPage : ContentPage
         }
 
         //
-        string userIsString = await SecureStorage.Default.GetAsync("user_id");
+        string userIsString = DeviceInfo.Platform == DevicePlatform.MacCatalyst 
+            ? Preferences.Default.Get("user_id", "") 
+            : await SecureStorage.Default.GetAsync("user_id") ?? "";
+            
         int finalUserId = 0; //0 Significa "Usuario anonimo u offline"
 
         if(!string.IsNullOrEmpty(userIsString))
@@ -475,13 +480,26 @@ public partial class FillSurveyPage : ContentPage
             //respuesta local existente o creando una nueva.
             await LocalDatabaseHelper.SaveResponseLocallyAsync(submitDto);
 
-            await DisplayAlert("Guardado local", "Tus respuestas han sido guardadas localmente y se enviarán cuando " +
-                "tengas conexión a internet.", "OK");
-            await Navigation.PopAsync(); //Volver a la página anterior después de guardar las respuestas localmente.
+            //Intentamos enviar al backend si hay conexión
+            var api = new ApiService();
+            var result = await api.SubmitResponseAsync(submitDto);
+
+            if (result.IsSuccess)
+            {
+                //Si se envió exitosamente, eliminamos el guardado local
+                await LocalDatabaseHelper.DeletePendingResponseAsync(submitDto.LocalId);
+                await DisplayAlert("Éxito", "Tu respuesta ha sido enviada correctamente.", "OK");
+            }
+            else
+            {
+                await DisplayAlert("Guardado local", "Tus respuestas han sido guardadas localmente y se enviarán cuando " +
+                    "tengas conexión a internet.", "OK");
+            }
+            await Navigation.PopAsync(); //Volver a la página anterior después de guardar las respuestas.
         }
         catch(Exception ex)
         {
-            await DisplayAlert("Error", $"No se pudo guardar localmente: {ex.Message}", "OK");
+            await DisplayAlert("Error", $"No se pudo enviar: {ex.Message}", "OK");
         }
     }
 }

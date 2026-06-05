@@ -38,37 +38,35 @@ public partial class SyncSurveysPage : ContentPage
 		var button = sender as ImageButton;
 		var responseToSync = button?.CommandParameter as SubmitResponseDto;
 
-		if (responseToSync == null) return;
+		if (responseToSync == null || button == null) return;
 
 		if(Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
 		{
-			await DisplayAlert("Sin Conexión", "Necesitas internet para subir la encuesta", "OK");
+			await DisplayAlert("Sin ConexiÃ³n", "Necesitas internet para subir la encuesta", "OK");
 			return;
 		}
 
-		//Mostar indicador de carga
 		button.IsEnabled = false;
 
 		try
 		{
 			var api = new ApiService();
+			var result = await api.SubmitResponseAsync(responseToSync);
 
-			bool isSuccess = await api.SubmitResponseAsync(responseToSync);
-
-			if(isSuccess)
+			if(result.IsSuccess)
 			{
 				await LocalDatabaseHelper.DeletePendingResponseAsync(responseToSync.LocalId);
-				await DisplayAlert("Éxito", "Encuesta subida correctamente", "OK");
-                await LoadPendingResponses(); //Recargar la lista para reflejar los cambios
+				await DisplayAlert("Ã‰xito", "Encuesta subida correctamente", "OK");
+                await LoadPendingResponses();
             }
             else
             {
-                await DisplayAlert("Error", "El servidor rechazo los datos. Intenta denuevo", "OK");
+                await DisplayAlert("Error", result.ErrorMessage ?? "El servidor rechazÃ³ los datos. Intenta denuevo", "OK");
             }
         }
 		catch (Exception ex)
         {
-			await DisplayAlert("Error", $"Ocurrió un error al subir la encuesta: {ex.Message}", "OK");
+			await DisplayAlert("Error", $"OcurriÃ³ un error al subir la encuesta: {ex.Message}", "OK");
         }
 		finally
 		{
@@ -83,12 +81,12 @@ public partial class SyncSurveysPage : ContentPage
 
         if (responseToDelete == null) return;
 
-        bool confirm = await DisplayAlert("Confirmar", "¿Estás seguro de que quieres eliminar esta encuesta pendiente?", "Sí", "No");
+        bool confirm = await DisplayAlert("Confirmar", "Â¿EstÃ¡s seguro de que quieres eliminar esta encuesta pendiente?", "SÃ­", "No");
 
         if (confirm)
         {
             await LocalDatabaseHelper.DeletePendingResponseAsync(responseToDelete.LocalId);
-            await LoadPendingResponses(); //Recargar la lista para reflejar los cambios
+            await LoadPendingResponses();
         }
     }
 
@@ -99,7 +97,6 @@ public partial class SyncSurveysPage : ContentPage
 
         if (responseToEdit == null) return;
 
-		//Navegar a la página de edición, pasando la respuesta a editar
 		await Navigation.PushAsync(new FillSurveyPage(responseToEdit.FormId, responseToEdit.LocalId));
 	}
 }

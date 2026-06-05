@@ -13,7 +13,6 @@ public partial class OfflineSurveysPage : ContentPage
 	protected override async void OnAppearing()
     {
         base.OnAppearing();
-        //cargar las respuestas pendientes desde el almacenamiento local
         await LoadOfflineSurveys();
     }
 
@@ -40,9 +39,24 @@ public partial class OfflineSurveysPage : ContentPage
         var selectedForm = button?.CommandParameter as FormDto;
 
         if (selectedForm != null)
-        {
-            //navegar a la pagina de llenado de encuesta, pasando el formulario seleccionado
             await Navigation.PushAsync(new FillSurveyPage(selectedForm.IdForm));
-        }
+    }
+
+    private async void OnDeleteOfflineFormClicked(object sender, EventArgs e)
+    {
+        var button = sender as ImageButton;
+        var form = button?.CommandParameter as FormDto;
+
+        if (form == null) return;
+
+        bool confirm = await DisplayAlert(
+            "Eliminar encuesta",
+            $"¿Quieres eliminar '{form.Title}' del dispositivo?\nPodrás volver a descargarla cuando tengas conexión.",
+            "Eliminar", "Cancelar");
+
+        if (!confirm) return;
+
+        await LocalDatabaseHelper.DeleteDownloadedFormAsync(form.IdForm);
+        await LoadOfflineSurveys();
     }
 }

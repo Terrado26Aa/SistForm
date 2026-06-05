@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Forms.Services;
 using System.Text.RegularExpressions;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Forms.Views;
 
@@ -15,7 +17,16 @@ public partial class EditFormPage : ContentPage
     //variable para guardar las dimensiones iniciales del elemento
     private int _nextRow = 0;
 
-    public ObservableCollection<ToolbarItem> ToolbarItems { get; set; }
+    private ObservableCollection<ToolbarItem> _toolbarElements = new();
+    public ObservableCollection<ToolbarItem> ToolbarElements 
+    { 
+        get => _toolbarElements; 
+        set 
+        { 
+            _toolbarElements = value; 
+            OnPropertyChanged(); 
+        } 
+    }
 
     private int _formId;
 
@@ -31,15 +42,20 @@ public partial class EditFormPage : ContentPage
         var addMultipleChoiceCommand = new Command(OnAddMultipleChoiceClicked);
         var addSingleSelectionCommand = new Command(OnAddSingleSelectionClicked);
 
-        //creamos la lista de datos para el CarouselView de la toolbar
-        ToolbarItems = new ObservableCollection<ToolbarItem>
+        var addTextInputCommand = new Command(OnAddTextInputClicked);
+
+        //creamos la lista de datos para la toolbar
+        ToolbarElements = new ObservableCollection<ToolbarItem>
         {
             new ToolbarItem{ Text = "Texto", IconImageSource = "text_icon.png", Command = addTextCommand},
             new ToolbarItem{ Text = "Imagen", IconImageSource = "image_icon.png", Command = addImageCommand },
             new ToolbarItem{ Text = "Checklist",IconImageSource = "checklist_icon.png", Command = addChecklistCommand },
-            new ToolbarItem{ Text = "Multiple", IconImageSource = "multiple_icon.png", Command = addMultipleChoiceCommand },
-            new ToolbarItem{ Text = "Única", IconImageSource = "unique_icon.png", Command = addSingleSelectionCommand },
+            new ToolbarItem{ Text = "MultiselecciÃ³n", IconImageSource = "multiple_icon.png", Command = addMultipleChoiceCommand },
+            new ToolbarItem{ Text = "SelecciÃ³n Ãšnica", IconImageSource = "unique_icon.png", Command = addSingleSelectionCommand },
+            new ToolbarItem{ Text = "Campo de Entrada", IconImageSource = "input_icon.png", Command = addTextInputCommand },
         };
+
+        ToolbarCollection.ItemsSource = ToolbarElements;
 
         this.BindingContext = this;
 
@@ -54,7 +70,7 @@ public partial class EditFormPage : ContentPage
 
         _selectedElement = selectedContainer;
 
-        //Reinicia el tamaño y color de todos los frames
+        //Reinicia el tamao y color de todos los frames
         foreach (var child in CanvasGrid.Children)
         {
             if (child is Grid container)
@@ -63,7 +79,7 @@ public partial class EditFormPage : ContentPage
                 var border = container.Children.FirstOrDefault(c => c is Border) as Border;
                 if (border != null)
                 {
-                    border.Scale = 1.0; // Tamaño normal
+                    border.Scale = 1.0; // Tamao normal
                     border.Stroke = Colors.LightGray; // Color normal
                     border.StrokeThickness = 1; // Grosor normal
                 }
@@ -72,7 +88,7 @@ public partial class EditFormPage : ContentPage
         var selectedBorder = selectedContainer.Children.FirstOrDefault(c => c is Border) as Border;
         if (selectedBorder != null)
         {
-            selectedBorder.Scale = 1.0; // Tamaño normal
+            selectedBorder.Scale = 1.0; // Tamao normal
             selectedBorder.Stroke = Colors.DodgerBlue; // Cambia el color del borde para resaltar
             selectedBorder.StrokeThickness = 3; // Aumenta el grosor del borde
         }
@@ -226,10 +242,10 @@ public partial class EditFormPage : ContentPage
         //crea un contenedor vertical para la checklist
         var checklistStack = new VerticalStackLayout { Spacing = 5 };
 
-        //crea el botón "Agregar ítem" que ira dentro del checklist
+        //crea el botn "Agregar tem" que ira dentro del checklist
         var addItemButton = new Button
         {
-            Text = "Agregar ítem",
+            Text = "Agregar tem",
             WidthRequest = 100,
             HeightRequest = 40,
             BackgroundColor = Colors.Transparent,
@@ -237,36 +253,36 @@ public partial class EditFormPage : ContentPage
             HorizontalOptions = LayoutOptions.Start,
         };
 
-        //define la acción del botón "agregar ítem" usando la función lambda.
+        //define la accin del botn "agregar tem" usando la funcin lambda.
         addItemButton.Clicked += (sender, e) =>
         {
-            //crea un nuevo ítem para la checklist (checkbox + entry)
+            //crea un nuevo tem para la checklist (checkbox + entry)
             var newItemLayout = new HorizontalStackLayout { Spacing = 5 };
             newItemLayout.Children.Add(new CheckBox());
             newItemLayout.Children.Add(new Entry
             {
-                Placeholder = "Nuevo ítem",
+                Placeholder = "Nuevo tem",
                 FontSize = 16,
                 TextColor = Colors.Black,
                 VerticalOptions = LayoutOptions.Center,
             });
 
-            //inserta el nuevo ítem antes del botón "Agregar ítem"
+            //inserta el nuevo tem antes del botn "Agregar tem"
             checklistStack.Children.Insert(checklistStack.Children.Count - 1, newItemLayout);
         };
 
-        // crea el primer ítem de la checklist
+        // crea el primer tem de la checklist
         var firstItemLayout = new HorizontalStackLayout { Spacing = 5 };
         firstItemLayout.Children.Add(new CheckBox());
         firstItemLayout.Children.Add(new Entry
         {
-            Placeholder = "Nuevo ítem",
+            Placeholder = "Nuevo tem",
             FontSize = 16,
             TextColor = Colors.Black,
             VerticalOptions = LayoutOptions.Center,
         });
 
-        // agrega el checklistStack (con el primer ítem y el botón) al canvas
+        // agrega el checklistStack (con el primer tem y el botn) al canvas
         checklistStack.Children.Add(firstItemLayout);
         checklistStack.Children.Add(addItemButton);
 
@@ -281,10 +297,10 @@ public partial class EditFormPage : ContentPage
         //Asegura que los RadioButtons de esta pregunta no se mezclen con otros
         string groupName = Guid.NewGuid().ToString();
 
-        //Crea el boton para añadir mas opciones
+        //Crea el boton para aadir mas opciones
         var addItemButton = new Button
         {
-            Text = "Agregar Opción",
+            Text = "Agregar Opcin",
             WidthRequest = 120,
             HeightRequest = 40,
             BackgroundColor = Colors.Transparent,
@@ -292,17 +308,17 @@ public partial class EditFormPage : ContentPage
             HorizontalOptions = LayoutOptions.Start,
         };
 
-        //Añade la fila con RadioButton mas Entry
+        //Aade la fila con RadioButton mas Entry
         addItemButton.Clicked += (s, args) =>
         {
             var newItemLayout = new HorizontalStackLayout { Spacing = 5 };
 
-            //Creamos el RadioButton y le asignamos el grupo único
+            //Creamos el RadioButton y le asignamos el grupo nico
             var radioButton = new RadioButton { GroupName = groupName };
 
             var entry = new Entry
             {
-                Placeholder = "Opción",
+                Placeholder = "Opcin",
                 FontSize = 16,
                 TextColor = Colors.Black,
                 VerticalOptions = LayoutOptions.Center,
@@ -316,12 +332,12 @@ public partial class EditFormPage : ContentPage
             singleSelectionStack.Children.Insert(singleSelectionStack.Children.Count - 1, newItemLayout);
         };
 
-        // Crea la primera opción por defecto
+        // Crea la primera opcin por defecto
         var firstItemLayout = new HorizontalStackLayout { Spacing = 5 };
         var firstRadioButton = new RadioButton { GroupName = groupName, IsChecked = true }; //Marcamos la primera por defecto
         var firstEntry = new Entry
         {
-            Placeholder = "Opción 1",
+            Placeholder = "Opcin 1",
             FontSize = 16,
             TextColor = Colors.Black,
             VerticalOptions = LayoutOptions.Center,
@@ -331,12 +347,27 @@ public partial class EditFormPage : ContentPage
         firstItemLayout.Children.Add(firstRadioButton);
         firstItemLayout.Children.Add(firstEntry);
 
-        //Añade todo al contenedor
+        //Aade todo al contenedor
         singleSelectionStack.Children.Add(firstItemLayout);
         singleSelectionStack.Children.Add(addItemButton);
 
         //Lo manda al lienzo
         CreateAndAddElement(singleSelectionStack);
+    }
+
+
+    private void OnAddTextInputClicked()
+    {
+        //crea un Entry para el campo de entrada
+        var textInput = new Entry
+        {
+            Placeholder = "Escriba su respuesta aquÃ­",
+            FontSize = 16,
+            TextColor = Colors.Black,
+            Keyboard = Keyboard.Text
+        };
+
+        CreateAndAddElement(textInput);
     }
 
     private async void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e)
@@ -376,7 +407,7 @@ public partial class EditFormPage : ContentPage
                 changedCheckBox.IsChecked = false; // desmarca la casilla que excede el limite
             });
 
-            await DisplayAlert("Límite alcanzado", $"Solo puede seleccionar hasta {limit} opciones.", "OK");
+            await DisplayAlert("Lmite alcanzado", $"Solo puede seleccionar hasta {limit} opciones.", "OK");
         }
     }
 
@@ -394,15 +425,15 @@ public partial class EditFormPage : ContentPage
         };
         var limitEntry = new Entry
         {
-            Placeholder = "Número máximo de selecciones",
+            Placeholder = "Nmero mximo de selecciones",
             Keyboard = Keyboard.Numeric,
             WidthRequest = 50,
         };
 
-        // crea el botón para agregar opciones que ira dentro del multiple choice
+        // crea el botn para agregar opciones que ira dentro del multiple choice
         var addOptionButton = new Button
         {
-            Text = "Agregar opción",
+            Text = "Agregar opcin",
             WidthRequest = 120,
             HeightRequest = 40,
             BackgroundColor = Colors.Transparent,
@@ -419,9 +450,9 @@ public partial class EditFormPage : ContentPage
             newCheckbox.CheckedChanged += OnCheckBoxCheckedChanged;
 
             newOptionLayout.Children.Add(newCheckbox);
-            newOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opción", VerticalOptions = LayoutOptions.Center, });
+            newOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opcin", VerticalOptions = LayoutOptions.Center, });
 
-            // inserta la nueva opción antes del botón "Agregar opción"
+            // inserta la nueva opcin antes del botn "Agregar opcin"
             multipleChoiceLayout.Children.Insert(multipleChoiceLayout.Children.Count - 1, newOptionLayout);
         };
 
@@ -430,9 +461,9 @@ public partial class EditFormPage : ContentPage
         firstCheckbox.CheckedChanged += OnCheckBoxCheckedChanged; // asigna el manejador de evento para controlar el limite de selecciones
 
         firstOptionLayout.Children.Add(firstCheckbox);
-        firstOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opción", VerticalOptions = LayoutOptions.Center, });
+        firstOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opcin", VerticalOptions = LayoutOptions.Center, });
 
-        //añade todos los componentes al contenedor principal en orden.
+        //aade todos los componentes al contenedor principal en orden.
         multipleChoiceLayout.Children.Add(limitLable);
         multipleChoiceLayout.Children.Add(limitEntry);
         multipleChoiceLayout.Children.Add(firstOptionLayout);
@@ -460,14 +491,17 @@ public partial class EditFormPage : ContentPage
     {
         if (string.IsNullOrWhiteSpace(FormTitleEntry.Text))
         {
-            await DisplayAlert("Error", "El título del formulario no puede estar vacío.", "OK");
+            await DisplayAlert("Error", "El ttulo del formulario no puede estar vaco.", "OK");
             return;
         }
 
-        string userIdString = await SecureStorage.Default.GetAsync("user_id");
+        // En MacCatalyst se usa Preferences, en otros dispositivos SecureStorage
+        string userIdString = DeviceInfo.Platform == DevicePlatform.MacCatalyst 
+            ? Preferences.Default.Get("user_id", "") 
+            : await SecureStorage.Default.GetAsync("user_id");
         if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int idUser))
         {
-            await DisplayAlert("Error", "No se pudo obtener la información del usuario.", "OK");
+            await DisplayAlert("Error", "No se pudo obtener la informacin del usuario.", "OK");
             return;
         }
 
@@ -568,24 +602,25 @@ public partial class EditFormPage : ContentPage
         }
 
         var apiService = new ApiService();
-        bool isSuccess = await apiService.UpdateFormAsync(_formId, formDto);
+        var result = await apiService.UpdateFormAsync(_formId, formDto);
 
-        if (isSuccess)
+        if (result.IsSuccess)
         {
-            await DisplayAlert("Éxito", "El formulario se ha guardado correctamente.", "OK");
+            await DisplayAlert("xito", "El formulario se ha guardado correctamente.", "OK");
             ResetForm();
-            await Navigation.PopAsync(); // Regresa a la página anterior después de guardar
+            await Navigation.PopAsync(); // Regresa a la pgina anterior despus de guardar
         }
         else
         {
-            await DisplayAlert("Error", "Hubo un problema al guardar el formulario. Por favor, inténtelo de nuevo.", "OK");
+            await DisplayAlert("Error", "Hubo un problema al guardar el formulario. Por favor, intntelo de nuevo.", "OK");
         }
     }
 
     private async void LoadFormToEdit(int id)
     {
         var api = new ApiService();
-        var form = await api.GetFormDetailsAsync(id);
+        var result = await api.GetFormDetailsAsync(id);
+        var form = result.IsSuccess ? result.Value : null;
         if (form == null) return;
 
         //cargamos los datos del formulario en la interfaz
@@ -605,12 +640,12 @@ public partial class EditFormPage : ContentPage
                 var newBtn = new Button { Text = "Inserte una imagen", WidthRequest = 200, HeightRequest = 50 };
                 CreateAndAddElement(newBtn, element.Title);
             }
-            else if (element.Type.Contains("Unica") || element.Type.Contains("Multiple") || element.Type.Contains("CheckList"))
+            else if (element.Type == "Seleccion Unica" || element.Type == "Multiple" || element.Type == "Checklist")
             {
                 var stack = new VerticalStackLayout { Spacing = 5 };
                 string groupName = Guid.NewGuid().ToString();
 
-                if(element.Type.Contains("Multiple"))
+                if(element.Type == "Multiple")
                 {
                     var limitLable = new Label
                     {
@@ -641,7 +676,7 @@ public partial class EditFormPage : ContentPage
                 foreach (var op in  options)
                 {
                     var row = new HorizontalStackLayout { Spacing = 5 };
-                    if (element.Type.Contains("Unica")) row.Children.Add(new RadioButton { GroupName = groupName });
+                    if (element.Type == "Seleccion Unica") row.Children.Add(new RadioButton { GroupName = groupName });
                     else row.Children.Add(new CheckBox());
 
                     row.Children.Add(new Entry { Text = op.Trim(), FontSize =16, TextColor =Colors.Black, 
@@ -649,15 +684,15 @@ public partial class EditFormPage : ContentPage
                     stack.Children.Add(row);
                 }
 
-                //Agregamos el boton para permitir añadir mas opciones durante la edicion.
+                //Agregamos el boton para permitir aadir mas opciones durante la edicion.
                 var addItemButton = new Button { Text = "Agregar Opcion", WidthRequest = 120, HeightRequest=40, 
                     BackgroundColor = Colors.Transparent, TextColor = Colors.CornflowerBlue, HorizontalOptions = LayoutOptions.Start};
                 addItemButton.Clicked += (s, args) =>
                 {
                     var newRow = new HorizontalStackLayout {Spacing = 5 };
-                    if (element.Type.Contains("Unica")) newRow.Children.Add(new RadioButton { GroupName = groupName });
+                    if (element.Type == "Seleccion Unica") newRow.Children.Add(new RadioButton { GroupName = groupName });
                     else newRow.Children.Add(new CheckBox());
-                    newRow.Children.Add(new Entry {Placeholder = "Nueva Opción", FontSize = 16, TextColor = Colors.Black, 
+                    newRow.Children.Add(new Entry {Placeholder = "Nueva Opcin", FontSize = 16, TextColor = Colors.Black, 
                         VerticalOptions = LayoutOptions.Center, WidthRequest = 200 });
                     stack.Children.Insert(stack.Children.Count - 1, newRow);
                 };
@@ -666,5 +701,16 @@ public partial class EditFormPage : ContentPage
                 CreateAndAddElement(stack, element.Title);
             }
         }
+    }
+
+    public new event PropertyChangedEventHandler? PropertyChanged;
+    protected new void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
     }
 }
