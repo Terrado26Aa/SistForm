@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: 8.0.x
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore test project
+        run: dotnet restore AuthLogin.Tests/AuthLogin.Tests.csproj
+      - name: Run tests
+        run: dotnet test AuthLogin.Tests/AuthLogin.Tests.csproj -c Release --no-restore
+
+  build-android:
+    name: Build Android APK
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Install MAUI workloads
+        run: dotnet workload install android
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: microsoft
+          java-version: 17
+      - name: Restore MAUI project
+        env:
+          CI: ""
+        run: dotnet restore Forms/Forms.csproj
+      - name: Build Android APK
+        env:
+          CI: ""
+        run: dotnet build Forms/Forms.csproj -f net8.0-android -c Release
+      - name: Find APK/AAB
+        run: find Forms/bin/Release -name "*.apk" -o -name "*.aab" 2>/dev/null | head -20
+      - name: Upload artifacts to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            Forms/bin/Release/**/net8.0-android/**/*.apk
+            Forms/bin/Release/**/net8.0-android/**/*.aab
