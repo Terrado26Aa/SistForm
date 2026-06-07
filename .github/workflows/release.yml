@@ -47,11 +47,104 @@ jobs:
         env:
           CI: ""
         run: dotnet build Forms/Forms.csproj -f net8.0-android -c Release
-      - name: Find APK/AAB
-        run: find Forms/bin/Release -name "*.apk" -o -name "*.aab" 2>/dev/null | head -20
-      - name: Upload artifacts to Release
-        uses: softprops/action-gh-release@v2
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: Forms/bin/Release/**/net8.0-android/**/*.apk
+
+  build-ios:
+    name: Build iOS App
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Install MAUI workloads
+        run: dotnet workload install ios
+      - name: Restore MAUI project
+        env:
+          CI: ""
+        run: dotnet restore Forms/Forms.csproj
+      - name: Build iOS App
+        env:
+          CI: ""
+        run: dotnet build Forms/Forms.csproj -f net8.0-ios -c Release
+      - name: Upload iOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app
+          path: Forms/bin/Release/**/net8.0-ios/**/*.app
+
+  build-maccatalyst:
+    name: Build macCatalyst App
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Install MAUI workloads
+        run: dotnet workload install maccatalyst
+      - name: Restore MAUI project
+        env:
+          CI: ""
+        run: dotnet restore Forms/Forms.csproj
+      - name: Build macCatalyst App
+        env:
+          CI: ""
+        run: dotnet build Forms/Forms.csproj -f net8.0-maccatalyst -c Release
+      - name: Upload macCatalyst artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: maccatalyst-app
+          path: Forms/bin/Release/**/net8.0-maccatalyst/**/*.app
+
+  build-windows:
+    name: Build Windows App
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Install MAUI workloads
+        run: dotnet workload install maui
+      - name: Restore MAUI project
+        env:
+          CI: ""
+        run: dotnet restore Forms/Forms.csproj
+      - name: Build Windows App
+        env:
+          CI: ""
+        run: dotnet build Forms/Forms.csproj -f net8.0-windows10.0.19041.0 -c Release
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-app
+          path: Forms/bin/Release/**/net8.0-windows10.0.19041.0/**/*.exe
+
+  release:
+    name: Create Release
+    needs:
+      - build-android
+      - build-ios
+      - build-maccatalyst
+      - build-windows
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+      - name: List artifacts
+        run: find . -type f | sort
+      - uses: softprops/action-gh-release@v2
         with:
           files: |
-            Forms/bin/Release/**/net8.0-android/**/*.apk
-            Forms/bin/Release/**/net8.0-android/**/*.aab
+            android-apk/**/*
+            ios-app/**/*
+            maccatalyst-app/**/*
+            windows-app/**/*
