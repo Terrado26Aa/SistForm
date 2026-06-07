@@ -1,64 +1,76 @@
 # SistForm
 
-Sistema de Encuestas (SistForm) es un sistema completo de creacion, gestion y respuesta de encuestas con soporte offline y sincronizacion, desarrollado en **.NET MAUI** (frontend) y **ASP.NET Core** (backend).
+Sistema de Encuestas movil con soporte offline, sincronizacion y captura de coordenadas geograficas.
+
+Desarrollado en **.NET MAUI** (frontend) y **ASP.NET Core** (backend) como Trabajo de Graduacion.
 
 ## Funcionalidades
 
-- Autenticacion de usuarios (Login, Registro)
-- Creacion de formularios y encuestas
-- Toolbar contextual para edicion de elementos
-- Refactorizacion de vistas y navegacion
-- Configuracion para plataforma Android
-- API REST para formularios con Entity Framework Core y MySQL
-- Respuesta a encuestas desde dispositivo movil
-- Administracion de formularios (CRUD completo)
-- Edicion de formularios existentes
-- Perfiles de usuario y edicion
-- Soporte offline con SQLite local
-- Sincronizacion de datos offline
-- Captura de coordenadas geograficas
-- Panel de resultados y gestion de usuarios
-- Pruebas unitarias con xUnit y Moq
+- **Autenticacion** — Login, registro y gestion de perfiles de usuario
+- **Formularios** — Creacion, edicion, asignacion y administracion de encuestas
+- **Encuestas** — Respuesta a formularios desde el dispositivo movil
+- **Soporte Offline** — Almacenamiento local con SQLite y sincronizacion automatica
+- **Geolocalizacion** — Captura de coordenadas geograficas en las respuestas
+- **Administracion** — Panel de resultados, gestion de usuarios y dashboard
+- **Multiplataforma** — Android, iOS, Windows y Mac Catalyst
+
+## Arquitectura
+
+```
+SistForm/
+├── AuthLogin/                  # Backend ASP.NET Core Web API
+│   ├── Controllers/            # AuthController, FormsController
+│   ├── Services/               # AuthService, FormsService
+│   ├── Models/                 # CForm, User, DTOs
+│   ├── Data/                   # ApplicationDbContext (EF Core)
+│   ├── Middleware/             # GlobalExceptionMiddleware
+│   └── Migrations/             # Migraciones de base de datos
+├── Forms/                      # Frontend .NET MAUI
+│   ├── Views/                  # Paginas XAML (login, encuestas, admin)
+│   ├── ViewModels/             # LoginViewModel
+│   ├── Services/               # ApiService, LocalDatabaseHelper
+│   ├── Models/                 # DTOs del frontend
+│   ├── Converters/             # RoleToColorConverter
+│   └── Platforms/              # Android, iOS, Windows, Mac, Tizen
+├── AuthLogin.Tests/            # Pruebas unitarias (xUnit + Moq)
+└── Base de Datos/              # Script SQL de la base de datos
+```
 
 ## Tecnologias
 
-- **Frontend:** .NET MAUI (C#, XAML)
-- **Backend:** ASP.NET Core Web API
-- **ORM:** Entity Framework Core
-- **Base de datos:** MySQL
-- **Almacenamiento local:** SQLite
-- **Testing:** xUnit + Moq
+| Capa | Tecnologia |
+|------|-----------|
+| Frontend | .NET MAUI (C#, XAML) |
+| Backend | ASP.NET Core Web API |
+| ORM | Entity Framework Core |
+| Base de datos | MySQL |
+| Almacenamiento local | SQLite |
+| Testing | xUnit + Moq |
+| Metodologia | SEMAT / ESSENCE |
 
 ## Requisitos Previos
 
-- [.NET SDK](https://dotnet.microsoft.com/download) (.NET 8 o superior)
-- Servidor **MySQL**
-- Visual Studio 2022 (con cargas de trabajo MAUI y ASP.NET) o VS Code con C# Dev Kit
+- [.NET SDK](https://dotnet.microsoft.com/download) 8.0 o superior
+- **MySQL** server
+- Visual Studio 2022 (cargas de trabajo MAUI y ASP.NET) o VS Code + C# Dev Kit
 - Entity Framework Core CLI (opcional): `dotnet tool install --global dotnet-ef`
 
 ## Configuracion y Ejecucion
 
-### 1. Backend
+### Backend
 
 ```bash
 cd AuthLogin
+# Editar appsettings.json con cadena de conexion MySQL
 dotnet run
 ```
+
 La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 
-### 2. Frontend (MAUI)
+### Base de Datos
 
-1. Abre `Forms.sln` en Visual Studio.
-2. Configura la URL de la API en los servicios del frontend para que apunte al backend local.
-3. Selecciona el dispositivo destino (Android Emulator, Windows Machine, etc.).
-4. Presiona **F5** o haz clic en "Ejecutar".
-
-> **Nota:** Si pruebas en un emulador de Android, usa `10.0.2.2` en lugar de `localhost` para referirte a la maquina local.
-
-### 3. Base de Datos
-
-1. Asegurate de que MySQL este ejecutandose.
-2. Edita `AuthLogin/appsettings.json` y configura la cadena de conexion:
+1. Asegurate de que MySQL este ejecutandose
+2. Configura la cadena de conexion en `AuthLogin/appsettings.json`:
    ```json
    "ConnectionStrings": {
      "DefaultConnection": "Server=localhost;Database=dbforms;Uid=TU_USUARIO;Pwd=TU_CONTRASENA;"
@@ -70,51 +82,97 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
    dotnet ef database update
    ```
 
----
+### Frontend (MAUI)
 
-## Versiones
+1. Abre `Forms.sln` en Visual Studio
+2. Configura la URL de la API en `Forms/Services/ApiService.cs`
+3. Selecciona el destino (Android Emulator, Windows, etc.)
+4. Presiona **F5** o haz clic en "Ejecutar"
+
+> En un emulador de Android, usa `10.0.2.2` en lugar de `localhost`.
+
+### Pruebas
+
+```bash
+dotnet test AuthLogin.Tests/AuthLogin.Tests.csproj
+```
+
+## API Endpoints
+
+| Metodo | Ruta | Descripcion |
+|--------|------|-------------|
+| POST | `/api/auth/login` | Iniciar sesion |
+| POST | `/api/auth/register` | Registrar usuario |
+| GET | `/api/forms` | Listar formularios |
+| POST | `/api/forms` | Crear formulario |
+| PUT | `/api/forms/{id}` | Editar formulario |
+| DELETE | `/api/forms/{id}` | Eliminar formulario |
+| POST | `/api/forms/{id}/respond` | Responder encuesta |
+| GET | `/api/forms/{id}/results` | Resultados de encuesta |
+| GET | `/api/admin/users` | Gestionar usuarios (admin) |
+
+## Metodologia SEMAT / ESSENCE
+
+El proyecto se rige bajo **SEMAT (Software Engineering Method and Theory)** con el kernel **ESSENCE**, utilizando 7 alfas para medir progreso y salud del proyecto:
+
+| Alfa | Proposito |
+|------|-----------|
+| **Opportunity** | Necesidad que motiva el sistema |
+| **Stakeholders** | Personas afectadas por el sistema |
+| **Requirements** | Capacidades que el sistema debe proveer |
+| **Software System** | El sistema de software en construccion |
+| **Work** | Actividades para construir el sistema |
+| **Team** | Equipo responsable del desarrollo |
+| **Way of Working** | Metodologia y herramientas utilizadas |
+
+> Documentacion completa de SEMAT en la [wiki](https://github.com/Terrado26Aa/SistForm/wiki).
+
+## Versionado
 
 | Version | Nombre | Descripcion |
 |---------|--------|-------------|
-| [v1.0](wiki/v1-0-Fundamentos) | Fundamentos | Estructura base del proyecto con autenticacion (Login, Signin, HomePage), backend ASP.NET Core con controlador de autenticacion y modelos User, LoginRequestDto, RegisterRequestDto. |
-| [v1.1](wiki/v1-1-Servicios-y-API) | Servicios y API | Agregados modelos frontend y backend para registro de usuarios. Agregado servicio ApiService. Agregadas vistas CreateForm, PropertiesPanelView, Surveys. Configuracion de plataforma Android. |
-| [v1.2](wiki/v1-2-Toolbar-Popup) | Toolbar Popup | Agregado PropertiesToolBarPopup. Modificaciones en CreateForm.xaml y appsettings.json. |
-| [v1.3](wiki/v1-3-Configuracion-Maui) | Configuracion Maui | Modificacion en MauiProgram.cs (configuracion de la aplicacion). |
-| [v1.4](wiki/v1-4-Ajustes-Proyecto) | Ajustes Proyecto | Ajustes en configuracion del proyecto Forms.csproj. |
-| [v1.5](wiki/v1-5-Toolbar-y-Eliminacion) | Toolbar y Eliminacion | Agregado ToolbarItem. Agregado delete_icon.png. Eliminados PropertiesPanelView y PropertiesToolBarPopup (reemplazados por toolbar). |
-| [v1.6](wiki/v1-6-Iconos-y-Mejoras) | Iconos y Mejoras | Agregados iconos: checklist_icon, delete_icon2, image_icon, plus_icon, question_icon, text_icon. Modificaciones en CreateForm y ToolbarItem. |
-| [v1.7](wiki/v1-7-Mejoras-CreateForm) | Mejoras CreateForm | Mejoras en la logica de CreateForm. |
-| [v1.8](wiki/v1-8-Ajustes-CreateForm) | Ajustes CreateForm | Ajustes adicionales en CreateForm.xaml.cs. |
-| [v1.9](wiki/v1-9-MainPage-y-Refactor) | MainPage y Refactor | Agregados MainPage.xaml y MainPage.xaml.cs. Modificaciones en CreateForm, HomePage, Login. Actualizaciones en DbContext, controladores y ApiService. |
-| [v2.0](wiki/v2-0-Plataforma-Android) | Plataforma Android | Modificaciones en plataforma Android (manifest, actividades, aplicaciones). |
-| [v2.1](wiki/v2-1-Reestructuracion) | Reestructuracion | Ajustes en archivos de proyecto (AuthLogin.csproj, Forms.sln, Forms.csproj). |
-| [v2.2](wiki/v2-2-Formularios-y-Controlador) | Formularios y Controlador | Agregado FormsController. Agregados modelos FormDto, CForm, CreateFormDto. Modificaciones en estilos, fuentes, configuracion de app. Mejoras en vistas CreateForm, HomePage, Login. |
-| [v2.3](wiki/v2-3-Base-de-Datos) | Base de Datos | Modificacion en ApplicationDbContext. |
-| [v2.4](wiki/v2-4-Elementos-de-Formulario) | Elementos de Formulario | Agregado modelo CFormElement. Modificaciones en CreateForm y Login. Actualizacion en AppShell. |
-| [v2.5](wiki/v2-5-Respuestas-y-Encuestas) | Respuestas y Encuestas | Agregada FillSurveyPage para llenar encuestas. Agregados modelos ResponseDtos y CFormResponse. |
-| [v2.6](wiki/v2-6-Ajustes-Proyecto) | Ajustes Proyecto | Ajustes en configuracion del proyecto. |
-| [v2.7](wiki/v2-7-Controlador-Forms) | Controlador Forms | Modificaciones en FormsController. |
-| [v2.8](wiki/v2-8-Vistas-Encuestas) | Vistas Encuestas | Ajustes en vistas FillSurveyPage.xaml y Surveys.xaml. |
-| [v2.9](wiki/v2-9-Logica-Encuestas) | Logica Encuestas | Mejoras en logica de FillSurveyPage y Surveys. |
-| [v3.0](wiki/v3-0-Administracion) | Administracion | Agregada ManageFormsPage para administrar formularios. Modificaciones en FormsController, FillSurveyPage, CreateForm, Surveys. |
-| [v3.1](wiki/v3-1-Navegacion) | Navegacion | Modificaciones en AppShell (navegacion). |
-| [v3.2](wiki/v3-2-Edicion-de-Formularios) | Edicion de Formularios | Agregada EditFormPage para editar formularios existentes. Modificaciones en FormsController, CreateForm, ManageFormsPage. |
-| [v3.3](wiki/v3-3-Iconos-y-Gestion) | Iconos y Gestion | Agregados iconos delete_icon3 y edit_icon. Mejoras en ManageFormsPage. |
-| [v3.4](wiki/v3-4-Perfil-de-Usuario) | Perfil de Usuario | Agregado modelo UserProfileDto (frontend y backend). |
-| [v3.5](wiki/v3-5-Editar-Perfil) | Editar Perfil | Agregada EditProfilePage para editar perfil de usuario. Modificaciones en ApiService y controlador de autenticacion. |
-| [v3.6](wiki/v3-6-Ajustes-Navegacion) | Ajustes Navegacion | Ajustes en AppShell (navegacion). |
-| [v3.7](wiki/v3-7-Soporte-Offline) | Soporte Offline | Agregada OfflineSurveysPage y servicio LocalDatabaseHelper. Soporte offline para encuestas. |
-| [v3.8](wiki/v3-8-Base-Datos-Local) | Base Datos Local | Mejoras en LocalDatabaseHelper. |
-| [v3.9](wiki/v3-9-Sincronizacion) | Sincronizacion | Agregada SyncSurveysPage para sincronizacion de encuestas. Agregado upload_icon.png. |
-| [v4.0](wiki/v4-0-Coordenadas-y-Limpieza) | Coordenadas y Limpieza | Agregadas migraciones de base de datos para coordenadas. Eliminado ToolbarItem (modelo obsoleto). |
-| [v4.1](wiki/v4-1-Gestion-y-Tests) | Gestion y Tests | Agregados servicios backend AuthService y FormsService. Agregadas AssignFormPage, ResultsDashboardPage, UserManagementPage. Agregado GlobalExceptionMiddleware. Agregados tests unitarios. Agregado script de base de datos. |
+| v1.0 | Fundamentos | Estructura base con autenticacion |
+| v1.1 | Servicios y API | ApiService, vistas CreateForm/Surveys |
+| v1.2 | Toolbar Popup | PropertiesToolBarPopup |
+| v1.3 | Configuracion Maui | MauiProgram.cs |
+| v1.4 | Ajustes Proyecto | Config Forms.csproj |
+| v1.5 | Toolbar y Eliminacion | ToolbarItem, iconos |
+| v1.6 | Iconos y Mejoras | Iconos, mejoras CreateForm |
+| v1.7 | Mejoras CreateForm | Logica CreateForm |
+| v1.8 | Ajustes CreateForm | Ajustes CreateForm.xaml.cs |
+| v1.9 | MainPage y Refactor | MainPage, refactor general |
+| v2.0 | Plataforma Android | Configuracion Android |
+| v2.1 | Reestructuracion | Ajustes archivos proyecto |
+| v2.2 | Formularios | FormsController, modelos |
+| v2.3 | Base de Datos | ApplicationDbContext |
+| v2.4 | Elementos | CFormElement |
+| v2.5 | Respuestas | FillSurveyPage, ResponseDtos |
+| v2.6 | Ajustes Proyecto | Config Forms.csproj |
+| v2.7 | Controlador Forms | FormsController |
+| v2.8 | Vistas Encuestas | FillSurveyPage, Surveys |
+| v2.9 | Logica Encuestas | Mejoras FillSurveyPage |
+| v3.0 | Administracion | ManageFormsPage |
+| v3.1 | Navegacion | AppShell |
+| v3.2 | Edicion Formularios | EditFormPage |
+| v3.3 | Iconos y Gestion | Iconos, mejoras manage |
+| v3.4 | Perfil Usuario | UserProfileDto |
+| v3.5 | Editar Perfil | EditProfilePage |
+| v3.6 | Ajustes Navegacion | AppShell |
+| v3.7 | Soporte Offline | OfflineSurveysPage, LocalDB |
+| v3.8 | Base Datos Local | Mejoras LocalDatabaseHelper |
+| v3.9 | Sincronizacion | SyncSurveysPage |
+| v4.0 | Coordenadas | Geolocalizacion, limpieza |
+| v4.1 | Gestion y Tests | AuthService, FormsService, tests unitarios |
 
-> *Documentacion completa disponible en la [wiki](wiki/Home).*
+> Documentacion detallada de cada version en la [wiki](https://github.com/Terrado26Aa/SistForm/wiki).
 
----
+## Licencia
+
+Este proyecto es un Trabajo de Graduacion. Todos los derechos reservados.
 
 ## Enlaces
 
 - [Repositorio](https://github.com/Terrado26Aa/SistForm)
-- [Wiki](wiki/Home)
-- [Changelog](wiki/Changelog)
+- [Wiki](https://github.com/Terrado26Aa/SistForm/wiki)
+- [Changelog](https://github.com/Terrado26Aa/SistForm/wiki/Changelog)
+- [Reportar vulnerabilidad](SECURITY.md)
