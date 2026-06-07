@@ -24,8 +24,15 @@ namespace AuthLogin.Middleware
             }
             catch (Exception ex)
             {
+                var safeMethod = (context.Request.Method ?? string.Empty)
+                    .Replace("\r", string.Empty)
+                    .Replace("\n", string.Empty);
+                var safePath = (context.Request.Path.Value ?? string.Empty)
+                    .Replace("\r", string.Empty)
+                    .Replace("\n", string.Empty);
+
                 _logger.LogError(ex, "Excepción no controlada en la petición {Method} {Path}",
-                    context.Request.Method, context.Request.Path);
+                    safeMethod, safePath);
 
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
