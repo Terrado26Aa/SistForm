@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks Condition="'$(CI)' == ''">net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="'$(CI)' == '' and !$([MSBuild]::IsOSPlatform('linux'))">net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="'$(CI)' != ''">net8.0</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(CI)' == ''">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('linux')) and '$(CI)' == ''">net8.0-android</TargetFrameworks>
 		<UseMaui Condition="'$(CI)' == ''">true</UseMaui>
 
 		<OutputType>Exe</OutputType>

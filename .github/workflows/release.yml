@@ -60,7 +60,7 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Install MAUI workloads
-        run: dotnet workload install maui-ios
+        run: dotnet workload install maui
       - name: Build iOS App
         env:
           CI: ""
@@ -82,7 +82,7 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Install MAUI workloads
-        run: dotnet workload install maui-maccatalyst
+        run: dotnet workload install maui
       - name: Build macCatalyst App
         env:
           CI: ""
