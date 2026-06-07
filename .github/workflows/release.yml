@@ -42,7 +42,7 @@ jobs:
       - name: Restore MAUI project
         env:
           CI: ""
-        run: dotnet restore Forms/Forms.csproj
+        run: dotnet restore Forms/Forms.csproj -f net8.0-android
       - name: Build Android APK
         env:
           CI: ""
@@ -68,7 +68,7 @@ jobs:
       - name: Restore MAUI project
         env:
           CI: ""
-        run: dotnet restore Forms/Forms.csproj
+        run: dotnet restore Forms/Forms.csproj -f net8.0-ios
       - name: Build iOS App
         env:
           CI: ""
@@ -94,7 +94,7 @@ jobs:
       - name: Restore MAUI project
         env:
           CI: ""
-        run: dotnet restore Forms/Forms.csproj
+        run: dotnet restore Forms/Forms.csproj -f net8.0-maccatalyst
       - name: Build macCatalyst App
         env:
           CI: ""
@@ -119,7 +119,7 @@ jobs:
       - name: Restore MAUI project
         env:
           CI: ""
-        run: dotnet restore Forms/Forms.csproj
+        run: dotnet restore Forms/Forms.csproj -f net8.0-windows10.0.19041.0
       - name: Build Windows App
         env:
           CI: ""
