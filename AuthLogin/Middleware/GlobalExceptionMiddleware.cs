@@ -24,8 +24,11 @@ namespace AuthLogin.Middleware
             }
             catch (Exception ex)
             {
+                var safeMethod = SanitizeForLog(context.Request.Method);
+                var safePath = SanitizeForLog(context.Request.Path.Value);
+
                 _logger.LogError(ex, "Excepción no controlada en la petición {Method} {Path}",
-                    context.Request.Method, context.Request.Path);
+                    safeMethod, safePath);
 
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
@@ -38,6 +41,17 @@ namespace AuthLogin.Middleware
 
                 await context.Response.WriteAsJsonAsync(errorResponse);
             }
+        }
+
+        private static string SanitizeForLog(string? input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
+
+            return input.Replace("\r", string.Empty)
+                        .Replace("\n", string.Empty);
         }
     }
 }
