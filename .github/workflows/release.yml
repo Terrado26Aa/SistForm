@@ -39,10 +39,6 @@ jobs:
         with:
           distribution: microsoft
           java-version: 17
-      - name: Restore MAUI project
-        env:
-          CI: ""
-        run: dotnet restore Forms/Forms.csproj --framework net8.0-android
       - name: Build Android APK
         env:
           CI: ""
@@ -65,10 +61,6 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Install MAUI workloads
         run: dotnet workload install maui-ios
-      - name: Restore MAUI project
-        env:
-          CI: ""
-        run: dotnet restore Forms/Forms.csproj --framework net8.0-ios
       - name: Build iOS App
         env:
           CI: ""
@@ -91,10 +83,6 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Install MAUI workloads
         run: dotnet workload install maui-maccatalyst
-      - name: Restore MAUI project
-        env:
-          CI: ""
-        run: dotnet restore Forms/Forms.csproj --framework net8.0-maccatalyst
       - name: Build macCatalyst App
         env:
           CI: ""
@@ -116,10 +104,6 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Install MAUI workloads
         run: dotnet workload install maui
-      - name: Restore MAUI project
-        env:
-          CI: ""
-        run: dotnet restore Forms/Forms.csproj --framework net8.0-windows10.0.19041.0
       - name: Build Windows App
         env:
           CI: ""
