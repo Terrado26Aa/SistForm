@@ -88,6 +88,44 @@ jobs:
           CI: ""
         run: dotnet build Forms/Forms.csproj -f net10.0-android -c Release
 
+  frontend-ios:
+    name: Frontend - iOS Build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install MAUI iOS workload
+        run: dotnet workload install maui-ios
+
+      - name: Build iOS
+        env:
+          CI: ""
+        run: dotnet build Forms/Forms.csproj -f net10.0-ios -c Release
+
+  frontend-maccatalyst:
+    name: Frontend - macCatalyst Build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui
+
+      - name: Build macCatalyst
+        env:
+          CI: ""
+        run: dotnet build Forms/Forms.csproj -f net10.0-maccatalyst -c Release
+
   frontend-windows:
     name: Frontend - Windows Build
     runs-on: windows-latest
