@@ -174,11 +174,11 @@ jobs:
         name: Package Windows app
         shell: pwsh
         run: |
-          $publishDir = "Forms/bin/Release/${{ matrix.tfm }}/win10-x64/publish"
-          if (Test-Path $publishDir) {
-            Compress-Archive -Path "$publishDir/*" -DestinationPath "${{ matrix.artifact }}.zip"
+          $ridDir = Get-ChildItem -Path "Forms/bin/Release/${{ matrix.tfm }}" -Directory | Where-Object Name -like 'win-*' | Select-Object -First 1 -ExpandProperty FullName
+          if ($ridDir -and (Test-Path $ridDir)) {
+            Compress-Archive -Path "$ridDir/*" -DestinationPath "${{ matrix.artifact }}.zip"
           } else {
-            Write-Host "Publish directory not found"
+            Write-Host "Windows RID directory not found"
             Get-ChildItem -Path "Forms/bin/Release/${{ matrix.tfm }}" -Recurse | Select-Object FullName
             exit 1
           }
