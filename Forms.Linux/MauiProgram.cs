@@ -1,3 +1,5 @@
+using Microsoft.Maui.Platforms.Linux.Gtk4.Hosting;
+using Microsoft.Maui.Hosting;
 using CommunityToolkit.Maui;
 using Forms.Services;
 using Forms.Views;

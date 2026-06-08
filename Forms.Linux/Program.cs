@@ -1,12 +1,15 @@
-using Platform.Maui.Linux.Gtk4;
+using Microsoft.Maui.Platforms.Linux.Gtk4.Platform;
+using Microsoft.Maui.Hosting;
 
 namespace Forms.Linux;
 
-class Program
+public class Program : GtkMauiApplication
 {
-    [STAThread]
-    static void Main(string[] args)
+    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+
+    public static void Main(string[] args)
     {
-        GtkMauiApplication.Run<App>("com.sistform.app", "SistForm", args);
+        var app = new Program();
+        app.Run(args);
     }
 }
