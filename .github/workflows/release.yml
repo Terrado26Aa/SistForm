@@ -64,6 +64,8 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Install MAUI workloads
         run: dotnet workload install maui
+      - name: Select Xcode 26.5
+        run: sudo xcode-select -s /Applications/Xcode_26.5.app
       - name: Build iOS App
         env:
           CI: ""
@@ -86,6 +88,8 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Install MAUI workloads
         run: dotnet workload install maui
+      - name: Select Xcode 26.5
+        run: sudo xcode-select -s /Applications/Xcode_26.5.app
       - name: Build macCatalyst App
         env:
           CI: ""
