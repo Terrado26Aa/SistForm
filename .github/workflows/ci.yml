@@ -3,54 +3,129 @@ name: CI
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main ]
-
-permissions:
-  contents: read
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g. v1.0.0)'
+        required: false
 
 env:
   DOTNET_VERSION: 10.0.x
 
 jobs:
-  SistForm-API:
-    name: SistForm-API - Build & Test
+  test:
+    name: Test SistForm-API
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+      - run: dotnet test SistForm-API.Tests/SistForm-API.Tests.csproj -c Release
 
-      - name: Restore
-        run: dotnet restore SistForm-API/SistForm-API.csproj
-
-      - name: Build
-        run: dotnet build SistForm-API/SistForm-API.csproj --no-restore -c Release
-
-      - name: Restore tests
-        run: dotnet restore SistForm-API.Tests/SistForm-API.Tests.csproj
-
-      - name: Run tests
-        run: dotnet test SistForm-API.Tests/SistForm-API.Tests.csproj -c Release --no-restore
-
-      - name: Publish (self-contained linux-x64)
-        run: dotnet publish SistForm-API/SistForm-API.csproj -c Release --runtime linux-x64 --self-contained -o publish/SistForm-API
-
-  frontend-linux-gtk4:
-    name: Frontend - Linux GTK4 Build
-    runs-on: ubuntu-latest
+  build:
+    name: ${{ matrix.name }}
+    needs: test
+    runs-on: ${{ matrix.runner }}
+    continue-on-error: ${{ matrix.continue_on_error || false }}
+    strategy:
+      matrix:
+        include:
+          # -- Backend self-contained --
+          - name: Backend Linux x64
+            project: SistForm-API/SistForm-API.csproj
+            runner: ubuntu-latest
+            runtime: linux-x64
+            artifact: SistForm-API-linux-x64
+          - name: Backend Linux ARM64
+            project: SistForm-API/SistForm-API.csproj
+            runner: ubuntu-latest
+            runtime: linux-arm64
+            artifact: SistForm-API-linux-arm64
+          - name: Backend Windows x64
+            project: SistForm-API/SistForm-API.csproj
+            runner: windows-latest
+            runtime: win-x64
+            artifact: SistForm-API-win-x64
+          - name: Backend Windows ARM64
+            project: SistForm-API/SistForm-API.csproj
+            runner: windows-latest
+            runtime: win-arm64
+            artifact: SistForm-API-win-arm64
+          - name: Backend macOS x64
+            project: SistForm-API/SistForm-API.csproj
+            runner: macos-26
+            runtime: osx-x64
+            artifact: SistForm-API-macos-x64
+          - name: Backend macOS ARM64
+            project: SistForm-API/SistForm-API.csproj
+            runner: macos-26
+            runtime: osx-arm64
+            artifact: SistForm-API-macos-arm64
+          # -- Frontend MAUI --
+          - name: Android
+            project: Forms/Forms.csproj
+            tfm: net10.0-android
+            runner: ubuntu-latest
+            workload: maui-android
+            java: 17
+            artifact: android-apk
+          - name: iOS
+            project: Forms/Forms.csproj
+            tfm: net10.0-ios
+            runner: macos-26
+            workload: maui
+            artifact: ios-app
+            package: true
+            continue_on_error: true
+          - name: macCatalyst
+            project: Forms/Forms.csproj
+            tfm: net10.0-maccatalyst
+            runner: macos-26
+            workload: maui
+            extra_args: /p:PublishTrimmed=false
+            artifact: maccatalyst-app
+            package: true
+            continue_on_error: true
+          - name: Windows
+            project: Forms/Forms.csproj
+            tfm: net10.0-windows10.0.19041.0
+            runner: windows-latest
+            workload: maui
+            artifact: windows-app
+            publish_zip: true
+          # -- Frontend Linux GTK4 --
+          - name: Linux GTK4 x64
+            project: Forms.Linux/Forms.Linux.csproj
+            runner: ubuntu-latest
+            gtk4: true
+            runtime: linux-x64
+            artifact: linux-gtk4-x64
+          - name: Linux GTK4 ARM64
+            project: Forms.Linux/Forms.Linux.csproj
+            runner: ubuntu-latest
+            gtk4: true
+            runtime: linux-arm64
+            artifact: linux-gtk4-arm64
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install GTK4 dependencies
+      - if: matrix.workload
+        name: Install MAUI workload
+        run: dotnet workload install ${{ matrix.workload }}
+      - if: matrix.java
+        uses: actions/setup-java@v4
+        with:
+          distribution: microsoft
+          java-version: ${{ matrix.java }}
+      - if: matrix.gtk4
+        name: Install GTK4 dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -60,87 +135,89 @@ jobs:
             libgirepository1.0-dev \
             pkg-config
 
-      - name: Build Linux GTK4
-        run: dotnet build Forms.Linux/Forms.Linux.csproj -c Release
+      - name: Build
+        env:
+          CI: ""
+        run: dotnet build ${{ matrix.project }} -c Release ${{ matrix.tfm && format('-f {0}', matrix.tfm) || '' }} ${{ matrix.extra_args }}
 
-  frontend-android:
-    name: Frontend - Android Build
+      - if: matrix.runtime && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
+        name: Publish self-contained
+        run: dotnet publish ${{ matrix.project }} -c Release --runtime ${{ matrix.runtime }} --self-contained -o publish/${{ matrix.artifact }}
+
+      - if: matrix.tfm && !matrix.package && !matrix.publish_zip && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
+        name: Publish MAUI app
+        env:
+          CI: ""
+        run: dotnet publish ${{ matrix.project }} -c Release -f ${{ matrix.tfm }} ${{ matrix.extra_args }}
+
+      - if: matrix.package && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
+        name: Package app bundle
+        shell: bash
+        run: |
+          cd Forms/bin/Release
+          app_dir=$(find . -path "*/${{ matrix.tfm }}/*.app" -type d | head -1)
+          if [ -n "$app_dir" ]; then
+            zip -r ${{ matrix.artifact }}.zip "$app_dir"
+          else
+            echo "No .app bundle found"
+            exit 1
+          fi
+
+      - if: matrix.publish_zip && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
+        name: Package Windows app
+        shell: pwsh
+        run: |
+          $publishDir = "Forms/bin/Release/${{ matrix.tfm }}/win10-x64/publish"
+          if (Test-Path $publishDir) {
+            Compress-Archive -Path "$publishDir/*" -DestinationPath "${{ matrix.artifact }}.zip"
+          } else {
+            Write-Host "Publish directory not found"
+            Get-ChildItem -Path "Forms/bin/Release/${{ matrix.tfm }}" -Recurse | Select-Object FullName
+            exit 1
+          }
+
+      - if: matrix.tfm && !matrix.package && !matrix.publish_zip && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            Forms/bin/Release/${{ matrix.tfm }}/*.apk
+            Forms/bin/Release/${{ matrix.tfm }}/*.aab
+      - if: (matrix.package || matrix.publish_zip) && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}.zip
+      - if: matrix.runtime && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: publish/${{ matrix.artifact }}/**
+
+  release:
+    name: Create Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - uses: actions/download-artifact@v4
+      - name: Display structure
+        run: ls -laR
+      - uses: softprops/action-gh-release@v2
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Install MAUI Android workload
-        run: dotnet workload install maui-android
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: microsoft
-          java-version: 17
-
-      - name: Build Android
-        env:
-          CI: ""
-        run: dotnet build Forms/Forms.csproj -f net10.0-android -c Release
-
-  frontend-ios:
-    name: Frontend - iOS Build
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Install MAUI workload
-        run: dotnet workload install maui
-
-      - name: Build iOS
-        env:
-          CI: ""
-        run: dotnet build Forms/Forms.csproj -f net10.0-ios -c Release
-
-  frontend-maccatalyst:
-    name: Frontend - macCatalyst Build
-    runs-on: macos-26
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Install MAUI workload
-        run: dotnet workload install maui
-
-      - name: Build macCatalyst
-        env:
-          CI: ""
-        run: dotnet build Forms/Forms.csproj -f net10.0-maccatalyst -c Release /p:PublishTrimmed=false
-
-  frontend-windows:
-    name: Frontend - Windows Build
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Install MAUI workload
-        run: dotnet workload install maui
-
-      - name: Build Windows
-        env:
-          CI: ""
-        run: dotnet build Forms/Forms.csproj -f net10.0-windows10.0.19041.0 -c Release
+          generate_release_notes: true
+          files: |
+            android-apk/*
+            ios-app/*.zip
+            maccatalyst-app/*.zip
+            windows-app/*.zip
+            linux-gtk4-x64/**
+            linux-gtk4-arm64/**
+            SistForm-API-linux-x64/**
+            SistForm-API-linux-arm64/**
+            SistForm-API-win-x64/**
+            SistForm-API-win-arm64/**
+            SistForm-API-macos-x64/**
+            SistForm-API-macos-arm64/**
