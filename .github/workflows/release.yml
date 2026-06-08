@@ -21,113 +21,124 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Restore test project
-        run: dotnet restore AuthLogin.Tests/AuthLogin.Tests.csproj
-      - name: Run tests
-        run: dotnet test AuthLogin.Tests/AuthLogin.Tests.csproj -c Release --no-restore
+      - run: dotnet restore AuthLogin.Tests/AuthLogin.Tests.csproj
+      - run: dotnet test AuthLogin.Tests/AuthLogin.Tests.csproj -c Release --no-restore
 
-  build-android:
-    name: Build Android APK
+  build:
+    name: Build ${{ matrix.name }}
     needs: test
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          # Frontend — MAUI
+          - name: Android APK
+            category: frontend
+            tfm: net10.0-android
+            runner: ubuntu-latest
+            workload: maui-android
+            java: 17
+            artifact: android-apk
+            ext: apk
+          - name: iOS App
+            category: frontend
+            tfm: net10.0-ios
+            runner: macos-26
+            workload: maui
+            xcode: /Applications/Xcode_26.5.app
+            artifact: ios-app
+            package: true
+            continue-on-error: true
+          - name: macCatalyst App
+            category: frontend
+            tfm: net10.0-maccatalyst
+            runner: macos-26
+            workload: maui
+            xcode: /Applications/Xcode_26.5.app
+            artifact: maccatalyst-app
+            package: true
+            continue-on-error: true
+          - name: Windows App
+            category: frontend
+            tfm: net10.0-windows10.0.19041.0
+            runner: windows-latest
+            workload: maui
+            artifact: windows-app
+            ext: exe
+          # Backend — API self-contained
+          - name: Backend Linux
+            category: backend
+            runtime: linux-x64
+            runner: ubuntu-latest
+            artifact: backend-linux
+          - name: Backend Windows
+            category: backend
+            runtime: win-x64
+            runner: windows-latest
+            artifact: backend-win
+          - name: Backend macOS
+            category: backend
+            runtime: osx-x64
+            runner: macos-26
+            artifact: backend-macos
+    runs-on: ${{ matrix.runner }}
+    continue-on-error: ${{ matrix.continue-on-error || false }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Install MAUI workloads
-        run: dotnet workload install maui-android
-      - name: Set up Java 17
+
+      # Frontend: install workloads
+      - if: matrix.category == 'frontend'
+        name: Install MAUI workload
+        run: dotnet workload install ${{ matrix.workload }}
+      - if: matrix.category == 'frontend' && matrix.java
         uses: actions/setup-java@v4
         with:
           distribution: microsoft
-          java-version: 17
-      - name: Build Android APK
+          java-version: ${{ matrix.java }}
+      - if: matrix.category == 'frontend' && matrix.xcode
+        name: Select Xcode
+        run: sudo xcode-select -s ${{ matrix.xcode }}
+      - if: matrix.category == 'frontend'
+        name: Build MAUI app
         env:
           CI: ""
-        run: dotnet build Forms/Forms.csproj -f net10.0-android -c Release
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-apk
-          path: Forms/bin/Release/**/net10.0-android/**/*.apk
+        run: dotnet build Forms/Forms.csproj -f ${{ matrix.tfm }} -c Release
 
-  build-ios:
-    name: Build iOS App
-    needs: test
-    runs-on: macos-26
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Install MAUI workloads
-        run: dotnet workload install maui
-      - name: Select Xcode 26.5
-        run: sudo xcode-select -s /Applications/Xcode_26.5.app
-      - name: Build iOS App
-        env:
-          CI: ""
-        run: dotnet build Forms/Forms.csproj -f net10.0-ios -c Release
-      - name: Upload iOS artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-app
-          path: Forms/bin/Release/**/net10.0-ios/**/*.app
+      # Backend: publish self-contained
+      - if: matrix.category == 'backend'
+        name: Publish backend API
+        run: dotnet publish AuthLogin/AuthLogin.csproj -c Release --runtime ${{ matrix.runtime }} --self-contained -o publish/${{ matrix.artifact }}
 
-  build-maccatalyst:
-    name: Build macCatalyst App
-    needs: test
-    runs-on: macos-26
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Install MAUI workloads
-        run: dotnet workload install maui
-      - name: Select Xcode 26.5
-        run: sudo xcode-select -s /Applications/Xcode_26.5.app
-      - name: Build macCatalyst App
-        env:
-          CI: ""
-        run: dotnet build Forms/Forms.csproj -f net10.0-maccatalyst -c Release
-      - name: Upload macCatalyst artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: maccatalyst-app
-          path: Forms/bin/Release/**/net10.0-maccatalyst/**/*.app
+      # Package iOS/macCatalyst bundle to .zip
+      - if: matrix.package
+        name: Package app bundle
+        run: |
+          cd Forms/bin/Release
+          app_dir=$(find . -path "*/${{ matrix.tfm }}/*.app" -type d | head -1)
+          zip -r ${{ matrix.artifact }}.zip "$app_dir"
 
-  build-windows:
-    name: Build Windows App
-    needs: test
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Install MAUI workloads
-        run: dotnet workload install maui
-      - name: Build Windows App
-        env:
-          CI: ""
-        run: dotnet build Forms/Forms.csproj -f net10.0-windows10.0.19041.0 -c Release
-      - name: Upload Windows artifact
+      # Upload artifact
+      - if: matrix.category == 'frontend' && !matrix.package
         uses: actions/upload-artifact@v4
         with:
-          name: windows-app
-          path: Forms/bin/Release/**/net10.0-windows10.0.19041.0/**/*.exe
+          name: ${{ matrix.artifact }}
+          path: Forms/bin/Release/**/${{ matrix.tfm }}/*.${{ matrix.ext }}
+      - if: matrix.category == 'frontend' && matrix.package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: Forms/bin/Release/${{ matrix.artifact }}.zip
+      - if: matrix.category == 'backend'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: publish/${{ matrix.artifact }}/**
 
   release:
     name: Create Release
-    needs:
-      - build-android
-      - build-ios
-      - build-maccatalyst
-      - build-windows
+    needs: build
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
@@ -136,6 +147,9 @@ jobs:
         with:
           files: |
             android-apk/**/*.apk
-            ios-app/**/*.app
-            maccatalyst-app/**/*.app
+            ios-app/**/*.zip
+            maccatalyst-app/**/*.zip
             windows-app/**/*.exe
+            backend-linux/**
+            backend-win/**
+            backend-macos/**
