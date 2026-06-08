@@ -3,25 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Forms.Views.SyncSurveysPage"
              Title="Sincronizar Datos">
-    <Grid>
+    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
         <Label x:Name="EmptyMessageLabel"
                 Text="No hay encuestas para sincronizar."
                 HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center"
-                Margin="20" IsVisible="False" TextColor="Gray"/>
+                Margin="20" IsVisible="False" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}"/>
 
         <CollectionView x:Name="PendingResponsesList" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="15,8" Padding="15" BorderColor="CornflowerBlue" CornerRadius="10" HasShadow="False">
+                    <Frame Margin="15,8" Padding="15" 
+                           BorderColor="{AppThemeBinding Light=CornflowerBlue, Dark={StaticResource AccentCornflowerDark}}" 
+                           CornerRadius="10" HasShadow="False"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}">
                         <Grid ColumnDefinitions="*, auto" ColumnSpacing="15">
                             
                             <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
                                 <Label Text="{Binding FormTitle, TargetNullValue='Encuesta sin titulo'}" FontSize="18" FontAttributes="Bold"
-                                       TextColor="Black" Margin="0,0,0,10"/>
+                                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" Margin="0,0,0,10"/>
                                 <Label Text="{Binding SaveAt, StringFormat='Guardado: {0:dd/MM/yyyy hh:mm tt}'}" FontSize="12"
-                                       TextColor="Gray"/>
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}"/>
                                 <Label Text="{Binding Responses.Count, StringFormat='Respuestas guardadas: {0}'}" FontSize="14"
-                                       TextColor="DarkGray"/>
+                                       TextColor="{AppThemeBinding Light=DarkGray, Dark=Gray}"/>
                             </VerticalStackLayout>
 
                             <HorizontalStackLayout Grid.Column="1" Spacing="15" VerticalOptions="Center">

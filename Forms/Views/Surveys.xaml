@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Forms.Views.Surveys"
              Title="Encuestas">
+    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
     <CollectionView x:Name="FormsList" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate>
@@ -26,5 +27,6 @@
                 </Frame>
             </DataTemplate>
         </CollectionView.ItemTemplate>
-    </CollectionView>
+        </CollectionView>
+    </Grid>
 </ContentPage>

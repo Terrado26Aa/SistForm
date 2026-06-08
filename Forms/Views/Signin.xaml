@@ -6,57 +6,87 @@
     <ScrollView>
         <Grid BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" RowDefinitions="auto, *">
             <Image Source="fondo2.jpg" Grid.RowSpan="2" Aspect="AspectFill"/>
-            <Image Source="forms.png" HeightRequest="100" WidthRequest="100"
-                   VerticalOptions="Start"/>
+            <BoxView Grid.RowSpan="2">
+                <BoxView.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="Transparent" Offset="0.4"/>
+                        <GradientStop Color="{AppThemeBinding Light=White, Dark=#1f1f1f}" Offset="1"/>
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
+            <Border StrokeShape="RoundRectangle 50,50,50,50"
+                    WidthRequest="100" HeightRequest="100"
+                    StrokeThickness="0"
+                    VerticalOptions="Start" Margin="0,30,0,0">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="{AppThemeBinding Light=#FFFFFF, Dark=#4A4A4A}" Offset="0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#E0E0E0, Dark=#2A2A2A}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Image Source="forms.png" HeightRequest="90" WidthRequest="90"/>
+            </Border>
             <Border BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}" StrokeShape="RoundRectangle 40, 40, 0,0" 
                     Grid.Row="1">
                 <VerticalStackLayout>
                     <StackLayout Padding="20,20,20,0">
                         <Label Text="Nombre de Usuario" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                         <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
-                               HorizontalOptions="FillAndExpand" Padding="0">
-                            <Entry x:Name="UsernameEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                               HorizontalOptions="FillAndExpand" Padding="0"
+                               BorderColor="{AppThemeBinding Light=LightGray, Dark=#555555}">
+                            <Entry x:Name="UsernameEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                                   PlaceholderColor="{AppThemeBinding Light=Gray, Dark=LightGray}"/>
                         </Frame>
                     </StackLayout>
                     <StackLayout Padding="20,20,20,0">
                         <Label Text="Nombre" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                         <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
-                               HorizontalOptions="FillAndExpand" Padding="0">
-                            <Entry x:Name="FirstnameEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                               HorizontalOptions="FillAndExpand" Padding="0"
+                               BorderColor="{AppThemeBinding Light=LightGray, Dark=#555555}">
+                            <Entry x:Name="FirstnameEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                                   PlaceholderColor="{AppThemeBinding Light=Gray, Dark=LightGray}"/>
                         </Frame>
                     </StackLayout>
                     <StackLayout Padding="20,20,20,0">
                         <Label Text="Apellido" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                         <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
-                               HorizontalOptions="FillAndExpand" Padding="0">
-                            <Entry x:Name="LastnameEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                               HorizontalOptions="FillAndExpand" Padding="0"
+                               BorderColor="{AppThemeBinding Light=LightGray, Dark=#555555}">
+                            <Entry x:Name="LastnameEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                                   PlaceholderColor="{AppThemeBinding Light=Gray, Dark=LightGray}"/>
                         </Frame>
                     </StackLayout>
                     <StackLayout Padding="20,20,20,0">
                         <Label Text="Correo" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                         <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
-                               HorizontalOptions="FillAndExpand" Padding="0">
-                            <Entry x:Name="EmailEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                               HorizontalOptions="FillAndExpand" Padding="0"
+                               BorderColor="{AppThemeBinding Light=LightGray, Dark=#555555}">
+                            <Entry x:Name="EmailEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                                   PlaceholderColor="{AppThemeBinding Light=Gray, Dark=LightGray}"/>
                         </Frame>
                     </StackLayout>
                     <StackLayout Padding="20,20,20,0">
                         <Label Text="Contraseña" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                         <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
-                               HorizontalOptions="FillAndExpand" Padding="0">
-                            <Entry x:Name="PasswordEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                               HorizontalOptions="FillAndExpand" Padding="0"
+                               BorderColor="{AppThemeBinding Light=LightGray, Dark=#555555}">
+                            <Entry x:Name="PasswordEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                                   PlaceholderColor="{AppThemeBinding Light=Gray, Dark=LightGray}"/>
                         </Frame>
                     </StackLayout>
                     <StackLayout Padding="20,20,20,0">
                         <Label Text="Confirmar Contraseña" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                         <Frame CornerRadius="15" BackgroundColor="Transparent" VerticalOptions="Start"
-                               HorizontalOptions="FillAndExpand" Padding="0">
-                            <Entry x:Name="ConfirmPasswordEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                               HorizontalOptions="FillAndExpand" Padding="0"
+                               BorderColor="{AppThemeBinding Light=LightGray, Dark=#555555}">
+                            <Entry x:Name="ConfirmPasswordEntry" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                                   PlaceholderColor="{AppThemeBinding Light=Gray, Dark=LightGray}"/>
                         </Frame>
                     </StackLayout>
-                    <Button Text="Registrarse" BackgroundColor="Aqua" TextColor="White" FontAttributes="Bold" 
+                    <Button Text="Registrarse" BackgroundColor="{AppThemeBinding Light=Aqua, Dark=#009999}" TextColor="White" FontAttributes="Bold" 
                             CornerRadius="10" WidthRequest="200" Margin="0,15,0,0"
                             HorizontalOptions="Center" Clicked="OnRegisterButtonClicked"/>
-                    <Label x:Name="ErrorLabel" TextColor="Red" IsVisible="False" HorizontalOptions="Center"/>
+                    <Label x:Name="ErrorLabel" TextColor="{AppThemeBinding Light=Red, Dark=#FF6B6B}" IsVisible="False" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
             </Border>
         </Grid>

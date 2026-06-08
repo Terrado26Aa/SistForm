@@ -42,4 +42,30 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <!-- Semantic colors for dark mode support -->
+    <Color x:Key="TextPrimary">Black</Color>
+    <Color x:Key="TextPrimaryDark">White</Color>
+    <Color x:Key="TextSecondary">Gray</Color>
+    <Color x:Key="TextSecondaryDark">LightGray</Color>
+    <Color x:Key="TextMuted">DarkGray</Color>
+    <Color x:Key="TextMutedDark">Gray</Color>
+    <Color x:Key="CardBg">White</Color>
+    <Color x:Key="CardBgDark">#1E1E1E</Color>
+    <Color x:Key="SurfaceBg">#F0F2F5</Color>
+    <Color x:Key="SurfaceBgDark">#121212</Color>
+    <Color x:Key="BorderLight">LightGray</Color>
+    <Color x:Key="BorderLightDark">#333333</Color>
+    <Color x:Key="Separator">LightGray</Color>
+    <Color x:Key="SeparatorDark">#444444</Color>
+    <Color x:Key="AccentBlue">SkyBlue</Color>
+    <Color x:Key="AccentBlueDark">DeepSkyBlue</Color>
+    <Color x:Key="AccentOrange">Orange</Color>
+    <Color x:Key="AccentOrangeDark">DarkOrange</Color>
+    <Color x:Key="AccentGreen">Green</Color>
+    <Color x:Key="AccentGreenDark">ForestGreen</Color>
+    <Color x:Key="AccentRed">Red</Color>
+    <Color x:Key="AccentRedDark">#FF6B6B</Color>
+    <Color x:Key="AccentCornflower">CornflowerBlue</Color>
+    <Color x:Key="AccentCornflowerDark">#6BA3FF</Color>
 </ResourceDictionary>

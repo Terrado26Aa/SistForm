@@ -5,7 +5,8 @@
              x:Class="Forms.Views.AssignFormPage"
              Title="Asignar Encuesta">
     
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <VerticalStackLayout Padding="20" Spacing="15"
+                         BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
         <Label x:Name="FormTitleLabel" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" 
                TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
         
@@ -15,7 +16,7 @@
         <CollectionView x:Name="UsersList" SelectionMode="Single" HeightRequest="400">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="5" Padding="10" BorderColor="LightGray" CornerRadius="8"
+                    <Frame Margin="5" Padding="10" BorderColor="{AppThemeBinding Light=LightGray, Dark=#555555}" CornerRadius="8"
                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
                         <VerticalStackLayout>
                             <Label Text="{Binding UserName}" FontAttributes="Bold" FontSize="16"
@@ -36,8 +37,8 @@
         </CollectionView>
 
         <Button Text="Asignar Encuesta" Clicked="OnAssignClicked" 
-                BackgroundColor="SkyBlue" TextColor="White" FontAttributes="Bold" CornerRadius="10" HeightRequest="50"/>
+                BackgroundColor="{AppThemeBinding Light=SkyBlue, Dark=DeepSkyBlue}" TextColor="White" FontAttributes="Bold" CornerRadius="10" HeightRequest="50"/>
         
-        <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="SkyBlue" HorizontalOptions="Center"/>
+        <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="{AppThemeBinding Light=SkyBlue, Dark=DeepSkyBlue}" HorizontalOptions="Center"/>
     </VerticalStackLayout>
 </ContentPage>

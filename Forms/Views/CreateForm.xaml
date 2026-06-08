@@ -39,7 +39,7 @@
                                FontSize="24"
                                FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
-                               PlaceholderColor="Gray"/>
+                               PlaceholderColor="{AppThemeBinding Light=Gray, Dark=LightGray}"/>
 
                         <BoxView HeightRequest="1" BackgroundColor="{AppThemeBinding Light=LightGray, Dark=#444444}"/>
 
@@ -47,7 +47,7 @@
                                 Placeholder="Descripción del formulario"
                                 FontSize="16"
                                 TextColor="{AppThemeBinding Light=Black, Dark=White}"
-                                PlaceholderColor="Gray"
+                                PlaceholderColor="{AppThemeBinding Light=Gray, Dark=LightGray}"
                                 AutoSize="TextChanges"
                                 BackgroundColor="Transparent"/>
                     </VerticalStackLayout>

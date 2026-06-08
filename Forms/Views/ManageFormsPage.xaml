@@ -67,7 +67,7 @@
                                      VerticalOptions="Start"/>
                     </Grid>
 
-                    <BoxView HeightRequest="1" BackgroundColor="LightGray"/>
+                    <BoxView HeightRequest="1" BackgroundColor="{AppThemeBinding Light=LightGray, Dark=#444444}"/>
 
                     <Label Text="Selecciona el usuario:" FontSize="14"
                            TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}"/>
@@ -81,7 +81,7 @@
                                     <Frame Grid.ColumnSpan="2" BackgroundColor="Transparent"
                                            BorderColor="Transparent" Padding="0"/>
                                     <BoxView Grid.Column="0" WidthRequest="40" HeightRequest="40"
-                                             CornerRadius="20" BackgroundColor="SkyBlue"
+                                             CornerRadius="20" BackgroundColor="{AppThemeBinding Light=SkyBlue, Dark=DeepSkyBlue}"
                                              VerticalOptions="Center"/>
                                     <Label Grid.Column="0" Text="{Binding UserName[0]}"
                                            TextColor="White" FontAttributes="Bold" FontSize="16"
@@ -104,20 +104,18 @@
                     </CollectionView>
 
                     <ActivityIndicator x:Name="PopupLoadingIndicator" IsRunning="False" IsVisible="False"
-                                       Color="SkyBlue" HorizontalOptions="Center"/>
+                                       Color="{AppThemeBinding Light=SkyBlue, Dark=DeepSkyBlue}" HorizontalOptions="Center"/>
 
-                    <!-- Botón confirmar asignación -->
                     <Button x:Name="ConfirmAssignButton" Text="Confirmar Asignación"
-                            BackgroundColor="SkyBlue" TextColor="White"
+                            BackgroundColor="{AppThemeBinding Light=SkyBlue, Dark=DeepSkyBlue}" TextColor="White"
                             FontAttributes="Bold" CornerRadius="10" HeightRequest="48"
                             Clicked="OnConfirmAssignClicked" IsEnabled="False"/>
                 </VerticalStackLayout>
             </Frame>
         </Grid>
 
-        <!-- Botón Flotante para crear nueva encuesta (Solo Admin) -->
         <Button Text="+" FontSize="30" FontAttributes="Bold"
-                BackgroundColor="SkyBlue" TextColor="White"
+                BackgroundColor="{AppThemeBinding Light=SkyBlue, Dark=DeepSkyBlue}" TextColor="White"
                 CornerRadius="30" WidthRequest="60" HeightRequest="60"
                 HorizontalOptions="End" VerticalOptions="End" Margin="20"
                 Clicked="OnCreateNewClicked"

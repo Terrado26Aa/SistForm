@@ -3,20 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Forms.Views.OfflineSurveysPage"
              Title="Encuestas Offline">
-    <Grid>
+    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
         <Label x:Name="EmptyMessageLabel"
                Text="No tienes encuestas descargadas."
                HorizontalOptions="Center" VerticalOptions="Center"
-               HorizontalTextAlignment="Center" Margin="20" IsVisible="False" TextColor="Gray"/>
+               HorizontalTextAlignment="Center" Margin="20" IsVisible="False" 
+               TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}"/>
 
         <CollectionView x:Name="OfflineFormList" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="10,5" Padding="15" BorderColor="Gray" CornerRadius="10"
+                    <Frame Margin="10,5" Padding="15" 
+                           BorderColor="{AppThemeBinding Light=Gray, Dark=#555555}" CornerRadius="10"
                            BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}">
                         <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto" RowSpacing="8">
 
-                            <!-- Título y descripción -->
                             <VerticalStackLayout Grid.Row="0" Grid.Column="0" VerticalOptions="Center">
                                 <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold"
                                        TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
@@ -25,7 +26,6 @@
                                        Margin="0,3,0,0"/>
                             </VerticalStackLayout>
 
-                            <!-- Botón eliminar encuesta (esquina superior derecha) -->
                             <ImageButton Grid.Row="0" Grid.Column="1"
                                          Source="delete_icon3.png"
                                          WidthRequest="22" HeightRequest="22"
@@ -35,10 +35,9 @@
                                          CommandParameter="{Binding .}"
                                          ToolTipProperties.Text="Eliminar del dispositivo"/>
 
-                            <!-- Botón Llenar -->
                             <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                                     Text="Llenar Encuesta"
-                                    BackgroundColor="CornflowerBlue" TextColor="White"
+                                    BackgroundColor="{AppThemeBinding Light=CornflowerBlue, Dark=#6BA3FF}" TextColor="White"
                                     CornerRadius="8" HeightRequest="44"
                                     Clicked="OnFillOfflineSurveyClicked"
                                     CommandParameter="{Binding .}"/>

@@ -11,14 +11,24 @@
 
     <Shell.FlyoutHeader>
         <VerticalStackLayout HorizontalOptions="FillAndExpand" Padding="10,30,10,30">
-            <Image Source="username.png" HeightRequest="75" WidthRequest="75">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnProfileClicked"/>
-                </Image.GestureRecognizers>
-            </Image>
-            <Button Text="Perfil" Background="Transparent" TextColor="Black"
+            <Border StrokeShape="RoundRectangle 37,37,37,37"
+                    WidthRequest="75" HeightRequest="75"
+                    StrokeThickness="0">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="{AppThemeBinding Light=#E0E0E0, Dark=#4A4A4A}" Offset="0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#C0C0C0, Dark=#2A2A2A}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Image Source="username.png" HeightRequest="75" WidthRequest="75">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnProfileClicked"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </Border>
+            <Button Text="Perfil" Background="Transparent" TextColor="{AppThemeBinding Light=Black, Dark=White}"
                     HorizontalOptions="Center" Padding="0,0,0,10" Clicked="OnProfileClicked"/>
-            <BoxView BackgroundColor="Black" HeightRequest="5" HorizontalOptions="Fill"
+            <BoxView BackgroundColor="{AppThemeBinding Light=Black, Dark=White}" HeightRequest="5" HorizontalOptions="Fill"
                      CornerRadius="40" />
         </VerticalStackLayout>
     </Shell.FlyoutHeader>
@@ -71,7 +81,6 @@
 
     <MenuItem
         Text="Cerrar Sesión"
-        IconImageSource="cerrar.png"
         Clicked="OnLogoutClicked"/>
 
 </Shell>

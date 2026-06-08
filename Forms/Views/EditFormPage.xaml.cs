@@ -17,6 +17,17 @@ public partial class EditFormPage : ContentPage
     //variable para guardar las dimensiones iniciales del elemento
     private int _nextRow = 0;
 
+    private static Color T(Color light, Color dark) =>
+        Application.Current?.RequestedTheme == AppTheme.Dark ? dark : light;
+
+    private Color TextPrimary    => T(Color.FromArgb("#111111"), Color.FromArgb("#F0F0F0"));
+    private Color TextSecondary  => T(Color.FromArgb("#555555"), Color.FromArgb("#AAAAAA"));
+    private Color CardBackground => T(Colors.White, Color.FromArgb("#1E1E1E"));
+    private Color BorderColor    => T(Color.FromArgb("#DDDDDD"), Color.FromArgb("#3A3A3A"));
+    private Color ShadowColor    => T(Colors.Black, Colors.Black);
+    private Color AccentColor    => T(Color.FromArgb("#5C7CFA"), Color.FromArgb("#7B96FF"));
+
+
     private ObservableCollection<ToolbarItem> _toolbarElements = new();
     public ObservableCollection<ToolbarItem> ToolbarElements 
     { 
@@ -71,7 +82,7 @@ public partial class EditFormPage : ContentPage
         _selectedElement = selectedContainer;
 
         //Reinicia el tamao y color de todos los frames
-        foreach (var child in CanvasGrid.Children)
+            foreach (var child in CanvasGrid.Children)
         {
             if (child is Grid container)
             {
@@ -79,18 +90,18 @@ public partial class EditFormPage : ContentPage
                 var border = container.Children.FirstOrDefault(c => c is Border) as Border;
                 if (border != null)
                 {
-                    border.Scale = 1.0; // Tamao normal
-                    border.Stroke = Colors.LightGray; // Color normal
-                    border.StrokeThickness = 1; // Grosor normal
+                    border.Scale = 1.0;
+                    border.Stroke = BorderColor;
+                    border.StrokeThickness = 1;
                 }
             }
         }
         var selectedBorder = selectedContainer.Children.FirstOrDefault(c => c is Border) as Border;
         if (selectedBorder != null)
         {
-            selectedBorder.Scale = 1.0; // Tamao normal
-            selectedBorder.Stroke = Colors.DodgerBlue; // Cambia el color del borde para resaltar
-            selectedBorder.StrokeThickness = 3; // Aumenta el grosor del borde
+            selectedBorder.Scale = 1.0;
+            selectedBorder.Stroke = Colors.DodgerBlue;
+            selectedBorder.StrokeThickness = 3;
         }
     }
 
@@ -116,9 +127,9 @@ public partial class EditFormPage : ContentPage
         return new Border
         {
             Content = element,
-            Stroke = Colors.LightGray,
+            Stroke = BorderColor,
             StrokeThickness = 1,
-            Background = Colors.White,
+            Background = CardBackground,
             Margin = new Thickness(5),
             Padding = new Thickness(15, 10),
             StrokeShape = new RoundRectangle
@@ -127,8 +138,8 @@ public partial class EditFormPage : ContentPage
             },
             Shadow = new Shadow
             {
-                Brush = Colors.Black,
-                Opacity = 0.3f,
+                Brush = ShadowColor,
+                Opacity = 0.25f,
                 Radius = 5,
                 Offset = new Point(2, 2),
             },
@@ -144,7 +155,9 @@ public partial class EditFormPage : ContentPage
             Placeholder = "Ingrese el titulo",
             FontSize = 16,
             FontAttributes = FontAttributes.Bold,
-            TextColor = Colors.Black,
+            TextColor = TextPrimary,
+            PlaceholderColor = TextSecondary,
+            BackgroundColor = Colors.Transparent,
         };
 
         //crea el boton eliminar
@@ -211,13 +224,12 @@ public partial class EditFormPage : ContentPage
 
     private void OnAddTextClicked()
     {
-        //crea un nuevo Label
         var newLabel = new Label
         {
             Text = "Nuevo Texto",
             Padding = 5,
             FontSize = 16,
-            TextColor = Colors.Black,
+            TextColor = TextPrimary,
         };
 
         // agrega el label envuelto en un frame al grid
@@ -242,43 +254,42 @@ public partial class EditFormPage : ContentPage
         //crea un contenedor vertical para la checklist
         var checklistStack = new VerticalStackLayout { Spacing = 5 };
 
-        //crea el botn "Agregar tem" que ira dentro del checklist
         var addItemButton = new Button
         {
             Text = "Agregar tem",
             WidthRequest = 100,
             HeightRequest = 40,
             BackgroundColor = Colors.Transparent,
-            TextColor = Colors.CornflowerBlue,
+            TextColor = AccentColor,
             HorizontalOptions = LayoutOptions.Start,
         };
 
-        //define la accin del botn "agregar tem" usando la funcin lambda.
         addItemButton.Clicked += (sender, e) =>
         {
-            //crea un nuevo tem para la checklist (checkbox + entry)
             var newItemLayout = new HorizontalStackLayout { Spacing = 5 };
             newItemLayout.Children.Add(new CheckBox());
             newItemLayout.Children.Add(new Entry
             {
                 Placeholder = "Nuevo tem",
                 FontSize = 16,
-                TextColor = Colors.Black,
+                TextColor = TextPrimary,
+                PlaceholderColor = TextSecondary,
+                BackgroundColor = Colors.Transparent,
                 VerticalOptions = LayoutOptions.Center,
             });
 
-            //inserta el nuevo tem antes del botn "Agregar tem"
             checklistStack.Children.Insert(checklistStack.Children.Count - 1, newItemLayout);
         };
 
-        // crea el primer tem de la checklist
         var firstItemLayout = new HorizontalStackLayout { Spacing = 5 };
         firstItemLayout.Children.Add(new CheckBox());
         firstItemLayout.Children.Add(new Entry
         {
             Placeholder = "Nuevo tem",
             FontSize = 16,
-            TextColor = Colors.Black,
+            TextColor = TextPrimary,
+            PlaceholderColor = TextSecondary,
+            BackgroundColor = Colors.Transparent,
             VerticalOptions = LayoutOptions.Center,
         });
 
@@ -297,30 +308,29 @@ public partial class EditFormPage : ContentPage
         //Asegura que los RadioButtons de esta pregunta no se mezclen con otros
         string groupName = Guid.NewGuid().ToString();
 
-        //Crea el boton para aadir mas opciones
         var addItemButton = new Button
         {
             Text = "Agregar Opcin",
             WidthRequest = 120,
             HeightRequest = 40,
             BackgroundColor = Colors.Transparent,
-            TextColor = Colors.CornflowerBlue,
+            TextColor = AccentColor,
             HorizontalOptions = LayoutOptions.Start,
         };
 
-        //Aade la fila con RadioButton mas Entry
         addItemButton.Clicked += (s, args) =>
         {
             var newItemLayout = new HorizontalStackLayout { Spacing = 5 };
 
-            //Creamos el RadioButton y le asignamos el grupo nico
             var radioButton = new RadioButton { GroupName = groupName };
 
             var entry = new Entry
             {
                 Placeholder = "Opcin",
                 FontSize = 16,
-                TextColor = Colors.Black,
+                TextColor = TextPrimary,
+                PlaceholderColor = TextSecondary,
+                BackgroundColor = Colors.Transparent,
                 VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 200
             };
@@ -328,18 +338,18 @@ public partial class EditFormPage : ContentPage
             newItemLayout.Children.Add(radioButton);
             newItemLayout.Children.Add(entry);
 
-            //Inserta antes del boton de agregar
             singleSelectionStack.Children.Insert(singleSelectionStack.Children.Count - 1, newItemLayout);
         };
 
-        // Crea la primera opcin por defecto
         var firstItemLayout = new HorizontalStackLayout { Spacing = 5 };
-        var firstRadioButton = new RadioButton { GroupName = groupName, IsChecked = true }; //Marcamos la primera por defecto
+        var firstRadioButton = new RadioButton { GroupName = groupName, IsChecked = true };
         var firstEntry = new Entry
         {
             Placeholder = "Opcin 1",
             FontSize = 16,
-            TextColor = Colors.Black,
+            TextColor = TextPrimary,
+            PlaceholderColor = TextSecondary,
+            BackgroundColor = Colors.Transparent,
             VerticalOptions = LayoutOptions.Center,
             WidthRequest = 200
         };
@@ -358,12 +368,13 @@ public partial class EditFormPage : ContentPage
 
     private void OnAddTextInputClicked()
     {
-        //crea un Entry para el campo de entrada
         var textInput = new Entry
         {
             Placeholder = "Escriba su respuesta aquí",
             FontSize = 16,
-            TextColor = Colors.Black,
+            TextColor = TextPrimary,
+            PlaceholderColor = TextSecondary,
+            BackgroundColor = Colors.Transparent,
             Keyboard = Keyboard.Text
         };
 
@@ -430,14 +441,13 @@ public partial class EditFormPage : ContentPage
             WidthRequest = 50,
         };
 
-        // crea el botn para agregar opciones que ira dentro del multiple choice
         var addOptionButton = new Button
         {
             Text = "Agregar opcin",
             WidthRequest = 120,
             HeightRequest = 40,
             BackgroundColor = Colors.Transparent,
-            TextColor = Colors.CornflowerBlue,
+            TextColor = AccentColor,
             HorizontalOptions = LayoutOptions.Start,
         };
 
@@ -446,22 +456,20 @@ public partial class EditFormPage : ContentPage
             var newOptionLayout = new HorizontalStackLayout { Spacing = 5 };
             var newCheckbox = new CheckBox();
 
-            //asigna el manejador de evento para controlar el limite de selecciones
             newCheckbox.CheckedChanged += OnCheckBoxCheckedChanged;
 
             newOptionLayout.Children.Add(newCheckbox);
-            newOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opcin", VerticalOptions = LayoutOptions.Center, });
+            newOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opcin", TextColor = TextPrimary, PlaceholderColor = TextSecondary, BackgroundColor = Colors.Transparent, VerticalOptions = LayoutOptions.Center, });
 
-            // inserta la nueva opcin antes del botn "Agregar opcin"
             multipleChoiceLayout.Children.Insert(multipleChoiceLayout.Children.Count - 1, newOptionLayout);
         };
 
         var firstOptionLayout = new HorizontalStackLayout { Spacing = 5 };
         var firstCheckbox = new CheckBox();
-        firstCheckbox.CheckedChanged += OnCheckBoxCheckedChanged; // asigna el manejador de evento para controlar el limite de selecciones
+        firstCheckbox.CheckedChanged += OnCheckBoxCheckedChanged;
 
         firstOptionLayout.Children.Add(firstCheckbox);
-        firstOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opcin", VerticalOptions = LayoutOptions.Center, });
+        firstOptionLayout.Children.Add(new Entry { Placeholder = "Nueva opcin", TextColor = TextPrimary, PlaceholderColor = TextSecondary, BackgroundColor = Colors.Transparent, VerticalOptions = LayoutOptions.Center, });
 
         //aade todos los componentes al contenedor principal en orden.
         multipleChoiceLayout.Children.Add(limitLable);
@@ -632,7 +640,7 @@ public partial class EditFormPage : ContentPage
         {
             if (element.Type == "Texto" || element.Type == "Campo de Entrada")
             {
-                var newLabel = new Label { Text = "Nuevo Texto", Padding = 5, FontSize = 16, TextColor = Colors.Black };
+                var newLabel = new Label { Text = "Nuevo Texto", Padding = 5, FontSize = 16, TextColor = TextPrimary };
                 CreateAndAddElement(newLabel, element.Title);
             }
             else if (element.Type == "Imagen")
@@ -679,20 +687,19 @@ public partial class EditFormPage : ContentPage
                     if (element.Type == "Seleccion Unica") row.Children.Add(new RadioButton { GroupName = groupName });
                     else row.Children.Add(new CheckBox());
 
-                    row.Children.Add(new Entry { Text = op.Trim(), FontSize =16, TextColor =Colors.Black, 
+                    row.Children.Add(new Entry { Text = op.Trim(), FontSize =16, TextColor = TextPrimary, PlaceholderColor = TextSecondary, BackgroundColor = Colors.Transparent,
                         VerticalOptions = LayoutOptions.Center, WidthRequest = 200});
                     stack.Children.Add(row);
                 }
 
-                //Agregamos el boton para permitir aadir mas opciones durante la edicion.
                 var addItemButton = new Button { Text = "Agregar Opcion", WidthRequest = 120, HeightRequest=40, 
-                    BackgroundColor = Colors.Transparent, TextColor = Colors.CornflowerBlue, HorizontalOptions = LayoutOptions.Start};
+                    BackgroundColor = Colors.Transparent, TextColor = AccentColor, HorizontalOptions = LayoutOptions.Start};
                 addItemButton.Clicked += (s, args) =>
                 {
                     var newRow = new HorizontalStackLayout {Spacing = 5 };
                     if (element.Type == "Seleccion Unica") newRow.Children.Add(new RadioButton { GroupName = groupName });
                     else newRow.Children.Add(new CheckBox());
-                    newRow.Children.Add(new Entry {Placeholder = "Nueva Opcin", FontSize = 16, TextColor = Colors.Black, 
+                    newRow.Children.Add(new Entry {Placeholder = "Nueva Opcin", FontSize = 16, TextColor = TextPrimary, PlaceholderColor = TextSecondary, BackgroundColor = Colors.Transparent,
                         VerticalOptions = LayoutOptions.Center, WidthRequest = 200 });
                     stack.Children.Insert(stack.Children.Count - 1, newRow);
                 };

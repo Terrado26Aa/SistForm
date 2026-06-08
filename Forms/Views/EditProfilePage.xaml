@@ -3,9 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Forms.Views.EditProfilePage"
              Title="Mi Perfil">
-    <ScrollView>
+    <ScrollView BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
         <VerticalStackLayout Padding="20" Spacing="20">
-            <Image Source="username.png" WidthRequest="100" HeightRequest="100" HorizontalOptions="Center" Margin="0,20,0,10"/>
+            <Border StrokeShape="RoundRectangle 50,50,50,50"
+                    WidthRequest="100" HeightRequest="100"
+                    StrokeThickness="0"
+                    HorizontalOptions="Center" Margin="0,20,0,10">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="{AppThemeBinding Light=#E0E0E0, Dark=#4A4A4A}" Offset="0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#C0C0C0, Dark=#2A2A2A}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Image Source="username.png" WidthRequest="90" HeightRequest="90"/>
+            </Border>
             
             <Label x:Name="RoleLabel" Text="Rol:" FontSize="16" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}" FontAttributes="Bold" Margin="0,0,0,20"/>
 
@@ -28,7 +39,7 @@
             <Label Text="Confirmar Contraseña" FontSize="14" TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}" FontAttributes="Bold" Margin="0,0,0,-15"/>
             <Entry x:Name="ConfirmPasswordEntry" Placeholder="repite la contraseña" FontSize="16" IsPassword="True" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
 
-            <Button Text="Guardar cambios" BackgroundColor="CornflowerBlue" TextColor="White" HeightRequest="50" 
+            <Button Text="Guardar cambios" BackgroundColor="{AppThemeBinding Light=CornflowerBlue, Dark=#6BA3FF}" TextColor="White" HeightRequest="50" 
                     CornerRadius="10" Margin="0,30,0,0" Clicked="OnSaveProfileClicked"/>
         </VerticalStackLayout>
     </ScrollView>

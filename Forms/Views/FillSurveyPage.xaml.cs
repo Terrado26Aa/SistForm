@@ -286,7 +286,7 @@ public partial class FillSurveyPage : ContentPage
                     var previewImage = new Image { HeightRequest = 200, IsVisible = false, Aspect = Aspect.AspectFit };
 
                     //El boton para seleccionar la imagen
-                    var pickButton = new Button { Text = "Seleccionar Imagen", BackgroundColor = Colors.CornflowerBlue};
+                    var pickButton = new Button { Text = "Seleccionar Imagen", BackgroundColor = Application.Current?.RequestedTheme == AppTheme.Dark ? Color.FromArgb("#6BA3FF") : Colors.CornflowerBlue };
 
                     //Un Entry oculto para almacenar la imagen en base64 (no es la mejor forma, pero es una solucion rapida para no complicar el ejemplo con clases adicionales)
                     var hiddenBase64Label = new Label { IsVisible = false, Text = ""};
@@ -325,7 +325,7 @@ public partial class FillSurveyPage : ContentPage
                                 using var streamForBase64 = await photo.OpenReadAsync();
                                 await streamForBase64.CopyToAsync(memoryStream);
 
-                                // Convertimos la imagen a base64 y la almacenamos en el Entry oculto para enviarla luego al backend
+                                // Convertimos la imagen a base64 y la almacenamos en el Entry oculto para enviarla luego a SistForm-API
                                 hiddenBase64Label.Text = Convert.ToBase64String(memoryStream.ToArray());
                             }
                         }
@@ -464,7 +464,7 @@ public partial class FillSurveyPage : ContentPage
             LatitudeB = currentLatB,
             LongitudeB = currentLonB,
             //Le pasamos los puntos de ruta intermedios capturados durante el proceso de respuesta para que se puedan usar luego en el
-            //backend o para mostrar el camino recorrido.
+            //SistForm-API o para mostrar el camino recorrido.
             TrackPoints = _routePoints
         };
 
@@ -480,7 +480,7 @@ public partial class FillSurveyPage : ContentPage
             //respuesta local existente o creando una nueva.
             await LocalDatabaseHelper.SaveResponseLocallyAsync(submitDto);
 
-            //Intentamos enviar al backend si hay conexión
+            //Intentamos enviar a SistForm-API si hay conexión
             var api = new ApiService();
             var result = await api.SubmitResponseAsync(submitDto);
 

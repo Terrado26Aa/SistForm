@@ -7,11 +7,14 @@ namespace Forms.Converters
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            bool isDark = Application.Current?.RequestedTheme == AppTheme.Dark;
             if (value is string role)
             {
-                return role == "Admin" ? Colors.Red : Colors.Green;
+                if (role == "Admin")
+                    return isDark ? Color.FromArgb("#FF6B6B") : Colors.Red;
+                return isDark ? Color.FromArgb("#6BCB6B") : Colors.Green;
             }
-            return Colors.Gray;
+            return isDark ? Color.FromArgb("#888888") : Colors.Gray;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
