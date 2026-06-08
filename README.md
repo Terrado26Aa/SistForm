@@ -50,7 +50,7 @@ SistForm/
 
 ## Requisitos Previos
 
-- [.NET SDK](https://dotnet.microsoft.com/download) 8.0 o superior
+- [.NET SDK](https://dotnet.microsoft.com/download) 10.0 o superior
 - **MySQL** server
 - Visual Studio 2022 (cargas de trabajo MAUI y ASP.NET) o VS Code + C# Dev Kit
 - Entity Framework Core CLI (opcional): `dotnet tool install --global dotnet-ef`
@@ -163,6 +163,7 @@ El proyecto se rige bajo **SEMAT (Software Engineering Method and Theory)** con 
 | v3.9 | Sincronizacion | SyncSurveysPage |
 | v4.0 | Coordenadas | Geolocalizacion, limpieza |
 | v4.1 | Gestion y Tests | AuthService, FormsService, tests unitarios |
+| v4.2 | .NET 10 y CI/CD | Migracion a .NET 10, fix pipeline multiplataforma |
 
 > Documentacion detallada de cada version en la [wiki](https://github.com/Terrado26Aa/SistForm/wiki).
 

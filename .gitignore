@@ -11,6 +11,9 @@ obj/
 .DS_Store
 .DS_Store?
 ._*
+## Wiki (repositorio separado SistForm.wiki)
+wiki/
+
 ## Build results
 [Dd]ebug/
 [Rr]elease/
