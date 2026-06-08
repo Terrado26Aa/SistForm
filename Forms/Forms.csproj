@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks Condition="'$(CI)' == '' and !$([MSBuild]::IsOSPlatform('linux'))">net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="'$(CI)' != ''">net10.0</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(CI)' == ''">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('linux')) and '$(CI)' == ''">net10.0-android</TargetFrameworks>
-		<UseMaui Condition="'$(CI)' == ''">true</UseMaui>
+		<TargetFrameworks Condition="'$(LinuxHead)' == 'true'">net10.0</TargetFrameworks>
+		<TargetFrameworks Condition="'$(LinuxHead)' != 'true' and '$(CI)' == '' and !$([MSBuild]::IsOSPlatform('linux'))">net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="'$(LinuxHead)' != 'true' and '$(CI)' == '' and $([MSBuild]::IsOSPlatform('linux'))">net10.0-android</TargetFrameworks>
+		<TargetFrameworks Condition="'$(LinuxHead)' != 'true' and '$(CI)' != ''">net10.0</TargetFrameworks>
+		<TargetFrameworks Condition="'$(LinuxHead)' != 'true' and $([MSBuild]::IsOSPlatform('windows')) and '$(CI)' == ''">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
+		<UseMaui Condition="'$(CI)' == '' and '$(LinuxHead)' != 'true'">true</UseMaui>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Forms</RootNamespace>
@@ -14,10 +15,10 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>Forms</ApplicationTitle>
+		<ApplicationTitle>SistForm</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.forms</ApplicationId>
+		<ApplicationId>com.sistform.app</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -39,11 +40,16 @@
 		<CodesignKey>-</CodesignKey>
 		<EnableCodeSigning>false</EnableCodeSigning>
 		<CodesignProvision>Automatic</CodesignProvision>
+		<ValidateXcodeVersion>false</ValidateXcodeVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
-		<AndroidSdkDirectory>/Users/ghost/Library/Android/sdk</AndroidSdkDirectory>
-		<JavaSdkDirectory>/usr/local/Cellar/openjdk@17/17.0.19/libexec/openjdk.jdk/Contents/Home</JavaSdkDirectory>
+		<AndroidSdkDirectory Condition="'$(ANDROID_HOME)' != ''">$(ANDROID_HOME)</AndroidSdkDirectory>
+		<JavaSdkDirectory Condition="'$(JAVA_HOME)' != ''">$(JAVA_HOME)</JavaSdkDirectory>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+		<ValidateXcodeVersion>false</ValidateXcodeVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
