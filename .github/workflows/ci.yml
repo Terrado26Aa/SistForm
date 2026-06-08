@@ -32,6 +32,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     continue-on-error: ${{ matrix.continue_on_error || false }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           # -- Backend self-contained --
@@ -104,12 +105,14 @@ jobs:
             gtk4: true
             runtime: linux-x64
             artifact: linux-gtk4-x64
+            extra_args: /p:LinuxHead=true
           - name: Linux GTK4 ARM64
             project: Forms.Linux/Forms.Linux.csproj
             runner: ubuntu-latest
             gtk4: true
             runtime: linux-arm64
             artifact: linux-gtk4-arm64
+            extra_args: /p:LinuxHead=true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -142,7 +145,7 @@ jobs:
 
       - if: matrix.runtime && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
         name: Publish self-contained
-        run: dotnet publish ${{ matrix.project }} -c Release --runtime ${{ matrix.runtime }} --self-contained -o publish/${{ matrix.artifact }}
+        run: dotnet publish ${{ matrix.project }} -c Release --runtime ${{ matrix.runtime }} --self-contained -o publish/${{ matrix.artifact }} ${{ matrix.extra_args }}
 
       - if: matrix.tfm && !matrix.package && !matrix.publish_zip && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
         name: Publish MAUI app
