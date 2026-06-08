@@ -2,7 +2,7 @@
 
 Los espacios de actividad de ESSENCE definen las areas de trabajo en el desarrollo de software. A continuacion se documenta como cada fase de SistForm cubrio estos espacios.
 
-> *Este mapa se ha ido completando progresivamente desde v1.0 hasta v4.1. Cada fase se agrego a la documentacion una vez completada.*
+> *Este mapa se ha ido completando progresivamente desde v1.0 hasta v4.2. Cada fase se agrego a la documentacion una vez completada.*
 
 | Simbolo | Significado |
 |---------|-------------|
@@ -84,24 +84,42 @@ Los espacios de actividad de ESSENCE definen las areas de trabajo en el desarrol
 
 ---
 
+### Fase 5: Migracion y DevOps (v4.2)
+
+| Espacio de Actividad | Estado | Evidencia |
+|---------------------|--------|-----------|
+| **Explorar Posibilidades** | — | Fase concluida |
+| **Entender Necesidades de Stakeholders** | — | Fase concluida |
+| **Entender los Requisitos** | — | Fase concluida |
+| **Dar Forma al Sistema** | ◐ | Migracion de .NET 8 a .NET 10, Swashbuckle v10, Microting.MySql |
+| **Implementar el Sistema** | ✓ | Actualizacion de TFMs, paquetes, Program.cs para OpenApi v2 |
+| **Probar el Sistema** | ✓ | Tests actualizados y pasando con .NET 10 |
+| **Desplegar el Sistema** | ✓ | Pipeline CI/CD automatizado con builds para 4 plataformas |
+| **Planear el Trabajo** | ✓ | Migracion planificada e iterativa |
+| **Coordinar Actividad** | ✓ | Commits atomicos |
+| **Seguir Progreso** | ✓ | Tags y releases automatizados |
+| **Identificar y Gestionar Riesgos** | ✓ | Fix de compatibilidad Xcode 26.5 para iOS/macCatalyst |
+
+---
+
 ## Cobertura Total por Espacio
 
-| Espacio de Actividad | F1 | F2 | F3 | F4 |
-|---------------------|:--:|:--:|:--:|:--:|
-| Explorar Posibilidades | ✓ | — | — | — |
-| Entender Necesidades de Stakeholders | ✓ | ◐ | ◐ | ◐ |
-| Entender los Requisitos | ✓ | ✓ | ✓ | ✓ |
-| Dar Forma al Sistema | ◐ | ✓ | ✓ | ◐ |
-| Implementar el Sistema | ✓ | ✓ | ✓ | ✓ |
-| Probar el Sistema | — | — | — | ✓ |
-| Desplegar el Sistema | — | ◐ | ◐ | ◐ |
-| Planear el Trabajo | ✓ | ✓ | ✓ | ✓ |
-| Coordinar Actividad | ✓ | ✓ | ✓ | ✓ |
-| Seguir Progreso | ✓ | ✓ | ✓ | ✓ |
-| Identificar y Gestionar Riesgos | ◐ | ◐ | ✓ | ✓ |
+| Espacio de Actividad | F1 | F2 | F3 | F4 | F5 |
+|---------------------|:--:|:--:|:--:|:--:|:--:|
+| Explorar Posibilidades | ✓ | — | — | — | — |
+| Entender Necesidades de Stakeholders | ✓ | ◐ | ◐ | ◐ | — |
+| Entender los Requisitos | ✓ | ✓ | ✓ | ✓ | — |
+| Dar Forma al Sistema | ◐ | ✓ | ✓ | ◐ | ◐ |
+| Implementar el Sistema | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Probar el Sistema | — | — | — | ✓ | ✓ |
+| Desplegar el Sistema | — | ◐ | ◐ | ◐ | ✓ |
+| Planear el Trabajo | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Coordinar Actividad | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Seguir Progreso | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Identificar y Gestionar Riesgos | ◐ | ◐ | ✓ | ✓ | ✓ |
 
 ---
 
 > Basado en el estandar **ESSENCE v1.2** adaptado al proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Mapa generado progresivamente desde v1.0 hasta v4.1.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Mapa generado progresivamente desde v1.0 hasta v4.2.

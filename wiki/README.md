@@ -31,7 +31,7 @@ Sistema de Encuestas (SistForm) es un sistema completo de creacion, gestion y re
 
 ## Requisitos Previos
 
-- [.NET SDK](https://dotnet.microsoft.com/download) (.NET 8 o superior)
+- [.NET SDK](https://dotnet.microsoft.com/download) (.NET 10 o superior)
 - Servidor **MySQL**
 - Visual Studio 2022 (con cargas de trabajo MAUI y ASP.NET) o VS Code con C# Dev Kit
 - Entity Framework Core CLI (opcional): `dotnet tool install --global dotnet-ef`
@@ -108,6 +108,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 | [v3.9](wiki/v3-9-Sincronizacion) | Sincronizacion | Agregada SyncSurveysPage para sincronizacion de encuestas. Agregado upload_icon.png. |
 | [v4.0](wiki/v4-0-Coordenadas-y-Limpieza) | Coordenadas y Limpieza | Agregadas migraciones de base de datos para coordenadas. Eliminado ToolbarItem (modelo obsoleto). |
 | [v4.1](wiki/v4-1-Gestion-y-Tests) | Gestion y Tests | Agregados servicios backend AuthService y FormsService. Agregadas AssignFormPage, ResultsDashboardPage, UserManagementPage. Agregado GlobalExceptionMiddleware. Agregados tests unitarios. Agregado script de base de datos. |
+| [v4.2](wiki/v4-2-NET10-y-CICD) | .NET 10 y CI/CD | Migracion a .NET 10 (SDK, paquetes, TFMs). Actualizacion de Swashbuckle v10 y Microting.MySql. Fix de pipeline multiplataforma con Xcode 26.5. Documentacion tecnica agregada a la wiki. |
 
 > *Documentacion completa disponible en la [wiki](wiki/Home).*
 

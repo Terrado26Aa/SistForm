@@ -4,7 +4,7 @@ El estandar **ESSENCE** (Essential Software Engineering Common Terminology) defi
 
 A continuacion se define cada alfa para el contexto de SistForm, con sus estados y checklist de progresion.
 
-> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v4.1, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
+> *Esta pagina se ha ido construyendo progresivamente desde v1.0 hasta v4.2, refinando la definicion de cada alfa a medida que el proyecto avanzaba.*
 
 ---
 
@@ -68,6 +68,8 @@ Lo que el sistema debe hacer para satisfacer a los interesados y la oportunidad.
 - RF-08: Captura de coordenadas geograficas
 - RF-09: Panel de resultados y dashboard
 - RF-10: Gestion de usuarios (admin)
+- RF-11: Migracion a .NET 10 (SDK, paquetes, TFMs)
+- RF-12: Pipeline CI/CD automatizado con builds multiplataforma
 
 ---
 
@@ -79,7 +81,8 @@ El sistema de software que se esta construyendo.
 
 | Estado | Criterios |
 |--------|-----------|
-| **Architecture Selected** | Se elige .NET MAUI (frontend) + ASP.NET Core (backend) + MySQL |
+| **Architecture Selected** | Se elige .NET MAUI + ASP.NET Core + MySQL |
+| **Architecture Updated** | Migracion de .NET 8 a .NET 10 con paquetes actualizados |
 | **Demonstrable** | La autenticacion funciona (Login, Signin, HomePage) |
 | **Usable** | Se pueden crear, ver y responder encuestas |
 | **Ready** | Funcionalidades completas: administracion, perfiles, offline |
@@ -103,7 +106,7 @@ El conjunto de actividades que se deben realizar para construir el sistema.
 
 | Metrica | Valor |
 |---------|-------|
-| Versiones | v4.1 |
+| Versiones | v4.2 |
 
 ---
 
@@ -148,17 +151,18 @@ La metodologia, practicas y herramientas que el equipo utiliza para desarrollar 
 
 | Herramienta | Proposito |
 |-------------|-----------|
-| .NET MAUI | Framework frontend multiplataforma |
-| ASP.NET Core | Framework backend REST API |
-| Entity Framework Core | ORM para base de datos |
-| MySQL | Base de datos relacional |
+| .NET 10 / MAUI | Framework frontend multiplataforma |
+| ASP.NET Core 10 | Framework backend REST API |
+| Entity Framework Core 10 | ORM para base de datos |
+| MySQL 8.0 | Base de datos relacional |
 | SQLite | Base de datos local offline |
 | xUnit + Moq | Pruebas unitarias |
 | Git + GitHub | Control de versiones |
+| GitHub Actions | CI/CD automatizado |
 | GitHub Wiki | Documentacion del proyecto |
 
 ---
 
 > Basado en el estandar **ESSENCE v1.2** (Object Management Group) adaptado al contexto del proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v4.1.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Documentacion generada progresivamente desde v1.0 hasta v4.2.

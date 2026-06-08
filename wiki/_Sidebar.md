@@ -4,6 +4,14 @@
 - [Changelog](Changelog)
 - [Repositorio](https://github.com/Terrado26Aa/SistForm)
 
+### Documentacion Tecnica
+
+- [Arquitectura del Sistema](Arquitectura-del-Sistema)
+- [API REST](API-REST)
+- [Base de Datos](Base-de-Datos)
+- [Guia de Desarrollo](Guia-de-Desarrollo)
+- [Pipeline CI/CD](Pipeline-CICD)
+
 ### Documentacion
 
 - [Introduccion y Objetivos](Anteproyecto-Introduccion)
@@ -51,3 +59,4 @@
 - [v3.9 - Sincronizacion](v3-9-Sincronizacion)
 - [v4.0 - Coordenadas y Limpieza](v4-0-Coordenadas-y-Limpieza)
 - [v4.1 - Gestion y Tests](v4-1-Gestion-y-Tests)
+- [v4.2 - .NET 10 y CI/CD](v4-2-NET10-y-CICD)

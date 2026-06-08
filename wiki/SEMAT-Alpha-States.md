@@ -2,7 +2,7 @@
 
 Este documento registra el estado de cada alfa del kernel ESSENCE a lo largo de las versiones de SistForm.
 
-> *Esta matriz se ha ido completando progresivamente desde v1.0 hasta v4.1. Cada nueva version agrega su fila a la tabla.*
+> *Esta matriz se ha ido completando progresivamente desde v1.0 hasta v4.2. Cada nueva version agrega su fila a la tabla.*
 
 ## Matriz de Estados por Version
 
@@ -40,23 +40,24 @@ Este documento registra el estado de cada alfa del kernel ESSENCE a lo largo de 
 | [v3.9](v3-9-Sincronizacion) | Value Established | Involved | Coherent | Usable | Under Control | Collaborating | In Use |
 | [v4.0](v4-0-Coordenadas-y-Limpieza) | Addressed | Satisfied for Deployment | Addressed | Operational | Under Control | Performing | In Place |
 | [v4.1](v4-1-Gestion-y-Tests) | Addressed | Satisfied for Deployment | Addressed | Operational | Under Control | Performing | In Place |
+| [v4.2](v4-2-NET10-y-CICD) | Benefit Realized | Satisfied in Use | Fulfilled | Operational | Completed | Performing | Working Well |
 
 ---
 
 ## Resumen de Progresion
 
 ```
-Oportunidad:     Identified --► Addressed
-Interesados:     Identified --► Satisfied for Deployment
-Requisitos:      Conceived --► Addressed
+Oportunidad:     Identified --► Benefit Realized
+Interesados:     Identified --► Satisfied in Use
+Requisitos:      Conceived --► Fulfilled
 Sistema:         Architecture Selected --► Operational
-Trabajo:         Started --► Under Control
+Trabajo:         Started --► Completed
 Equipo:          Formed --► Performing
-WoW:             Principles Established --► In Place
+WoW:             Principles Established --► Working Well
 ```
 
 ---
 
 > Basado en el estandar **ESSENCE v1.2** adaptado al proyecto SistForm.
 >
-> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Matriz generada progresivamente desde v1.0 hasta v4.1.
+> **Referencia:** Anteproyecto de Trabajo de Graduacion — Cesar Andres Terrado Gonzalez (2023). Matriz generada progresivamente desde v1.0 hasta v4.2.

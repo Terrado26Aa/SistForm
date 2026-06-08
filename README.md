@@ -2,7 +2,7 @@
 
 Sistema de Encuestas movil con soporte offline, sincronizacion y captura de coordenadas geograficas.
 
-Desarrollado en **.NET MAUI** (frontend) y **ASP.NET Core** (backend) como Trabajo de Graduacion.
+Desarrollado en **.NET MAUI** (frontend) y **ASP.NET Core** (SistForm-API) como Trabajo de Graduacion.
 
 ## Funcionalidades
 
@@ -18,7 +18,7 @@ Desarrollado en **.NET MAUI** (frontend) y **ASP.NET Core** (backend) como Traba
 
 ```
 SistForm/
-├── AuthLogin/                  # Backend ASP.NET Core Web API
+├── SistForm-API/                  # Backend ASP.NET Core Web API
 │   ├── Controllers/            # AuthController, FormsController
 │   ├── Services/               # AuthService, FormsService
 │   ├── Models/                 # CForm, User, DTOs
@@ -32,7 +32,7 @@ SistForm/
 │   ├── Models/                 # DTOs del frontend
 │   ├── Converters/             # RoleToColorConverter
 │   └── Platforms/              # Android, iOS, Windows, Mac, Tizen
-├── AuthLogin.Tests/            # Pruebas unitarias (xUnit + Moq)
+├── SistForm-API.Tests/            # Pruebas unitarias (xUnit + Moq)
 └── Base de Datos/              # Script SQL de la base de datos
 ```
 
@@ -60,17 +60,17 @@ SistForm/
 ### Backend
 
 ```bash
-cd AuthLogin
+cd SistForm-API
 # Editar appsettings.json con cadena de conexion MySQL
 dotnet run
 ```
 
-La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
+La API se ejecuta en `https://localhost:5174`.
 
 ### Base de Datos
 
 1. Asegurate de que MySQL este ejecutandose
-2. Configura la cadena de conexion en `AuthLogin/appsettings.json`:
+2. Configura la cadena de conexion en `SistForm-API/appsettings.json`:
    ```json
    "ConnectionStrings": {
      "DefaultConnection": "Server=localhost;Database=dbforms;Uid=TU_USUARIO;Pwd=TU_CONTRASENA;"
@@ -78,7 +78,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
    ```
 3. Aplica las migraciones:
    ```bash
-   cd AuthLogin
+   cd SistForm-API
    dotnet ef database update
    ```
 
@@ -94,7 +94,7 @@ La API se ejecuta en `https://localhost:5001` o `http://localhost:5000`.
 ### Pruebas
 
 ```bash
-dotnet test AuthLogin.Tests/AuthLogin.Tests.csproj
+dotnet test SistForm-API.Tests/SistForm-API.Tests.csproj
 ```
 
 ## API Endpoints

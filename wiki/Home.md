@@ -40,6 +40,19 @@ Sistema de Encuestas (SistForm) es un sistema completo de creacion, gestion y re
 | [v3.9](v3-9-Sincronizacion) | Sincronizacion | Agregada SyncSurveysPage para sincronizacion de encuestas. Agregado upload_icon.png. |
 | [v4.0](v4-0-Coordenadas-y-Limpieza) | Coordenadas y Limpieza | Agregadas migraciones de base de datos para coordenadas. Eliminado ToolbarItem (modelo obsoleto). |
 | [v4.1](v4-1-Gestion-y-Tests) | Gestion y Tests | Agregados servicios backend AuthService y FormsService. Agregadas AssignFormPage, ResultsDashboardPage, UserManagementPage. Agregado GlobalExceptionMiddleware. Agregados tests unitarios. Agregado script de base de datos. |
+| [v4.2](v4-2-NET10-y-CICD) | .NET 10 y CI/CD | Migracion a .NET 10 (SDK, paquetes, TFMs). Actualizacion de Swashbuckle v10 y Microting.MySql. Fix de pipeline multiplataforma con Xcode 26.5. |
+
+---
+
+## Documentacion Tecnica
+
+| Pagina | Descripcion |
+|--------|-------------|
+| [Arquitectura del Sistema](Arquitectura-del-Sistema) | Diagrama de capas, patron MVVM, flujo de datos, dependencias |
+| [API REST](API-REST) | Endpoints completos de AuthController y FormsController |
+| [Base de Datos](Base-de-Datos) | Esquema relacional MySQL, tablas, migraciones, SQLite offline |
+| [Guia de Desarrollo](Guia-de-Desarrollo) | Configuracion del entorno, comandos utiles, convenciones |
+| [Pipeline CI/CD](Pipeline-CICD) | Workflows de GitHub Actions, builds multiplataforma, releases |
 
 ---
 
@@ -57,7 +70,7 @@ Sistema de Encuestas (SistForm) es un sistema completo de creacion, gestion y re
 | Pagina | Descripcion |
 |--------|-------------|
 | [Kernel ESSENCE](SEMAT-Kernel) | Definicion de las 7 alfas con checklist de estados para SistForm |
-| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v4.1) |
+| [Estados de Alfas](SEMAT-Alpha-States) | Matriz de progresion de alfas por cada version (v1.0 — v4.2) |
 | [Espacios de Actividad](SEMAT-Activity-Spaces) | Mapa de espacios de actividad cubiertos en cada fase del proyecto |
 
 ---

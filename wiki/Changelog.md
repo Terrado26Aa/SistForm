@@ -129,3 +129,7 @@ Agregadas migraciones de base de datos para coordenadas. Eliminado ToolbarItem (
 ## [v4.1] - Gestion y Tests
 
 Agregados servicios backend AuthService y FormsService. Agregadas AssignFormPage, ResultsDashboardPage, UserManagementPage. Agregado GlobalExceptionMiddleware. Agregados tests unitarios. Agregado script de base de datos.
+
+## [v4.2] - .NET 10 y CI/CD
+
+Migracion completa de .NET 8 a .NET 10 (SDK 10.0.100, paquetes actualizados, TFMs net10.0-*). Actualizacion de Swashbuckle a v10 con Microsoft.OpenApi v2. Reemplazo de Pomelo.EntityFrameworkCore.MySql por Microting.EntityFrameworkCore.MySql 10.0.5. Correccion del pipeline release: runner macos-26 con Xcode 26.5 para builds iOS/macCatalyst. Filtro de artefactos a solo ejecutables (.apk, .app, .exe). Documentacion tecnica agregada a la wiki (Arquitectura, API REST, Base de Datos, Guia de Desarrollo, CI/CD).
