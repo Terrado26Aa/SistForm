@@ -49,8 +49,8 @@ jobs:
           - name: iOS App
             category: frontend
             tfm: net10.0-ios
-            runner: macos-latest
-            workload: maui-ios
+            runner: macos-26
+            workload: maui
             artifact: ios-app
             command: build
             package: true
@@ -58,12 +58,13 @@ jobs:
           - name: macCatalyst App
             category: frontend
             tfm: net10.0-maccatalyst
-            runner: macos-latest
+            runner: macos-26
             workload: maui
             artifact: maccatalyst-app
             command: build
             package: true
             continue-on-error: true
+            extra_args: /p:PublishTrimmed=false
           - name: Windows App
             category: frontend
             tfm: net10.0-windows10.0.19041.0
@@ -138,13 +139,13 @@ jobs:
         name: Build MAUI app
         env:
           CI: ""
-        run: dotnet build Forms/Forms.csproj -f ${{ matrix.tfm }} -c Release
+        run: dotnet build Forms/Forms.csproj -f ${{ matrix.tfm }} -c Release ${{ matrix.extra_args }}
 
       - if: matrix.category == 'frontend' && matrix.command == 'publish'
         name: Publish MAUI app
         env:
           CI: ""
-        run: dotnet publish Forms/Forms.csproj -f ${{ matrix.tfm }} -c Release
+        run: dotnet publish Forms/Forms.csproj -f ${{ matrix.tfm }} -c Release ${{ matrix.extra_args }}
 
       # Backend: publish self-contained
       - if: matrix.category == 'SistForm-API'

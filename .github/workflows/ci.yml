@@ -109,7 +109,7 @@ jobs:
 
   frontend-maccatalyst:
     name: Frontend - macCatalyst Build
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
 
