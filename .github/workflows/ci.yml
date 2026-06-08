@@ -82,15 +82,16 @@ jobs:
             artifact: ios-app
             package: true
             continue_on_error: true
+            xcode: /Applications/Xcode_26.5.app
           - name: macCatalyst
             project: Forms/Forms.csproj
             tfm: net10.0-maccatalyst
             runner: macos-26
             workload: maui
-            extra_args: /p:MtouchLink=None
             artifact: maccatalyst-app
             package: true
             continue_on_error: true
+            xcode: /Applications/Xcode_26.5.app
           - name: Windows
             project: Forms/Forms.csproj
             tfm: net10.0-windows10.0.19041.0
@@ -127,6 +128,9 @@ jobs:
         with:
           distribution: microsoft
           java-version: ${{ matrix.java }}
+      - if: matrix.xcode
+        name: Select Xcode
+        run: sudo xcode-select -s ${{ matrix.xcode }}
       - if: matrix.gtk4
         name: Install GTK4 dependencies
         run: |
