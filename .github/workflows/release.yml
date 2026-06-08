@@ -45,12 +45,12 @@ jobs:
       - name: Build Android APK
         env:
           CI: ""
-        run: dotnet build Forms/Forms.csproj -f net8.0-android -c Release
+        run: dotnet build Forms/Forms.csproj -f net10.0-android -c Release
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: Forms/bin/Release/**/net8.0-android/**/*.apk
+          path: Forms/bin/Release/**/net10.0-android/**/*.apk
 
   build-ios:
     name: Build iOS App
@@ -67,12 +67,12 @@ jobs:
       - name: Build iOS App
         env:
           CI: ""
-        run: dotnet build Forms/Forms.csproj -f net8.0-ios -c Release
+        run: dotnet build Forms/Forms.csproj -f net10.0-ios -c Release
       - name: Upload iOS artifact
         uses: actions/upload-artifact@v4
         with:
           name: ios-app
-          path: Forms/bin/Release/**/net8.0-ios/**/*.app
+          path: Forms/bin/Release/**/net10.0-ios/**/*.app
 
   build-maccatalyst:
     name: Build macCatalyst App
@@ -89,12 +89,12 @@ jobs:
       - name: Build macCatalyst App
         env:
           CI: ""
-        run: dotnet build Forms/Forms.csproj -f net8.0-maccatalyst -c Release
+        run: dotnet build Forms/Forms.csproj -f net10.0-maccatalyst -c Release
       - name: Upload macCatalyst artifact
         uses: actions/upload-artifact@v4
         with:
           name: maccatalyst-app
-          path: Forms/bin/Release/**/net8.0-maccatalyst/**/*.app
+          path: Forms/bin/Release/**/net10.0-maccatalyst/**/*.app
 
   build-windows:
     name: Build Windows App
@@ -110,12 +110,12 @@ jobs:
       - name: Build Windows App
         env:
           CI: ""
-        run: dotnet build Forms/Forms.csproj -f net8.0-windows10.0.19041.0 -c Release
+        run: dotnet build Forms/Forms.csproj -f net10.0-windows10.0.19041.0 -c Release
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-app
-          path: Forms/bin/Release/**/net8.0-windows10.0.19041.0/**/*.exe
+          path: Forms/bin/Release/**/net10.0-windows10.0.19041.0/**/*.exe
 
   release:
     name: Create Release
