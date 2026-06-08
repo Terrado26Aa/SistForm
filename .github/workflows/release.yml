@@ -72,10 +72,17 @@ jobs:
             artifact: windows-app
             command: publish
             publish_zip: true
-          - name: Linux GTK4
+          - name: Linux GTK4 x64
             category: frontend-linux
             runner: ubuntu-latest
-            artifact: linux-gtk4
+            runtime: linux-x64
+            artifact: linux-gtk4-x64
+            command: publish-linux
+          - name: Linux GTK4 ARM64
+            category: frontend-linux
+            runner: ubuntu-latest
+            runtime: linux-arm64
+            artifact: linux-gtk4-arm64
             command: publish-linux
           # Backend — API self-contained
           - name: Backend Linux x64
@@ -93,6 +100,11 @@ jobs:
             runtime: win-x64
             runner: windows-latest
             artifact: SistForm-API-win-x64
+          - name: Backend Windows ARM64
+            category: SistForm-API
+            runtime: win-arm64
+            runner: windows-latest
+            artifact: SistForm-API-win-arm64
           - name: Backend macOS x64
             category: SistForm-API
             runtime: osx-x64
@@ -150,7 +162,7 @@ jobs:
             gobject-introspection \
             libgirepository1.0-dev \
             pkg-config
-          dotnet publish Forms.Linux/Forms.Linux.csproj -c Release -o publish/${{ matrix.artifact }}
+          dotnet publish Forms.Linux/Forms.Linux.csproj -c Release --runtime ${{ matrix.runtime }} --self-contained -o publish/${{ matrix.artifact }}
 
       # Package iOS/macCatalyst bundle to .zip
       - if: matrix.package
@@ -230,9 +242,11 @@ jobs:
             ios-app/*.zip
             maccatalyst-app/*.zip
             windows-app/*.zip
-            linux-gtk4/**
+            linux-gtk4-x64/**
+            linux-gtk4-arm64/**
             SistForm-API-linux-x64/**
             SistForm-API-linux-arm64/**
             SistForm-API-win-x64/**
+            SistForm-API-win-arm64/**
             SistForm-API-macos-x64/**
             SistForm-API-macos-arm64/**
